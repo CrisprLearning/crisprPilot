@@ -306,6 +306,28 @@
          font-weight: 600;
       }
 
+      .upload-progress {
+         flex: 1;
+         display: flex;
+         align-items: center;
+         gap: 10px;
+         margin-right: 10px;
+      }
+
+      .upload-progress-track {
+         flex: 1;
+         height: 8px;
+         background: #e2e8f0;
+         border-radius: 4px;
+         overflow: hidden;
+      }
+
+      .upload-progress-fill {
+         height: 100%;
+         background: linear-gradient(135deg, #006073 0%, #00a8cc 100%);
+         transition: width 0.2s ease;
+      }
+
       .preview-img {
          width: 100%;
          aspect-ratio: 16 / 9;
@@ -542,6 +564,12 @@
             </div>
          </div>
          <div class="crispr-modal-footer">
+            <div class="upload-progress" ng-if="isSaving">
+               <div class="upload-progress-track">
+                  <div class="upload-progress-fill" ng-style="{width: uploadProgress + '%'}"></div>
+               </div>
+               <small>{{uploadProgress}}%</small>
+            </div>
             <button class="btn btn-default" ng-click="closeAddModal()" ng-disabled="isSaving">Cancel</button>
             <button class="btn btn-success" ng-click="saveContent()" ng-disabled="isSaving">
                <i class="ti ti-check"></i> {{isSaving ? 'Uploading...' : 'Upload'}}

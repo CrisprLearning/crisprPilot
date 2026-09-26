@@ -8,9 +8,11 @@
  *   2. To add content the admin picks an image, crops / resizes it in an
  *      on-page canvas cropper (default output 1920x1080), and enters a title
  *      and duration.
- *   3. The cropped frame is exported as a PNG stamped with 300 DPI, encoded as
- *      a base64 data URL and POSTed to restricted/tv-content/add-tv-content.php,
- *      which stores it in tv_content.imageData.
+ *   3. The cropped frame is exported as a PNG stamped with 300 DPI and POSTed
+ *      as multipart form data (title, duration, file) to
+ *      restricted/tv-content/add-tv-content.php. The backend stores the file in
+ *      Bunny Edge Storage (folder `tv-content`) and saves its CDN URL in
+ *      tv_content.imageData. The image is sent as a binary blob, not base64.
  */
 
 var app = angular.module('tvContentApp', ['ngCookies']);
@@ -63,6 +65,7 @@ app.controller('tvContentController', ['$scope', '$http', '$cookies', '$timeout'
     $scope.loadError = '';
     $scope.addModalOpen = false;
     $scope.isSaving = false;
+    $scope.uploadProgress = 0;
     $scope.previewItem = null;
     $scope.errors = {};
     $scope.form = newForm();
@@ -95,7 +98,7 @@ app.controller('tvContentController', ['$scope', '$http', '$cookies', '$timeout'
     }
 
     function errorMessage(err) {
-        if (err && err.status === 413) return 'The image is too large for the server. Try a smaller output size.';
+        if (err && err.status === 413) return 'The image is too large for the server\'s upload limit. Try a smaller output size.';
         if (err && err.data && (err.data.message || err.data.error)) return err.data.message || err.data.error;
         return (err && err.message) || 'Something went wrong';
     }
@@ -338,7 +341,7 @@ app.controller('tvContentController', ['$scope', '$http', '$cookies', '$timeout'
         }, { passive: false });
     }
 
-    // ===== Export: crop frame -> PNG (300 DPI) -> base64 data URL =====
+    // ===== Export: crop frame -> PNG blob (300 DPI) =====
     var crcTable = null;
     function crc32(bytes) {
         if (!crcTable) {
@@ -395,10 +398,7 @@ app.controller('tvContentController', ['$scope', '$http', '$cookies', '$timeout'
                 reader.onerror = function () { reject(new Error('Could not read the rendered image')); };
                 reader.onload = function () {
                     var stamped = setPngDpi(new Uint8Array(reader.result), $scope.OUTPUT_DPI);
-                    var dataReader = new FileReader();
-                    dataReader.onerror = function () { reject(new Error('Could not encode the image')); };
-                    dataReader.onload = function () { resolve(dataReader.result); };
-                    dataReader.readAsDataURL(new Blob([stamped], { type: 'image/png' }));
+                    resolve(new Blob([stamped], { type: 'image/png' }));
                 };
                 reader.readAsArrayBuffer(blob);
             }, 'image/png');
@@ -425,19 +425,27 @@ app.controller('tvContentController', ['$scope', '$http', '$cookies', '$timeout'
     $scope.saveContent = function () {
         if (!validate()) return;
         $scope.isSaving = true;
+        $scope.uploadProgress = 0;
         $q.when(exportPng())
-            .then(function (imageData) {
-                return $http({
-                    method: 'POST',
-                    url: ADD_URL,
+            .then(function (blob) {
+                var formData = new FormData();
+                formData.append('title', String($scope.form.title).trim());
+                formData.append('duration', String(Number($scope.form.duration)));
+                formData.append('file', blob, 'tv-content.png');
+
+                return $http.post(ADD_URL, formData, {
                     headers: {
                         'X-Access-Token': getAdminTokenFromCookie(),
-                        'Content-Type': 'application/json'
+                        'Content-Type': undefined
                     },
-                    data: {
-                        title: String($scope.form.title).trim(),
-                        duration: String(Number($scope.form.duration)),
-                        imageData: imageData
+                    transformRequest: angular.identity,
+                    uploadEventHandlers: {
+                        progress: function (e) {
+                            if (e.lengthComputable) {
+                                $scope.uploadProgress = Math.round((e.loaded / e.total) * 100);
+                                $scope.$applyAsync();
+                            }
+                        }
                     }
                 });
             })
@@ -453,6 +461,7 @@ app.controller('tvContentController', ['$scope', '$http', '$cookies', '$timeout'
             })
             .finally(function () {
                 $scope.isSaving = false;
+                $scope.uploadProgress = 0;
             });
     };
 }]);
