@@ -161,6 +161,94 @@
          color: #dc2626;
       }
 
+      /* Slideshow preview */
+      .ss-overlay {
+         position: fixed;
+         inset: 0;
+         z-index: 100000;
+         background: rgba(8, 12, 16, 0.94);
+         display: none;
+         flex-direction: column;
+         align-items: center;
+         justify-content: center;
+         gap: 14px;
+      }
+
+      .ss-overlay.active { display: flex; }
+
+      .ss-frame {
+         position: relative;
+         flex: none;
+         background: #000;
+         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+         overflow: hidden;
+      }
+
+      .ss-stage {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 1920px;
+         height: 1080px;
+         transform-origin: top left;
+         background: #000;
+      }
+
+      .ss-stage img {
+         position: absolute;
+         inset: 0;
+         width: 100%;
+         height: 100%;
+         object-fit: contain;
+         opacity: 0;
+         transition: opacity 0.5s ease;
+      }
+
+      .ss-stage img.current { opacity: 1; }
+
+      .ss-progress {
+         height: 4px;
+         background: rgba(255, 255, 255, 0.15);
+         overflow: hidden;
+      }
+
+      .ss-progress-fill {
+         height: 100%;
+         width: 100%;
+         background: #ffb706;
+         transform-origin: left;
+         animation-name: ssProgress;
+         animation-timing-function: linear;
+         animation-fill-mode: forwards;
+      }
+
+      @keyframes ssProgress {
+         from { transform: scaleX(0); }
+         to { transform: scaleX(1); }
+      }
+
+      .ss-bar {
+         display: flex;
+         align-items: center;
+         gap: 10px;
+         color: #e5e7eb;
+         font-size: 14px;
+         max-width: 100%;
+         padding: 0 16px;
+      }
+
+      .ss-bar .ss-title {
+         max-width: 320px;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         white-space: nowrap;
+         font-weight: 600;
+      }
+
+      .ss-bar .ss-meta { color: #9ca3af; white-space: nowrap; }
+
+      .ss-bar .btn { min-width: 40px; }
+
       .tv-skeleton {
          aspect-ratio: 16 / 9;
          background: #e5e7eb;
@@ -375,6 +463,12 @@
 
       <ul class="nav navbar-nav toolbar pull-right">
          <li style="display: flex; align-items: center; margin-right: 10px;">
+            <button class="btn" ng-click="openSlideshow()" ng-disabled="isLoading || items.length === 0"
+               style="background: #fff; color: #006073; border: 1px solid #006073; font-weight: 600; padding: 9px 20px; border-radius: 6px; font-size: 14px; white-space: nowrap; margin-top: 7px;">
+               <i class="ti ti-control-play"></i> Preview
+            </button>
+         </li>
+         <li style="display: flex; align-items: center; margin-right: 10px;">
             <button class="btn"
                style="background: #ffb706; color: #006073; border: none; font-weight: 600; padding: 10px 20px; border-radius: 6px; font-size: 14px; transition: all 0.2s ease; white-space: nowrap; margin-top: 7px;"
                ng-click="openAddModal()"
@@ -408,6 +502,8 @@
                            <li class="nav-separator"><span>Content Library</span></li>
                            <li><a href="class-notes.html"><i class="ti ti-notepad"></i><span>Class Notes</span></a></li>
                            <li><a href="tv-content.html" class="active"><i class="ti ti-desktop"></i><span>TV Content</span></a></li>
+                           <li class="nav-separator"><span>Hostel</span></li>
+                           <li><a href="hostel-fee.html"><i class="ti ti-home"></i><span>Hostel Fee</span></a></li>
                         </ul>
                      </nav>
                   </div>
@@ -610,6 +706,33 @@
                <i class="ti ti-trash"></i> {{isDeleting ? 'Deleting...' : 'Delete'}}
             </button>
          </div>
+      </div>
+   </div>
+
+   <!-- Slideshow Preview (1920 x 1080 stage, scaled to fit the window) -->
+   <div class="ss-overlay" ng-class="{active: ss.open}">
+      <div class="ss-frame" ng-style="{width: (1920 * ss.scale) + 'px', height: (1080 * ss.scale) + 'px'}">
+         <div class="ss-stage" ng-style="{transform: 'scale(' + ss.scale + ')'}">
+            <img ng-repeat="item in ss.items track by item.id" ng-src="{{item.imageData}}" alt="{{item.title}}"
+               ng-class="{current: $index === ss.index}">
+         </div>
+      </div>
+      <div class="ss-frame" style="box-shadow: none; background: transparent;"
+         ng-style="{width: (1920 * ss.scale) + 'px'}">
+         <div class="ss-progress">
+            <div class="ss-progress-fill" ng-repeat="t in [ss.tick] track by t"
+               ng-style="{'animation-duration': ss.duration + 's', 'animation-play-state': ss.paused ? 'paused' : 'running'}"></div>
+         </div>
+      </div>
+      <div class="ss-bar">
+         <button class="btn btn-default" ng-click="ssPrev()" title="Previous (Left arrow)"><i class="ti ti-control-backward"></i></button>
+         <button class="btn btn-default" ng-click="ssTogglePause()" title="Pause / Play (Space)">
+            <i class="ti" ng-class="ss.paused ? 'ti-control-play' : 'ti-control-pause'"></i>
+         </button>
+         <button class="btn btn-default" ng-click="ssNext()" title="Next (Right arrow)"><i class="ti ti-control-forward"></i></button>
+         <span class="ss-title">{{ss.items[ss.index].title}}</span>
+         <span class="ss-meta">{{ss.index + 1}} / {{ss.items.length}} &middot; {{formatDuration(ss.items[ss.index].duration)}} &middot; 1920 &times; 1080</span>
+         <button class="btn btn-default" ng-click="closeSlideshow()" title="Close (Esc)"><i class="ti ti-close"></i> Close</button>
       </div>
    </div>
 

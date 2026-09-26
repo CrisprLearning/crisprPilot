@@ -40,6 +40,27 @@
       ],
       "port": 5279,
       "autoPort": true
+    },
+    {
+      "name": "crispr-api",
+      "runtimeExecutable": "php",
+      "runtimeArgs": [
+        "-S",
+        "localhost:3000",
+        "-t",
+        "../CrisprTechApp"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "legacy-static",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "5180"
+      ],
+      "port": 5180
     }
   ]
 }

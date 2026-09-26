@@ -144,6 +144,83 @@ app.controller('tvContentController', ['$scope', '$http', '$cookies', '$timeout'
     $scope.openPreview = function (item) { $scope.previewItem = item; };
     $scope.closePreview = function () { $scope.previewItem = null; };
 
+    // ===== Slideshow preview =====
+    // Plays every active item in list order at its own duration, looping, on a
+    // 1920x1080 stage scaled down to fit the window.
+    $scope.ss = { open: false, items: [], index: 0, paused: false, scale: 1, tick: 0, duration: 10 };
+    var ssTimer = null;
+    var ssStartedAt = 0;
+    var ssRemaining = 0;
+
+    function ssFitScale() {
+        // Leave room for the progress line and the control bar.
+        var w = window.innerWidth - 32;
+        var h = window.innerHeight - 130;
+        return Math.max(0.1, Math.min(w / $scope.DEFAULT_WIDTH, h / $scope.DEFAULT_HEIGHT, 1));
+    }
+
+    function ssSchedule(ms) {
+        $timeout.cancel(ssTimer);
+        ssStartedAt = Date.now();
+        ssRemaining = ms;
+        ssTimer = $timeout($scope.ssNext, ms);
+    }
+
+    function ssShow(index) {
+        var ss = $scope.ss;
+        ss.index = (index + ss.items.length) % ss.items.length;
+        var seconds = Number(ss.items[ss.index].duration);
+        ss.duration = isFinite(seconds) && seconds > 0 ? seconds : 10;
+        ss.tick++;              // restarts the progress bar animation
+        ss.paused = false;
+        ssSchedule(ss.duration * 1000);
+    }
+
+    $scope.openSlideshow = function () {
+        if (!$scope.items.length) return;
+        $scope.ss.items = $scope.items.slice();
+        $scope.ss.scale = ssFitScale();
+        $scope.ss.open = true;
+        ssShow(0);
+    };
+
+    $scope.closeSlideshow = function () {
+        $timeout.cancel(ssTimer);
+        $scope.ss.open = false;
+        $scope.ss.items = [];
+    };
+
+    $scope.ssNext = function () { ssShow($scope.ss.index + 1); };
+    $scope.ssPrev = function () { ssShow($scope.ss.index - 1); };
+
+    $scope.ssTogglePause = function () {
+        var ss = $scope.ss;
+        if (ss.paused) {
+            ss.paused = false;
+            ssSchedule(ssRemaining);
+        } else {
+            ss.paused = true;
+            $timeout.cancel(ssTimer);
+            ssRemaining = Math.max(0, ssRemaining - (Date.now() - ssStartedAt));
+        }
+    };
+
+    window.addEventListener('resize', function () {
+        if (!$scope.ss.open) return;
+        $scope.$apply(function () { $scope.ss.scale = ssFitScale(); });
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (!$scope.ss.open) return;
+        var handled = true;
+        if (e.key === 'Escape') $scope.$apply($scope.closeSlideshow);
+        else if (e.key === 'ArrowRight') $scope.$apply($scope.ssNext);
+        else if (e.key === 'ArrowLeft') $scope.$apply($scope.ssPrev);
+        else if (e.key === ' ') $scope.$apply($scope.ssTogglePause);
+        else handled = false;
+        if (handled) e.preventDefault();
+    });
+
     // ===== Edit duration =====
     $scope.openEdit = function (item) {
         $scope.editItem = item;

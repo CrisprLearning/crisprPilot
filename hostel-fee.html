@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="utf-8">
+   <title>Hostel Fee - VegaPilot</title>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+   <meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta name="apple-touch-fullscreen" content="yes">
+   <meta name="description" content="VegaPilot Hostel Fee">
+   <meta name="author" content="VegaPilot">
+   <link type='text/css' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400italic,600'
+      rel='stylesheet'>
+   <link type="text/css" href="assets/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+   <link type="text/css" href="assets/fonts/themify-icons/themify-icons.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/styles.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/scroll-fix.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/crispr-table.css" rel="stylesheet">
+   <link type="text/css" href="assets/plugins/codeprettifier/prettify.css" rel="stylesheet">
+   <link type="text/css" href="assets/plugins/iCheck/skins/minimal/blue.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/crispr-modals.css" rel="stylesheet">
+
+   <style type="text/css">
+      /* Header Layout */
+      #topnav {
+         display: flex !important;
+         align-items: center !important;
+         justify-content: flex-start !important;
+         background: linear-gradient(135deg, #006073 0%, #005a6b 100%) !important;
+         position: relative !important;
+      }
+
+      #topnav .navbar-brand,
+      #topnav h2,
+      #topnav .toolbar-icon-bg a {
+         color: white !important;
+      }
+
+      #topnav .logo-area .navbar-brand {
+         color: white !important;
+      }
+
+      #topnav .toolbar-icon-bg .icon-bg {
+         background: rgba(255, 255, 255, 0.15) !important;
+         border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      }
+
+      #topnav .toolbar-icon-bg:hover .icon-bg {
+         background: rgba(255, 255, 255, 0.25) !important;
+         border-color: rgba(255, 255, 255, 0.3) !important;
+      }
+
+      #topnav .toolbar-icon-bg i {
+         color: white !important;
+      }
+
+      #topnav #trigger-sidebar .icon-bg {
+         background: rgba(255, 255, 255, 0.15) !important;
+         border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      }
+
+      #topnav #trigger-sidebar:hover .icon-bg {
+         background: rgba(255, 255, 255, 0.25) !important;
+      }
+
+      .acc-menu li a.active {
+         border-left: 5px solid #005e70 !important;
+         color: #005e6f !important;
+         font-weight: bold !important;
+         background: rgba(0, 94, 112, 0.1) !important;
+      }
+
+      .acc-menu li a.active i {
+         color: #005e6f !important;
+      }
+
+      #wrapper {
+         padding: 0 !important;
+      }
+
+      /* Status palette (shared by cells, chips, legend and modal badges) */
+      .st-paid { --st-bg: #dcfce7; --st-fg: #166534; --st-bd: #86efac; }
+      .st-pending { --st-bg: #fef9c3; --st-fg: #854d0e; --st-bd: #fde047; }
+      .st-overdue { --st-bg: #fee2e2; --st-fg: #991b1b; --st-bd: #fca5a5; }
+
+      /* Summary cards */
+      .hf-summary {
+         display: grid;
+         grid-template-columns: repeat(4, minmax(0, 1fr));
+         gap: 14px;
+         margin-bottom: 16px;
+      }
+
+      @media (max-width: 900px) {
+         .hf-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+
+      .hf-card {
+         background: white;
+         border: 1px solid #e5e7eb;
+         border-left: 4px solid #006073;
+         border-radius: 10px;
+         padding: 12px 16px;
+         text-align: left;
+         width: 100%;
+         transition: box-shadow 0.15s ease, transform 0.15s ease;
+      }
+
+      button.hf-card { cursor: pointer; }
+
+      button.hf-card:hover {
+         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+         transform: translateY(-1px);
+      }
+
+      .hf-card.selected {
+         box-shadow: 0 0 0 2px #006073;
+      }
+
+      .hf-card.st-paid, .hf-card.st-pending, .hf-card.st-overdue {
+         border-left-color: var(--st-bd);
+      }
+
+      .hf-card-label {
+         font-size: 12px;
+         font-weight: 600;
+         color: #6b7280;
+         text-transform: uppercase;
+         letter-spacing: 0.4px;
+      }
+
+      .hf-card-value {
+         font-size: 22px;
+         font-weight: 600;
+         color: #111827;
+         margin-top: 2px;
+         font-variant-numeric: tabular-nums;
+      }
+
+      .hf-card.st-overdue .hf-card-value { color: #b91c1c; }
+
+      .hf-card-sub {
+         font-size: 12px;
+         color: #6b7280;
+      }
+
+      /* Toolbar */
+      .hf-toolbar {
+         display: flex;
+         flex-wrap: wrap;
+         align-items: center;
+         gap: 10px;
+         margin-bottom: 12px;
+      }
+
+      .hf-search {
+         position: relative;
+         flex: 0 1 280px;
+      }
+
+      .hf-search i {
+         position: absolute;
+         left: 11px;
+         top: 50%;
+         transform: translateY(-50%);
+         color: #9ca3af;
+      }
+
+      .hf-input {
+         width: 100%;
+         padding: 8px 12px;
+         border: 1px solid #d1d5db;
+         border-radius: 8px;
+         font-size: 14px;
+         color: #333;
+         background: white;
+      }
+
+      .hf-search .hf-input { padding-left: 32px; }
+
+      .hf-input:focus {
+         outline: none;
+         border-color: #006073;
+         box-shadow: 0 0 0 3px rgba(0, 96, 115, 0.1);
+      }
+
+      .hf-input.has-error { border-color: #dc2626; }
+
+      select.hf-input { width: auto; min-width: 200px; }
+
+      .hf-chips {
+         display: inline-flex;
+         border: 1px solid #d1d5db;
+         border-radius: 8px;
+         overflow: hidden;
+         background: white;
+      }
+
+      .hf-chips button {
+         border: none;
+         background: transparent;
+         padding: 7px 12px;
+         font-size: 13px;
+         color: #374151;
+         border-right: 1px solid #e5e7eb;
+      }
+
+      .hf-chips button:last-child { border-right: none; }
+
+      .hf-chips button.active {
+         background: #006073;
+         color: white;
+         font-weight: 600;
+      }
+
+      .hf-legend {
+         margin-left: auto;
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         font-size: 12px;
+         color: #4b5563;
+      }
+
+      .hf-legend span {
+         display: inline-flex;
+         align-items: center;
+         gap: 5px;
+      }
+
+      .hf-legend i {
+         width: 12px;
+         height: 12px;
+         border-radius: 3px;
+         background: var(--st-bg);
+         border: 1px solid var(--st-bd);
+         display: inline-block;
+      }
+
+      /* Ledger table */
+      .hf-table-wrap {
+         background: white;
+         border: 1px solid #e5e7eb;
+         border-radius: 10px;
+         overflow: auto;
+         max-height: calc(100vh - 290px);
+         min-height: 240px;
+      }
+
+      .hf-table {
+         width: 100%;
+         border-collapse: separate;
+         border-spacing: 0;
+         font-size: 13px;
+      }
+
+      .hf-table th,
+      .hf-table td {
+         padding: 6px 8px;
+         border-bottom: 1px solid #f1f3f5;
+         white-space: nowrap;
+         background: white;
+      }
+
+      .hf-table thead th {
+         position: sticky;
+         top: 0;
+         z-index: 3;
+         background: #006073;
+         color: white;
+         font-weight: 600;
+         font-size: 12px;
+         text-transform: uppercase;
+         letter-spacing: 0.4px;
+         border-bottom: none;
+         text-align: left;
+      }
+
+      .hf-table thead th.num { text-align: right; }
+      .hf-table thead th .yr {
+         display: block;
+         font-size: 10px;
+         font-weight: 400;
+         opacity: 0.75;
+      }
+
+      .hf-table th.sortable { cursor: pointer; user-select: none; }
+      .hf-table th.sortable i { opacity: 0.5; margin-left: 3px; }
+      .hf-table th.sortable.active i { opacity: 1; }
+
+      /* Freeze the name column while scrolling months horizontally */
+      .hf-table .col-name {
+         position: sticky;
+         left: 0;
+         z-index: 2;
+         min-width: 190px;
+         box-shadow: 1px 0 0 #e5e7eb;
+      }
+
+      .hf-table thead th.col-name { z-index: 4; }
+
+      .hf-table tbody tr:hover td { background: #f9fafb; }
+      .hf-table tbody tr:hover td.hf-cell { background: white; }
+
+      .hf-name { font-weight: 600; color: #111827; }
+      .hf-sub { font-size: 11px; color: #6b7280; }
+      .hf-muted { color: #9ca3af; }
+
+      .hf-group td {
+         position: sticky;
+         left: 0;
+         background: #eef6f7 !important;
+         color: #006073;
+         font-weight: 700;
+         font-size: 12px;
+         text-transform: uppercase;
+         letter-spacing: 0.5px;
+         padding: 8px 10px;
+      }
+
+      .hf-group .hf-group-meta {
+         font-weight: 400;
+         text-transform: none;
+         letter-spacing: 0;
+         color: #4b5563;
+         margin-left: 8px;
+      }
+
+      td.hf-cell { padding: 3px 4px; }
+
+      .hf-amt {
+         display: block;
+         width: 100%;
+         min-width: 78px;
+         padding: 6px 8px;
+         border-radius: 6px;
+         border: 1px solid var(--st-bd, transparent);
+         background: var(--st-bg, transparent);
+         color: var(--st-fg, #9ca3af);
+         font-weight: 600;
+         text-align: right;
+         font-variant-numeric: tabular-nums;
+         cursor: pointer;
+         transition: transform 0.1s ease, box-shadow 0.1s ease;
+      }
+
+      .hf-amt:hover,
+      .hf-amt:focus-visible {
+         outline: none;
+         box-shadow: 0 0 0 2px #006073;
+      }
+
+      .hf-amt .hf-amt-icon {
+         float: left;
+         font-size: 11px;
+         margin-top: 3px;
+         opacity: 0.8;
+      }
+
+      .hf-amt .hf-count {
+         float: left;
+         font-size: 10px;
+         font-weight: 700;
+         background: rgba(0, 0, 0, 0.08);
+         border-radius: 8px;
+         padding: 0 5px;
+         margin-top: 2px;
+         margin-left: 3px;
+      }
+
+      .hf-empty-cell {
+         display: block;
+         text-align: center;
+         color: #d1d5db;
+      }
+
+      td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+      .hf-balance { font-weight: 700; color: #991b1b; }
+      .hf-balance.zero { color: #166534; font-weight: 600; }
+      .hf-balance.not-due { color: #854d0e; font-weight: 600; }
+
+      .hf-table tfoot td {
+         position: sticky;
+         bottom: 0;
+         z-index: 2;
+         background: #f3f4f6;
+         border-top: 2px solid #d1d5db;
+         font-weight: 600;
+         font-variant-numeric: tabular-nums;
+      }
+
+      .hf-table tfoot td.col-name { z-index: 3; }
+
+      .hf-progress {
+         height: 4px;
+         background: #e5e7eb;
+         border-radius: 2px;
+         overflow: hidden;
+         margin-top: 3px;
+      }
+
+      .hf-progress > div {
+         height: 100%;
+         background: #16a34a;
+      }
+
+      .empty-state {
+         text-align: center;
+         padding: 60px 20px;
+         color: #666;
+      }
+
+      .empty-state i {
+         font-size: 64px;
+         color: #ddd;
+         margin-bottom: 20px;
+         display: block;
+      }
+
+      .empty-state h4 {
+         color: #999;
+         margin-bottom: 10px;
+      }
+
+      /* Details modal */
+      .hf-detail-head {
+         display: flex;
+         justify-content: space-between;
+         align-items: flex-start;
+         gap: 12px;
+         margin-bottom: 14px;
+      }
+
+      .hf-detail-head .hf-name { font-size: 16px; }
+
+      .hf-badge {
+         display: inline-block;
+         padding: 3px 10px;
+         border-radius: 12px;
+         font-size: 12px;
+         font-weight: 700;
+         text-transform: uppercase;
+         letter-spacing: 0.4px;
+         background: var(--st-bg);
+         color: var(--st-fg);
+         border: 1px solid var(--st-bd);
+      }
+
+      .hf-invoice {
+         border: 1px solid #e5e7eb;
+         border-left: 4px solid var(--st-bd);
+         border-radius: 10px;
+         padding: 14px 16px;
+         margin-bottom: 12px;
+      }
+
+      .hf-invoice-top {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         gap: 12px;
+      }
+
+      .hf-invoice-amt {
+         font-size: 20px;
+         font-weight: 700;
+         color: #111827;
+         font-variant-numeric: tabular-nums;
+      }
+
+      .hf-invoice-type {
+         font-size: 12px;
+         color: #6b7280;
+         text-transform: uppercase;
+         letter-spacing: 0.4px;
+         font-weight: 600;
+      }
+
+      .hf-kv {
+         display: grid;
+         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+         gap: 10px 16px;
+         margin-top: 12px;
+      }
+
+      .hf-kv dt {
+         font-size: 11px;
+         font-weight: 600;
+         color: #6b7280;
+         text-transform: uppercase;
+         letter-spacing: 0.4px;
+      }
+
+      .hf-kv dd {
+         margin: 2px 0 0;
+         color: #111827;
+      }
+
+      .hf-late { color: #b45309; font-size: 12px; }
+
+      .hf-pay-form {
+         margin-top: 14px;
+         padding-top: 14px;
+         border-top: 1px dashed #d1d5db;
+      }
+
+      .hf-form-grid {
+         display: grid;
+         grid-template-columns: 1fr 1fr;
+         gap: 12px;
+      }
+
+      .hf-form-grid .full { grid-column: 1 / -1; }
+
+      .field-label {
+         display: block;
+         font-size: 13px;
+         font-weight: 600;
+         color: #374151;
+         margin-bottom: 6px;
+      }
+
+      .field-label .required { color: #dc2626; }
+
+      .field-error {
+         color: #dc2626;
+         font-size: 12px;
+         margin-top: 4px;
+         display: block;
+      }
+
+      .hf-modes {
+         display: flex;
+         flex-wrap: wrap;
+         gap: 6px;
+      }
+
+      .hf-modes button {
+         border: 1px solid #d1d5db;
+         background: white;
+         border-radius: 16px;
+         padding: 5px 12px;
+         font-size: 13px;
+         color: #374151;
+      }
+
+      .hf-modes button.active {
+         background: #006073;
+         border-color: #006073;
+         color: white;
+         font-weight: 600;
+      }
+
+      .hf-modes.has-error button { border-color: #fca5a5; }
+
+      .hf-pay-actions {
+         display: flex;
+         justify-content: flex-end;
+         gap: 8px;
+         margin-top: 14px;
+      }
+   </style>
+
+</head>
+
+<body class="animated-content" ng-app="hostelFeeApp" ng-controller="hostelFeeController" ng-cloak ng-init="init()">
+   <header id="topnav" class="navbar navbar-default navbar-fixed-top" role="banner">
+      <div class="logo-area">
+         <span id="trigger-sidebar" class="toolbar-trigger toolbar-icon-bg">
+            <a data-toggle="tooltips" data-placement="right" title="Toggle Sidebar">
+               <span class="icon-bg"><i class="ti ti-menu"></i></span>
+            </a>
+         </span>
+         <span class="navbar-brand animated-brand" style="width: 125px" id="animatedBrand">VegaPilot</span>
+      </div>
+
+      <div style="position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center;">
+         <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: white;">
+            <i class="ti ti-home" style="margin-right: 8px; color: white;"></i> Hostel Fee
+         </h2>
+      </div>
+
+      <div style="flex: 1;"></div>
+
+      <ul class="nav navbar-nav toolbar pull-right">
+         <li style="display: flex; align-items: center; margin-right: 10px;">
+            <button class="btn" ng-click="loadLedger()" ng-disabled="isLoading"
+               style="background: #fff; color: #006073; border: 1px solid #006073; font-weight: 600; padding: 9px 20px; border-radius: 6px; font-size: 14px; white-space: nowrap; margin-top: 7px;">
+               <i class="ti ti-reload"></i> Refresh
+            </button>
+         </li>
+         <li class="toolbar-icon-bg hidden-xs" id="trigger-fullscreen">
+            <a href="#" class="toggle-fullscreen"><span class="icon-bg"><i class="ti ti-zoom-in"></i></span></a>
+         </li>
+         <li class="dropdown toolbar-icon-bg">
+            <a href="#" class="dropdown-toggle username" data-toggle="dropdown">
+               <img class="img-circle" src="assets/img/default_user.png" alt="" />
+            </a>
+            <ul class="dropdown-menu userinfo arrow">
+               <li ng-click="logoutNow()"><a href="#/"><i class="ti ti-shift-right"></i><span>Sign Out</span></a></li>
+            </ul>
+         </li>
+      </ul>
+   </header>
+
+   <div id="wrapper">
+      <div id="layout-static">
+         <div class="static-sidebar-wrapper sidebar-default">
+            <div class="static-sidebar">
+               <div class="sidebar">
+                  <div class="widget stay-on-collapse" id="widget-sidebar">
+                     <nav role="navigation" class="widget-body">
+                        <ul class="acc-menu">
+                           <li class="nav-separator"><span>Content Library</span></li>
+                           <li><a href="class-notes.html"><i class="ti ti-notepad"></i><span>Class Notes</span></a></li>
+                           <li><a href="tv-content.html"><i class="ti ti-desktop"></i><span>TV Content</span></a></li>
+                           <li class="nav-separator"><span>Hostel</span></li>
+                           <li><a href="hostel-fee.html" class="active"><i class="ti ti-home"></i><span>Hostel Fee</span></a></li>
+                        </ul>
+                     </nav>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="static-content-wrapper">
+            <div class="static-content">
+               <div class="page-content">
+                  <div class="container-fluid" style="padding-top: 1%;">
+
+                     <!-- Summary (click a card to filter) -->
+                     <div class="hf-summary" ng-if="!isLoading && !loadError && students.length > 0">
+                        <button type="button" class="hf-card" ng-class="{selected: filters.status === 'all'}"
+                           ng-click="setStatusFilter('all')">
+                           <div class="hf-card-label">Invoiced</div>
+                           <div class="hf-card-value">{{money(summary.invoiced)}}</div>
+                           <div class="hf-card-sub">{{summary.studentCount}} students &middot; {{summary.invoiceCount}}
+                              invoices</div>
+                        </button>
+                        <button type="button" class="hf-card st-paid" ng-class="{selected: filters.status === 'paid'}"
+                           ng-click="setStatusFilter('paid')">
+                           <div class="hf-card-label">Collected</div>
+                           <div class="hf-card-value">{{money(summary.paid)}}</div>
+                           <div class="hf-card-sub">{{percent(summary.paid, summary.invoiced)}}% of invoiced
+                              &middot; {{summary.paidStudents}} fully paid</div>
+                        </button>
+                        <button type="button" class="hf-card st-pending"
+                           ng-class="{selected: filters.status === 'pending'}" ng-click="setStatusFilter('pending')">
+                           <div class="hf-card-label">Pending</div>
+                           <div class="hf-card-value">{{money(summary.pending)}}</div>
+                           <div class="hf-card-sub">{{summary.pendingCount}} invoices not yet due</div>
+                        </button>
+                        <button type="button" class="hf-card st-overdue"
+                           ng-class="{selected: filters.status === 'overdue'}" ng-click="setStatusFilter('overdue')">
+                           <div class="hf-card-label">Overdue</div>
+                           <div class="hf-card-value">{{money(summary.overdue)}}</div>
+                           <div class="hf-card-sub">{{summary.overdueCount}} invoices &middot;
+                              {{summary.overdueStudents}} students</div>
+                        </button>
+                     </div>
+
+                     <!-- Filters -->
+                     <div class="hf-toolbar" ng-if="!isLoading && !loadError && students.length > 0">
+                        <div class="hf-search">
+                           <i class="ti ti-search"></i>
+                           <input type="text" class="hf-input" placeholder="Search name or student ID"
+                              ng-model="filters.search" ng-model-options="{debounce: 150}">
+                        </div>
+                        <select class="hf-input" ng-model="filters.residenceId"
+                           ng-options="r.id as r.name for r in residenceOptions">
+                        </select>
+                        <div class="hf-chips" role="group" aria-label="Filter by status">
+                           <button type="button" ng-repeat="opt in statusOptions"
+                              ng-class="{active: filters.status === opt.value}"
+                              ng-click="setStatusFilter(opt.value)">{{opt.label}}</button>
+                        </div>
+                        <div class="hf-legend">
+                           <span class="st-paid"><i></i> Paid</span>
+                           <span class="st-pending"><i></i> Pending</span>
+                           <span class="st-overdue"><i></i> Overdue</span>
+                        </div>
+                     </div>
+
+                     <!-- Loading skeleton -->
+                     <div class="skeleton-loader-container" ng-if="isLoading">
+                        <div class="skeleton-row" ng-repeat="i in [1,2,3,4,5,6,7,8] track by $index">
+                           <div class="skeleton-col text-short"><div class="skeleton-shimmer"></div></div>
+                           <div class="skeleton-col text-medium"><div class="skeleton-shimmer"></div></div>
+                           <div class="skeleton-col text-long"><div class="skeleton-shimmer"></div></div>
+                        </div>
+                     </div>
+
+                     <!-- Ledger -->
+                     <div class="hf-table-wrap" ng-if="!isLoading && !loadError && students.length > 0">
+                        <table class="hf-table">
+                           <thead>
+                              <tr>
+                                 <th class="col-name sortable" ng-class="{active: sort.key === 'name'}"
+                                    ng-click="setSort('name')">Student <i class="ti"
+                                       ng-class="sortIcon('name')"></i></th>
+                                 <th class="sortable" ng-class="{active: sort.key === 'candidateId'}"
+                                    ng-click="setSort('candidateId')">ID <i class="ti"
+                                       ng-class="sortIcon('candidateId')"></i></th>
+                                 <th>Type</th>
+                                 <th class="sortable" ng-class="{active: sort.key === 'doj'}"
+                                    ng-click="setSort('doj')">DOJ <i class="ti" ng-class="sortIcon('doj')"></i></th>
+                                 <th class="num" ng-repeat="key in cellKeys track by key">
+                                    {{columnLabel(key)}}<span class="yr">{{columnSub(key)}}</span>
+                                 </th>
+                                 <th class="num sortable" ng-class="{active: sort.key === 'balance'}"
+                                    ng-click="setSort('balance')">Balance <i class="ti"
+                                       ng-class="sortIcon('balance')"></i></th>
+                              </tr>
+                           </thead>
+                           <tbody ng-repeat="group in groups track by group.id">
+                              <tr class="hf-group">
+                                 <td ng-attr-colspan="{{5 + cellKeys.length}}">
+                                    <i class="ti ti-home"></i> {{group.name}}
+                                    <span class="hf-group-meta">{{group.students.length}} students
+                                       <span ng-if="group.overdue > 0"> &middot; {{money(group.overdue)}}
+                                          overdue</span></span>
+                                 </td>
+                              </tr>
+                              <tr ng-repeat="s in group.students track by s.candidateId">
+                                 <td class="col-name">
+                                    <div class="hf-name">{{s.name}}</div>
+                                 </td>
+                                 <td>{{s.candidateId}}</td>
+                                 <td>{{s.roomType || '—'}}</td>
+                                 <td>{{s.doj ? formatDate(s.doj) : '—'}}</td>
+                                 <!-- One amount cell per column; empty when nothing was invoiced -->
+                                 <td class="hf-cell" ng-repeat="key in cellKeys track by key">
+                                    <button type="button" class="hf-amt" ng-if="s.cells[key]"
+                                       ng-class="'st-' + s.cells[key].status" ng-click="openCell(s, key)"
+                                       title="{{s.cells[key].status | uppercase}} · click for details">
+                                       <i class="ti hf-amt-icon" ng-class="statusIcon(s.cells[key].status)"></i>
+                                       <span class="hf-count" ng-if="s.cells[key].entries.length > 1">{{s.cells[key].entries.length}}</span>
+                                       {{money(s.cells[key].amount)}}
+                                    </button>
+                                    <span class="hf-empty-cell" ng-if="!s.cells[key]">—</span>
+                                 </td>
+                                 <td class="num">
+                                    <span class="hf-balance" ng-class="{zero: s.balance === 0, 'not-due': s.balance > 0 && s.overdue === 0}"
+                                       title="{{s.overdue > 0 ? money(s.overdue) + ' overdue' : 'Nothing overdue'}}">{{s.balance === 0 ?
+                                       'Nil' : money(s.balance)}}</span>
+                                 </td>
+                              </tr>
+                           </tbody>
+                           <tbody ng-if="groups.length === 0">
+                              <tr>
+                                 <td ng-attr-colspan="{{5 + cellKeys.length}}" class="empty-state">
+                                    <i class="ti ti-filter"></i>
+                                    <h4>No students match these filters</h4>
+                                    <button class="btn btn-default" ng-click="clearFilters()">Clear filters</button>
+                                 </td>
+                              </tr>
+                           </tbody>
+                           <tfoot ng-if="groups.length > 0">
+                              <tr>
+                                 <td class="col-name">Collected / invoiced</td>
+                                 <td colspan="3" class="hf-sub">{{visibleCount}} students shown</td>
+                                 <td class="num" ng-repeat="key in cellKeys track by key">
+                                    <div ng-if="totals.cells[key].invoiced > 0"
+                                       title="{{money(totals.cells[key].paid)}} collected of {{money(totals.cells[key].invoiced)}}">
+                                       {{money(totals.cells[key].paid)}}
+                                       <div class="hf-sub">of {{money(totals.cells[key].invoiced)}}</div>
+                                       <div class="hf-progress">
+                                          <div ng-style="{width: percent(totals.cells[key].paid, totals.cells[key].invoiced) + '%'}"></div>
+                                       </div>
+                                    </div>
+                                    <span class="hf-empty-cell" ng-if="!(totals.cells[key].invoiced > 0)">—</span>
+                                 </td>
+                                 <td class="num">
+                                    <span class="hf-balance" ng-class="{zero: totals.balance === 0}">{{money(totals.balance)}}</span>
+                                 </td>
+                              </tr>
+                           </tfoot>
+                        </table>
+                     </div>
+
+                     <!-- Error State -->
+                     <div class="empty-state" ng-if="!isLoading && loadError">
+                        <i class="ti ti-alert"></i>
+                        <h4>Could not load hostel fees</h4>
+                        <p>{{loadError}}</p>
+                        <button class="btn btn-default" ng-click="loadLedger()"><i class="ti ti-reload"></i>
+                           Retry</button>
+                     </div>
+
+                     <!-- Empty State -->
+                     <div class="empty-state" ng-if="!isLoading && !loadError && students.length === 0">
+                        <i class="ti ti-home"></i>
+                        <h4>No Hostel Fees Yet</h4>
+                        <p>No hostel fee invoices have been raised.</p>
+                     </div>
+
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Payment details / record payment -->
+   <div class="crispr-modal-backdrop" ng-class="{active: !!detail}" ng-click="closeDetail()">
+      <div class="crispr-modal-dialog" style="max-width: 560px;" ng-click="$event.stopPropagation()">
+         <div class="crispr-modal-header">
+            <h3><i class="ti ti-receipt"></i> {{detail.title}}</h3>
+            <button class="crispr-modal-close" ng-click="closeDetail()">
+               <i class="ti ti-close"></i>
+            </button>
+         </div>
+         <div class="crispr-modal-body">
+            <div class="hf-detail-head">
+               <div>
+                  <div class="hf-name">{{detail.student.name}}</div>
+                  <div class="hf-sub">ID {{detail.student.candidateId}} &middot; {{detail.student.residenceName}}
+                     <span ng-if="detail.student.roomType"> &middot; {{detail.student.roomType}}</span></div>
+               </div>
+               <span class="hf-badge" ng-class="'st-' + detail.cell.status">{{detail.cell.status}}</span>
+            </div>
+
+            <div class="hf-invoice" ng-repeat="e in detail.cell.entries track by e.id" ng-class="'st-' + e.status">
+               <div class="hf-invoice-top">
+                  <div>
+                     <div class="hf-invoice-type">{{typeLabel(e)}}</div>
+                     <div class="hf-invoice-amt">{{money(e.amount)}}</div>
+                  </div>
+                  <span class="hf-badge" ng-class="'st-' + e.status">{{e.status}}</span>
+               </div>
+
+               <dl class="hf-kv">
+                  <div>
+                     <dt>Due on</dt>
+                     <dd>{{formatDate(e.dueOn)}}
+                        <div class="hf-late" ng-if="e.status === 'overdue'">{{daysLate(e)}} days overdue</div>
+                     </dd>
+                  </div>
+                  <div ng-if="e.status === 'paid'">
+                     <dt>Paid on</dt>
+                     <dd>{{e.paidOn ? formatDate(e.paidOn) : '—'}}
+                        <div class="hf-late" ng-if="e.paidOn && e.paidOn > e.dueOn">Paid late</div>
+                     </dd>
+                  </div>
+                  <div ng-if="e.status === 'paid'">
+                     <dt>Mode</dt>
+                     <dd>{{e.mode || '—'}}</dd>
+                  </div>
+                  <div ng-if="e.status === 'paid'">
+                     <dt>Receipt no.</dt>
+                     <dd>{{e.receiptNo || '—'}}</dd>
+                  </div>
+                  <div ng-if="e.note" style="grid-column: 1 / -1;">
+                     <dt>Note</dt>
+                     <dd>{{e.note}}</dd>
+                  </div>
+                  <div ng-if="e.status === 'paid' && e.lastModifiedAt" style="grid-column: 1 / -1;">
+                     <dt>Recorded</dt>
+                     <dd class="hf-sub">{{formatTimestamp(e.lastModifiedAt)}}<span ng-if="e.lastModifiedBy"> by
+                           {{e.lastModifiedBy}}</span></dd>
+                  </div>
+               </dl>
+
+               <!-- Record payment (pending / overdue only) -->
+               <div ng-if="e.status !== 'paid'">
+                  <div class="hf-pay-actions" ng-if="payForm.entryId !== e.id" style="margin-top: 12px;">
+                     <button class="btn btn-success" ng-click="startPayment(e)">
+                        <i class="ti ti-money"></i> Record payment
+                     </button>
+                  </div>
+
+                  <form class="hf-pay-form" ng-if="payForm.entryId === e.id" ng-submit="submitPayment(e)" novalidate>
+                     <div class="hf-form-grid">
+                        <div>
+                           <label class="field-label">Amount</label>
+                           <input type="text" class="hf-input" ng-value="money(e.amount)" disabled>
+                        </div>
+                        <div>
+                           <label class="field-label">Paid on <span class="required">*</span></label>
+                           <input type="date" class="hf-input" ng-model="payForm.paidOn" ng-attr-max="{{today}}"
+                              ng-class="{'has-error': payErrors.paidOn}">
+                           <span class="field-error" ng-if="payErrors.paidOn">{{payErrors.paidOn}}</span>
+                        </div>
+                        <div class="full">
+                           <label class="field-label">Mode <span class="required">*</span></label>
+                           <div class="hf-modes" ng-class="{'has-error': payErrors.mode}">
+                              <button type="button" ng-repeat="m in paymentModes"
+                                 ng-class="{active: payForm.mode === m}" ng-click="payForm.mode = m">{{m}}</button>
+                           </div>
+                           <span class="field-error" ng-if="payErrors.mode">{{payErrors.mode}}</span>
+                        </div>
+                        <div>
+                           <label class="field-label">Receipt no.</label>
+                           <input type="text" class="hf-input" maxlength="40" ng-model="payForm.receiptNo"
+                              placeholder="Optional">
+                        </div>
+                        <div>
+                           <label class="field-label">Note</label>
+                           <input type="text" class="hf-input" maxlength="160" ng-model="payForm.note"
+                              placeholder="Optional">
+                        </div>
+                     </div>
+                     <div class="hf-pay-actions">
+                        <button type="button" class="btn btn-default" ng-click="cancelPayment()"
+                           ng-disabled="isPaying">Cancel</button>
+                        <button type="submit" class="btn btn-success" ng-disabled="isPaying">
+                           <i class="ti ti-check"></i> {{isPaying ? 'Saving...' : 'Mark as paid'}}
+                        </button>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Scripts -->
+   <script type="text/javascript" src="assets/js/jquery-1.10.2.min.js"></script>
+   <script type="text/javascript" src="assets/js/jqueryui-1.10.3.min.js"></script>
+   <script type="text/javascript" src="assets/js/angular.min.js"></script>
+   <script type="text/javascript" src="assets/js/angular-cookies.min.js"></script>
+   <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+   <script type="text/javascript" src="assets/js/enquire.min.js"></script>
+   <script type="text/javascript" src="assets/plugins/velocityjs/velocity.min.js"></script>
+   <script type="text/javascript" src="assets/plugins/velocityjs/velocity.ui.min.js"></script>
+   <script type="text/javascript" src="assets/plugins/wijets/wijets.js"></script>
+   <script type="text/javascript" src="assets/plugins/nanoScroller/js/jquery.nanoscroller.min.js"></script>
+   <script type="text/javascript" src="assets/js/application.js"></script>
+   <script type="text/javascript" src="assets/js/toaster.js"></script>
+   <script src="controllers/hostel-fee.js"></script>
+
+   <!-- Toaster Container -->
+   <div class="toaster-container">
+      <div class="toaster" ng-repeat="toaster in toasters track by $index"
+         ng-class="[toaster.type, {'hiding': toaster.hiding}]">
+         <div class="toaster-icon">
+            <i class="ti" ng-class="{
+                'ti-check': toaster.type === 'success',
+                'ti-alert': toaster.type === 'error',
+                'ti-info-alt': toaster.type === 'info',
+                'ti-bell': toaster.type === 'warning'
+             }"></i>
+         </div>
+         <div class="toaster-content">
+            <div class="toaster-title">{{toaster.title}}</div>
+            <div class="toaster-message">{{toaster.message}}</div>
+         </div>
+         <button class="toaster-close" ng-click="removeToaster($index)">
+            <i class="ti ti-close"></i>
+         </button>
+      </div>
+   </div>
+
+</body>
+
+</html>

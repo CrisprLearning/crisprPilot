@@ -83,7 +83,7 @@ app.controller('classNotesController', ['$scope', '$http', '$cookies', '$timeout
 
     // Pagination
     $scope.currentPage = 1;
-    $scope.pageSize = 50;
+    $scope.pageSize = 10;
     $scope.totalItems = 0;
     $scope.totalPages = 1;
 
@@ -188,6 +188,13 @@ app.controller('classNotesController', ['$scope', '$http', '$cookies', '$timeout
             $scope.pageSize = body.size || $scope.pageSize;
             $scope.totalItems = (body.total != null) ? body.total : $scope.notes.length;
             $scope.totalPages = body.totalPages || Math.max(1, Math.ceil($scope.totalItems / $scope.pageSize));
+
+            // Landed past the end (e.g. deleted the last row of the last page):
+            // step back to the last page that still has rows.
+            if ($scope.notes.length === 0 && $scope.totalItems > 0 && $scope.currentPage > $scope.totalPages) {
+                $scope.currentPage = $scope.totalPages;
+                $scope.loadNotes();
+            }
         }).catch(function (error) {
             console.warn('Could not load class notes:', error);
             $scope.notes = [];
