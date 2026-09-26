@@ -678,7 +678,7 @@
                      ng-change="decisionError = ''" ng-class="{'has-error': decisionError}"
                      placeholder="{{decision.type === 'rejected' ? 'Tell the parent why the leave cannot be granted' : 'e.g. Collect the student from the warden\'s office'}}"></textarea>
                   <span class="field-error" ng-if="decisionError">{{decisionError}}</span>
-                  <span class="lr-sub" ng-if="!decisionError">Shown to the parent in the parent portal &middot; {{(decision.note || '').length}}/{{NOTE_MAX}}</span>
+                  <span class="lr-sub" ng-if="!decisionError">{{decision.type === 'rejected' ? 'Sent to the parent on WhatsApp and shown in the parent portal' : 'Shown to the parent in the parent portal. The WhatsApp message gives the leave reason.'}} &middot; {{(decision.note || '').length}}/{{NOTE_MAX}}</span>
                   <div class="lr-decide-actions">
                      <button type="button" class="btn btn-default" ng-click="cancelDecision()" ng-disabled="isDeciding">Back</button>
                      <button type="submit" class="btn" ng-class="decision.type === 'rejected' ? 'btn-danger' : 'btn-success'" ng-disabled="isDeciding">

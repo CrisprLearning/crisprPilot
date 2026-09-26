@@ -264,12 +264,34 @@ app.controller('leaveRequestsController', ['$scope', '$http', '$cookies', '$time
             data: { id: r.id, decision: d.type, note: note }
         })
             .then(function (response) {
-                angular.extend(r, unwrap(response).data);
+                var body = unwrap(response);
+                var whatsapp = body.whatsapp || {};
+                var hostelWhatsapp = body.hostelWhatsapp || [];
+                angular.extend(r, body.data);
                 deriveRequest(r);
                 recompute();
                 $scope.decision = {};
+
+                var notified = [];
+                if (whatsapp.sent) notified.push('parent');
+                hostelWhatsapp.forEach(function (w) { if (w.sent) notified.push(w.role); });
                 $scope.showToaster('success', r.status === 'approved' ? 'Leave approved' : 'Leave rejected',
-                    r.student.name + ' · ' + $scope.formatDate(r.outAt) + ' to ' + $scope.formatDate(r.inAt));
+                    r.student.name + ' · ' + $scope.formatDate(r.outAt) + ' to ' + $scope.formatDate(r.inAt) +
+                    (notified.length ? ' · WhatsApp sent to ' + notified.join(', ') : ''));
+
+                // The decision is saved either way; flag each failed WhatsApp so that person can be called.
+                if (!whatsapp.sent) {
+                    $scope.showToaster('warning', 'Parent not notified on WhatsApp',
+                        (whatsapp.error || 'Message could not be sent') +
+                        (r.parent.mobile ? '. Please inform the parent on ' + r.parent.mobile + '.' : '.'));
+                }
+                hostelWhatsapp.forEach(function (w) {
+                    if (w.sent) return;
+                    var who = w.role === 'warden' ? 'Warden' : 'Hostel provider';
+                    $scope.showToaster('warning', who + ' not notified on WhatsApp',
+                        (w.error || 'Message could not be sent') +
+                        (w.to ? '. Please inform them on ' + w.to.slice(-10) + '.' : '.'));
+                });
                 $scope.detail = null;
             })
             .catch(function (err) {
