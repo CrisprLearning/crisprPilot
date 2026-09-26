@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="utf-8">
+   <title>Leave Requests - VegaPilot</title>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+   <meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta name="apple-touch-fullscreen" content="yes">
+   <meta name="description" content="VegaPilot Hostel Leave Requests">
+   <meta name="author" content="VegaPilot">
+   <link type='text/css' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400italic,600'
+      rel='stylesheet'>
+   <link type="text/css" href="assets/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+   <link type="text/css" href="assets/fonts/themify-icons/themify-icons.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/styles.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/scroll-fix.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/crispr-table.css" rel="stylesheet">
+   <link type="text/css" href="assets/plugins/codeprettifier/prettify.css" rel="stylesheet">
+   <link type="text/css" href="assets/plugins/iCheck/skins/minimal/blue.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/crispr-modals.css" rel="stylesheet">
+
+   <style type="text/css">
+      /* Header Layout */
+      #topnav {
+         display: flex !important;
+         align-items: center !important;
+         justify-content: flex-start !important;
+         background: linear-gradient(135deg, #006073 0%, #005a6b 100%) !important;
+         position: relative !important;
+      }
+
+      #topnav .navbar-brand,
+      #topnav h2,
+      #topnav .toolbar-icon-bg a {
+         color: white !important;
+      }
+
+      #topnav .logo-area .navbar-brand {
+         color: white !important;
+      }
+
+      #topnav .toolbar-icon-bg .icon-bg {
+         background: rgba(255, 255, 255, 0.15) !important;
+         border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      }
+
+      #topnav .toolbar-icon-bg:hover .icon-bg {
+         background: rgba(255, 255, 255, 0.25) !important;
+         border-color: rgba(255, 255, 255, 0.3) !important;
+      }
+
+      #topnav .toolbar-icon-bg i {
+         color: white !important;
+      }
+
+      #topnav #trigger-sidebar .icon-bg {
+         background: rgba(255, 255, 255, 0.15) !important;
+         border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      }
+
+      #topnav #trigger-sidebar:hover .icon-bg {
+         background: rgba(255, 255, 255, 0.25) !important;
+      }
+
+      .acc-menu li a.active {
+         border-left: 5px solid #005e70 !important;
+         color: #005e6f !important;
+         font-weight: bold !important;
+         background: rgba(0, 94, 112, 0.1) !important;
+      }
+
+      .acc-menu li a.active i {
+         color: #005e6f !important;
+      }
+
+      #wrapper {
+         padding: 0 !important;
+      }
+
+
+      /* Status palette (shared by chips, cards, badges) */
+      .st-pending { --st-bg: #fef9c3; --st-fg: #854d0e; --st-bd: #fde047; }
+      .st-approved { --st-bg: #dcfce7; --st-fg: #166534; --st-bd: #86efac; }
+      .st-rejected { --st-bg: #fee2e2; --st-fg: #991b1b; --st-bd: #fca5a5; }
+      .st-cancelled { --st-bg: #f3f4f6; --st-fg: #4b5563; --st-bd: #d1d5db; }
+
+      /* Summary cards */
+      .lr-summary {
+         display: grid;
+         grid-template-columns: repeat(5, minmax(0, 1fr));
+         gap: 14px;
+         margin-bottom: 16px;
+      }
+
+      @media (max-width: 900px) {
+         .lr-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+
+      .lr-card {
+         background: white;
+         border: 1px solid #e5e7eb;
+         border-left: 4px solid var(--st-bd, #006073);
+         border-radius: 10px;
+         padding: 12px 16px;
+         text-align: left;
+         width: 100%;
+         cursor: pointer;
+         transition: box-shadow 0.15s ease, transform 0.15s ease;
+      }
+
+      .lr-card:hover {
+         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+         transform: translateY(-1px);
+      }
+
+      .lr-card.selected { box-shadow: 0 0 0 2px #006073; }
+
+      .lr-card-label {
+         font-size: 12px;
+         font-weight: 600;
+         color: #6b7280;
+         text-transform: uppercase;
+         letter-spacing: 0.4px;
+      }
+
+      .lr-card-value {
+         font-size: 22px;
+         font-weight: 600;
+         color: #111827;
+         margin-top: 2px;
+         font-variant-numeric: tabular-nums;
+      }
+
+      .lr-card.st-pending .lr-card-value { color: #854d0e; }
+
+      /* Toolbar */
+      .lr-toolbar {
+         display: flex;
+         flex-wrap: wrap;
+         align-items: center;
+         gap: 10px;
+         margin-bottom: 12px;
+      }
+
+      .lr-search {
+         position: relative;
+         flex: 0 1 320px;
+      }
+
+      .lr-search i {
+         position: absolute;
+         left: 11px;
+         top: 50%;
+         transform: translateY(-50%);
+         color: #9ca3af;
+      }
+
+      .lr-input {
+         width: 100%;
+         padding: 8px 12px;
+         border: 1px solid #d1d5db;
+         border-radius: 8px;
+         font-size: 14px;
+         color: #333;
+         background: white;
+      }
+
+      .lr-search .lr-input { padding-left: 32px; }
+
+      .lr-input:focus {
+         outline: none;
+         border-color: #006073;
+         box-shadow: 0 0 0 3px rgba(0, 96, 115, 0.1);
+      }
+
+      .lr-input.has-error { border-color: #dc2626; }
+
+      select.lr-input { width: auto; min-width: 200px; }
+
+      .lr-chips {
+         display: inline-flex;
+         border: 1px solid #d1d5db;
+         border-radius: 8px;
+         overflow: hidden;
+         background: white;
+      }
+
+      .lr-chips button {
+         border: none;
+         background: transparent;
+         padding: 7px 12px;
+         font-size: 13px;
+         color: #374151;
+         border-right: 1px solid #e5e7eb;
+      }
+
+      .lr-chips button:last-child { border-right: none; }
+
+      .lr-chips button.active {
+         background: #006073;
+         color: white;
+         font-weight: 600;
+      }
+
+      .lr-chips .lr-chip-count {
+         font-size: 11px;
+         opacity: 0.7;
+         margin-left: 3px;
+      }
+
+      /* Table */
+      .lr-table-wrap {
+         background: white;
+         border: 1px solid #e5e7eb;
+         border-radius: 10px;
+         overflow: auto;
+         max-height: calc(100vh - 290px);
+         min-height: 240px;
+      }
+
+      .lr-table {
+         width: 100%;
+         border-collapse: separate;
+         border-spacing: 0;
+         font-size: 13px;
+      }
+
+      .lr-table th,
+      .lr-table td {
+         padding: 9px 10px;
+         border-bottom: 1px solid #f1f3f5;
+         background: white;
+         vertical-align: top;
+      }
+
+      .lr-table thead th {
+         position: sticky;
+         top: 0;
+         z-index: 2;
+         background: #006073;
+         color: white;
+         font-weight: 600;
+         font-size: 12px;
+         text-transform: uppercase;
+         letter-spacing: 0.4px;
+         border-bottom: none;
+         text-align: left;
+         white-space: nowrap;
+      }
+
+      .lr-table tbody tr { cursor: pointer; }
+      .lr-table tbody tr:hover td { background: #f9fafb; }
+
+      .lr-name { font-weight: 600; color: #111827; }
+      .lr-sub { font-size: 11px; color: #6b7280; }
+      .lr-warn { font-size: 11px; color: #b45309; font-weight: 600; }
+      .lr-nowrap { white-space: nowrap; }
+
+      .lr-badge {
+         display: inline-flex;
+         align-items: center;
+         gap: 4px;
+         padding: 3px 10px;
+         border-radius: 12px;
+         font-size: 11px;
+         font-weight: 700;
+         text-transform: uppercase;
+         letter-spacing: 0.4px;
+         background: var(--st-bg);
+         color: var(--st-fg);
+         border: 1px solid var(--st-bd);
+         white-space: nowrap;
+      }
+
+      .lr-actions {
+         display: flex;
+         gap: 6px;
+         white-space: nowrap;
+      }
+
+      .lr-actions .btn { padding: 4px 10px; font-size: 12px; }
+
+      .empty-state {
+         text-align: center;
+         padding: 60px 20px;
+         color: #666;
+      }
+
+      .empty-state > i {
+         font-size: 64px;
+         color: #ddd;
+         margin-bottom: 20px;
+         display: block;
+      }
+
+      .empty-state h4 {
+         color: #999;
+         margin-bottom: 10px;
+      }
+
+      /* Details modal */
+      .lr-detail-head {
+         display: flex;
+         justify-content: space-between;
+         align-items: flex-start;
+         gap: 12px;
+         margin-bottom: 14px;
+      }
+
+      .lr-detail-head .lr-name { font-size: 16px; }
+
+      .lr-span {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         background: #f9fafb;
+         border: 1px solid #e5e7eb;
+         border-radius: 10px;
+         padding: 12px 14px;
+         margin-bottom: 14px;
+      }
+
+      .lr-span > div { flex: 1; }
+      .lr-span .lr-span-arrow { flex: 0 0 auto; color: #9ca3af; text-align: center; font-size: 12px; }
+      .lr-span .lr-span-date { font-size: 15px; font-weight: 600; color: #111827; }
+
+      .lr-section-title {
+         font-size: 12px;
+         font-weight: 700;
+         color: #006073;
+         text-transform: uppercase;
+         letter-spacing: 0.5px;
+         margin: 16px 0 6px;
+      }
+
+      .lr-kv {
+         display: grid;
+         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+         gap: 10px 16px;
+         margin: 0;
+      }
+
+      .lr-kv dt {
+         font-size: 11px;
+         font-weight: 600;
+         color: #6b7280;
+         text-transform: uppercase;
+         letter-spacing: 0.4px;
+      }
+
+      .lr-kv dd {
+         margin: 2px 0 0;
+         color: #111827;
+         word-break: break-word;
+      }
+
+      .lr-kv .full { grid-column: 1 / -1; }
+
+      .lr-decided {
+         border-left: 4px solid var(--st-bd);
+         background: var(--st-bg);
+         border-radius: 8px;
+         padding: 10px 12px;
+         margin-top: 16px;
+         color: var(--st-fg);
+      }
+
+      .lr-decide {
+         margin-top: 16px;
+         padding-top: 14px;
+         border-top: 1px dashed #d1d5db;
+      }
+
+      .field-label {
+         display: block;
+         font-size: 13px;
+         font-weight: 600;
+         color: #374151;
+         margin-bottom: 6px;
+      }
+
+      .field-label .required { color: #dc2626; }
+
+      .field-error {
+         color: #dc2626;
+         font-size: 12px;
+         margin-top: 4px;
+         display: block;
+      }
+
+      textarea.lr-input { resize: vertical; min-height: 80px; }
+
+      .lr-decide-actions {
+         display: flex;
+         justify-content: flex-end;
+         gap: 8px;
+         margin-top: 12px;
+      }
+   </style>
+
+</head>
+
+<body class="animated-content" ng-app="leaveRequestsApp" ng-controller="leaveRequestsController" ng-cloak ng-init="init()">
+   <header id="topnav" class="navbar navbar-default navbar-fixed-top" role="banner">
+      <div class="logo-area">
+         <span id="trigger-sidebar" class="toolbar-trigger toolbar-icon-bg">
+            <a data-toggle="tooltips" data-placement="right" title="Toggle Sidebar">
+               <span class="icon-bg"><i class="ti ti-menu"></i></span>
+            </a>
+         </span>
+         <span class="navbar-brand animated-brand" style="width: 125px" id="animatedBrand">VegaPilot</span>
+      </div>
+
+      <div style="position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center;">
+         <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: white;">
+            <i class="ti ti-calendar" style="margin-right: 8px; color: white;"></i> Leave Requests
+         </h2>
+      </div>
+
+      <div style="flex: 1;"></div>
+
+      <ul class="nav navbar-nav toolbar pull-right">
+         <li style="display: flex; align-items: center; margin-right: 10px;">
+            <button class="btn" ng-click="loadRequests()" ng-disabled="isLoading"
+               style="background: #fff; color: #006073; border: 1px solid #006073; font-weight: 600; padding: 9px 20px; border-radius: 6px; font-size: 14px; white-space: nowrap; margin-top: 7px;">
+               <i class="ti ti-reload"></i> Refresh
+            </button>
+         </li>
+         <li class="toolbar-icon-bg hidden-xs" id="trigger-fullscreen">
+            <a href="#" class="toggle-fullscreen"><span class="icon-bg"><i class="ti ti-zoom-in"></i></span></a>
+         </li>
+         <li class="dropdown toolbar-icon-bg">
+            <a href="#" class="dropdown-toggle username" data-toggle="dropdown">
+               <img class="img-circle" src="assets/img/default_user.png" alt="" />
+            </a>
+            <ul class="dropdown-menu userinfo arrow">
+               <li ng-click="logoutNow()"><a href="#/"><i class="ti ti-shift-right"></i><span>Sign Out</span></a></li>
+            </ul>
+         </li>
+      </ul>
+   </header>
+
+   <div id="wrapper">
+      <div id="layout-static">
+         <div class="static-sidebar-wrapper sidebar-default">
+            <div class="static-sidebar">
+               <div class="sidebar">
+                  <div class="widget stay-on-collapse" id="widget-sidebar">
+                     <nav role="navigation" class="widget-body">
+                        <ul class="acc-menu">
+                           <li class="nav-separator"><span>Content Library</span></li>
+                           <li><a href="class-notes.html"><i class="ti ti-notepad"></i><span>Class Notes</span></a></li>
+                           <li><a href="tv-content.html"><i class="ti ti-desktop"></i><span>TV Content</span></a></li>
+                           <li class="nav-separator"><span>Hostel</span></li>
+                           <li><a href="hostel-fee.html"><i class="ti ti-home"></i><span>Hostel Fee</span></a></li>
+                           <li><a href="leave-requests.html" class="active"><i class="ti ti-calendar"></i><span>Leave Requests</span></a></li>
+                        </ul>
+                     </nav>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="static-content-wrapper">
+            <div class="static-content">
+               <div class="page-content">
+                  <div class="container-fluid" style="padding-top: 1%;">
+
+                     <!-- Summary (click a card to filter) -->
+                     <div class="lr-summary" ng-if="!isLoading && !loadError && requests.length > 0">
+                        <button type="button" class="lr-card" ng-repeat="opt in statusOptions"
+                           ng-class="['st-' + opt.value, {selected: filters.status === opt.value}]"
+                           ng-click="setStatusFilter(opt.value)">
+                           <div class="lr-card-label">{{opt.label}}</div>
+                           <div class="lr-card-value">{{counts[opt.value] || 0}}</div>
+                        </button>
+                     </div>
+
+                     <!-- Filters -->
+                     <div class="lr-toolbar" ng-if="!isLoading && !loadError && requests.length > 0">
+                        <div class="lr-search">
+                           <i class="ti ti-search"></i>
+                           <input type="text" class="lr-input" placeholder="Search student, parent, mobile or ID"
+                              ng-model="filters.search" ng-model-options="{debounce: 150}">
+                        </div>
+                        <select class="lr-input" ng-model="filters.hostel"
+                           ng-options="h.value as h.label for h in hostelOptions">
+                        </select>
+                     </div>
+
+                     <!-- Loading skeleton -->
+                     <div class="skeleton-loader-container" ng-if="isLoading">
+                        <div class="skeleton-row" ng-repeat="i in [1,2,3,4,5,6,7,8] track by $index">
+                           <div class="skeleton-col text-short"><div class="skeleton-shimmer"></div></div>
+                           <div class="skeleton-col text-medium"><div class="skeleton-shimmer"></div></div>
+                           <div class="skeleton-col text-long"><div class="skeleton-shimmer"></div></div>
+                        </div>
+                     </div>
+
+                     <!-- Requests -->
+                     <div class="lr-table-wrap" ng-if="!isLoading && !loadError && requests.length > 0">
+                        <table class="lr-table">
+                           <thead>
+                              <tr>
+                                 <th>Student</th>
+                                 <th>Parent</th>
+                                 <th>Hostel</th>
+                                 <th>Out</th>
+                                 <th>In</th>
+                                 <th>Reason</th>
+                                 <th>Travel</th>
+                                 <th>Requested</th>
+                                 <th>Status</th>
+                                 <th></th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr ng-repeat="r in visible track by r.id" ng-click="openDetail(r)">
+                                 <td>
+                                    <div class="lr-name">{{r.student.name}}</div>
+                                    <div class="lr-sub">ID {{r.student.id}}</div>
+                                 </td>
+                                 <td>
+                                    <div>{{r.parent.name || 'Parent'}}<span class="lr-sub" ng-if="r.parent.relation"> &middot; {{r.parent.relation}}</span></div>
+                                    <div class="lr-sub" ng-if="r.parent.mobile">{{r.parent.mobile}}</div>
+                                 </td>
+                                 <td>
+                                    <div>{{r.hostelName}}</div>
+                                    <div class="lr-sub" ng-if="r.hostel.roomNumber">Room {{r.hostel.roomNumber}}</div>
+                                 </td>
+                                 <td class="lr-nowrap">
+                                    <div>{{formatDate(r.outAt)}}</div>
+                                    <div class="lr-sub">{{formatTime(r.outAt)}}</div>
+                                    <div class="lr-warn" ng-if="r.outPassed">Out date passed</div>
+                                 </td>
+                                 <td class="lr-nowrap">
+                                    <div>{{formatDate(r.inAt)}}</div>
+                                    <div class="lr-sub">{{formatTime(r.inAt)}} &middot; {{daysLabel(r.days)}}</div>
+                                 </td>
+                                 <td>
+                                    <div>{{r.reason}}</div>
+                                    <div class="lr-sub">To {{whereTo(r)}}</div>
+                                 </td>
+                                 <td>{{r.mode}}</td>
+                                 <td class="lr-nowrap lr-sub">{{formatTimestamp(r.requestedOn)}}</td>
+                                 <td>
+                                    <span class="lr-badge" ng-class="'st-' + r.status"><i class="ti" ng-class="statusIcon(r.status)"></i> {{r.status}}</span>
+                                 </td>
+                                 <td>
+                                    <div class="lr-actions" ng-if="r.status === 'pending'">
+                                       <button type="button" class="btn btn-success"
+                                          ng-click="$event.stopPropagation(); openDetail(r, 'approved')"><i class="ti ti-check"></i> Approve</button>
+                                       <button type="button" class="btn btn-danger"
+                                          ng-click="$event.stopPropagation(); openDetail(r, 'rejected')"><i class="ti ti-close"></i> Reject</button>
+                                    </div>
+                                 </td>
+                              </tr>
+                              <tr ng-if="visible.length === 0">
+                                 <td colspan="10" class="empty-state">
+                                    <i class="ti" ng-class="filters.status === 'pending' && !filters.search && !filters.hostel ? 'ti-check-box' : 'ti-filter'"></i>
+                                    <h4 ng-if="filters.status === 'pending' && !filters.search && !filters.hostel">All caught up. No pending leave requests.</h4>
+                                    <h4 ng-if="!(filters.status === 'pending' && !filters.search && !filters.hostel)">No leave requests match these filters</h4>
+                                    <button class="btn btn-default" ng-click="clearFilters()">Show all requests</button>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+
+                     <!-- Error State -->
+                     <div class="empty-state" ng-if="!isLoading && loadError">
+                        <i class="ti ti-alert"></i>
+                        <h4>Could not load leave requests</h4>
+                        <p>{{loadError}}</p>
+                        <button class="btn btn-default" ng-click="loadRequests()"><i class="ti ti-reload"></i>
+                           Retry</button>
+                     </div>
+
+                     <!-- Empty State -->
+                     <div class="empty-state" ng-if="!isLoading && !loadError && requests.length === 0">
+                        <i class="ti ti-calendar"></i>
+                        <h4>No Leave Requests Yet</h4>
+                        <p>Leave requests raised by parents from the parent portal will show up here.</p>
+                     </div>
+
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Leave request details / approve / reject -->
+   <div class="crispr-modal-backdrop" ng-class="{active: !!detail}" ng-click="closeDetail()">
+      <div class="crispr-modal-dialog" style="max-width: 600px;" ng-click="$event.stopPropagation()">
+         <div class="crispr-modal-header">
+            <h3><i class="ti ti-calendar"></i> Leave request L-{{detail.id}}</h3>
+            <button class="crispr-modal-close" ng-click="closeDetail()">
+               <i class="ti ti-close"></i>
+            </button>
+         </div>
+         <div class="crispr-modal-body">
+            <div class="lr-detail-head">
+               <div>
+                  <div class="lr-name">{{detail.student.name}}</div>
+                  <div class="lr-sub">ID {{detail.student.id}} &middot; {{detail.hostelName}}
+                     <span ng-if="detail.hostel.roomNumber"> &middot; Room {{detail.hostel.roomNumber}}</span></div>
+               </div>
+               <span class="lr-badge" ng-class="'st-' + detail.status"><i class="ti" ng-class="statusIcon(detail.status)"></i> {{detail.status}}</span>
+            </div>
+
+            <div class="lr-span">
+               <div>
+                  <div class="lr-sub">Out</div>
+                  <div class="lr-span-date">{{formatDate(detail.outAt)}}</div>
+                  <div class="lr-sub">{{formatTime(detail.outAt)}}</div>
+               </div>
+               <div class="lr-span-arrow"><i class="ti ti-arrow-right"></i><br>{{daysLabel(detail.days)}}</div>
+               <div>
+                  <div class="lr-sub">In</div>
+                  <div class="lr-span-date">{{formatDate(detail.inAt)}}</div>
+                  <div class="lr-sub">{{formatTime(detail.inAt)}}</div>
+               </div>
+            </div>
+            <div class="lr-warn" ng-if="detail.outPassed" style="margin: -6px 0 10px;">The out date has already passed.</div>
+
+            <dl class="lr-kv">
+               <div><dt>Reason</dt><dd>{{detail.reason}}</dd></div>
+               <div><dt>Going to</dt><dd>{{whereTo(detail)}}</dd></div>
+               <div><dt>Travel</dt><dd>{{detail.mode}}</dd></div>
+               <div class="full" ng-if="detail.remarks"><dt>Parent's remarks</dt><dd>{{detail.remarks}}</dd></div>
+            </dl>
+
+            <div class="lr-section-title">Parent</div>
+            <dl class="lr-kv">
+               <div><dt>Name</dt><dd>{{detail.parent.name || '—'}}</dd></div>
+               <div><dt>Relation</dt><dd>{{detail.parent.relation || '—'}}</dd></div>
+               <div><dt>Mobile</dt><dd><a ng-if="detail.parent.mobile" ng-href="tel:{{detail.parent.mobile}}">{{detail.parent.mobile}}</a><span ng-if="!detail.parent.mobile">—</span></dd></div>
+            </dl>
+
+            <div class="lr-section-title">Hostel</div>
+            <dl class="lr-kv">
+               <div><dt>Hostel</dt><dd>{{detail.hostelName}}</dd></div>
+               <div><dt>Room</dt><dd>{{detail.hostel.roomNumber || '—'}}<span ng-if="detail.hostel.roomType"> &middot; {{detail.hostel.roomType}}</span></dd></div>
+               <div><dt>Warden</dt><dd>{{detail.hostel.wardenName || '—'}}<div class="lr-sub" ng-if="detail.hostel.wardenContact">{{detail.hostel.wardenContact}}</div></dd></div>
+            </dl>
+
+            <div class="lr-section-title">Timeline</div>
+            <dl class="lr-kv">
+               <div><dt>Requested</dt><dd>{{formatTimestamp(detail.requestedOn)}}</dd></div>
+               <div><dt>Hostel notified</dt><dd>{{detail.notifiedOn ? formatTimestamp(detail.notifiedOn) : 'Not sent'}}</dd></div>
+            </dl>
+
+            <!-- Decision already taken -->
+            <div class="lr-decided" ng-if="detail.status !== 'pending'" ng-class="'st-' + detail.status">
+               <strong style="text-transform: capitalize;">{{detail.status}}</strong>
+               <span ng-if="detail.decidedOn"> on {{formatTimestamp(detail.decidedOn)}}</span>
+               <span ng-if="detail.decidedBy"> by {{detail.decidedBy}}</span>
+               <div ng-if="detail.decisionNote" style="margin-top: 4px;">
+                  <span ng-if="detail.status === 'rejected'">Reason: </span>{{detail.decisionNote}}
+               </div>
+            </div>
+
+            <!-- Approve / reject (pending only) -->
+            <div class="lr-decide" ng-if="detail.status === 'pending'">
+               <div class="lr-decide-actions" ng-if="!decision.type" style="margin-top: 0;">
+                  <button type="button" class="btn btn-danger" ng-click="startDecision('rejected')"><i class="ti ti-close"></i> Reject</button>
+                  <button type="button" class="btn btn-success" ng-click="startDecision('approved')"><i class="ti ti-check"></i> Approve</button>
+               </div>
+
+               <form ng-if="decision.type" ng-submit="submitDecision()" novalidate>
+                  <label class="field-label" ng-if="decision.type === 'rejected'">Reason for Rejection <span class="required">*</span></label>
+                  <label class="field-label" ng-if="decision.type === 'approved'">Note to parent <span class="lr-sub">(optional)</span></label>
+                  <textarea class="lr-input lr-note" ng-model="decision.note" ng-attr-maxlength="{{NOTE_MAX}}"
+                     ng-change="decisionError = ''" ng-class="{'has-error': decisionError}"
+                     placeholder="{{decision.type === 'rejected' ? 'Tell the parent why the leave cannot be granted' : 'e.g. Collect the student from the warden\'s office'}}"></textarea>
+                  <span class="field-error" ng-if="decisionError">{{decisionError}}</span>
+                  <span class="lr-sub" ng-if="!decisionError">Shown to the parent in the parent portal &middot; {{(decision.note || '').length}}/{{NOTE_MAX}}</span>
+                  <div class="lr-decide-actions">
+                     <button type="button" class="btn btn-default" ng-click="cancelDecision()" ng-disabled="isDeciding">Back</button>
+                     <button type="submit" class="btn" ng-class="decision.type === 'rejected' ? 'btn-danger' : 'btn-success'" ng-disabled="isDeciding">
+                        <i class="ti" ng-class="decision.type === 'rejected' ? 'ti-close' : 'ti-check'"></i>
+                        {{isDeciding ? 'Saving...' : (decision.type === 'rejected' ? 'Reject leave' : 'Approve leave')}}
+                     </button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Scripts -->
+   <script type="text/javascript" src="assets/js/jquery-1.10.2.min.js"></script>
+   <script type="text/javascript" src="assets/js/jqueryui-1.10.3.min.js"></script>
+   <script type="text/javascript" src="assets/js/angular.min.js"></script>
+   <script type="text/javascript" src="assets/js/angular-cookies.min.js"></script>
+   <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+   <script type="text/javascript" src="assets/js/enquire.min.js"></script>
+   <script type="text/javascript" src="assets/plugins/velocityjs/velocity.min.js"></script>
+   <script type="text/javascript" src="assets/plugins/velocityjs/velocity.ui.min.js"></script>
+   <script type="text/javascript" src="assets/plugins/wijets/wijets.js"></script>
+   <script type="text/javascript" src="assets/plugins/nanoScroller/js/jquery.nanoscroller.min.js"></script>
+   <script type="text/javascript" src="assets/js/application.js"></script>
+   <script type="text/javascript" src="assets/js/toaster.js"></script>
+   <script src="controllers/leave-requests.js"></script>
+
+
+   <!-- Toaster Container -->
+   <div class="toaster-container">
+      <div class="toaster" ng-repeat="toaster in toasters track by $index"
+         ng-class="[toaster.type, {'hiding': toaster.hiding}]">
+         <div class="toaster-icon">
+            <i class="ti" ng-class="{
+                'ti-check': toaster.type === 'success',
+                'ti-alert': toaster.type === 'error',
+                'ti-info-alt': toaster.type === 'info',
+                'ti-bell': toaster.type === 'warning'
+             }"></i>
+         </div>
+         <div class="toaster-content">
+            <div class="toaster-title">{{toaster.title}}</div>
+            <div class="toaster-message">{{toaster.message}}</div>
+         </div>
+         <button class="toaster-close" ng-click="removeToaster($index)">
+            <i class="ti ti-close"></i>
+         </button>
+      </div>
+   </div>
+
+</body>
+
+</html>
