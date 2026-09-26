@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="utf-8">
+   <title>TV Content - VegaPilot</title>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+   <meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta name="apple-touch-fullscreen" content="yes">
+   <meta name="description" content="VegaPilot TV Content">
+   <meta name="author" content="VegaPilot">
+   <link type='text/css' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400italic,600'
+      rel='stylesheet'>
+   <link type="text/css" href="assets/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+   <link type="text/css" href="assets/fonts/themify-icons/themify-icons.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/styles.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/scroll-fix.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/crispr-table.css" rel="stylesheet">
+   <link type="text/css" href="assets/plugins/codeprettifier/prettify.css" rel="stylesheet">
+   <link type="text/css" href="assets/plugins/iCheck/skins/minimal/blue.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/crispr-modals.css" rel="stylesheet">
+
+   <style type="text/css">
+      /* Header Layout */
+      #topnav {
+         display: flex !important;
+         align-items: center !important;
+         justify-content: flex-start !important;
+         background: linear-gradient(135deg, #006073 0%, #005a6b 100%) !important;
+         position: relative !important;
+      }
+
+      #topnav .navbar-brand,
+      #topnav h2,
+      #topnav .toolbar-icon-bg a {
+         color: white !important;
+      }
+
+      #topnav .logo-area .navbar-brand {
+         color: white !important;
+      }
+
+      #topnav .toolbar-icon-bg .icon-bg {
+         background: rgba(255, 255, 255, 0.15) !important;
+         border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      }
+
+      #topnav .toolbar-icon-bg:hover .icon-bg {
+         background: rgba(255, 255, 255, 0.25) !important;
+         border-color: rgba(255, 255, 255, 0.3) !important;
+      }
+
+      #topnav .toolbar-icon-bg i {
+         color: white !important;
+      }
+
+      #topnav #trigger-sidebar .icon-bg {
+         background: rgba(255, 255, 255, 0.15) !important;
+         border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      }
+
+      #topnav #trigger-sidebar:hover .icon-bg {
+         background: rgba(255, 255, 255, 0.25) !important;
+      }
+
+      .acc-menu li a.active {
+         border-left: 5px solid #005e70 !important;
+         color: #005e6f !important;
+         font-weight: bold !important;
+         background: rgba(0, 94, 112, 0.1) !important;
+      }
+
+      .acc-menu li a.active i {
+         color: #005e6f !important;
+      }
+
+      #wrapper {
+         padding: 0 !important;
+      }
+
+      /* Content grid */
+      .tv-grid {
+         display: grid;
+         grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+         gap: 20px;
+         padding-bottom: 30px;
+      }
+
+      .tv-card {
+         background: white;
+         border: 1px solid #f3f4f6;
+         border-radius: 12px;
+         overflow: hidden;
+         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+         transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .tv-card:hover {
+         transform: translateY(-3px);
+         box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.12);
+      }
+
+      .tv-thumb {
+         display: block;
+         width: 100%;
+         aspect-ratio: 16 / 9;
+         background: #111827;
+         cursor: zoom-in;
+         position: relative;
+      }
+
+      .tv-thumb img {
+         width: 100%;
+         height: 100%;
+         object-fit: contain;
+         display: block;
+      }
+
+      .tv-card-meta {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         gap: 10px;
+         padding: 12px 14px;
+      }
+
+      .tv-card-title {
+         font-weight: 600;
+         color: #111827;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         white-space: nowrap;
+         min-width: 0;
+      }
+
+      .tv-duration {
+         display: inline-block;
+         padding: 4px 10px;
+         background: #e7f5f7;
+         color: #006073;
+         border-radius: 12px;
+         font-size: 12px;
+         font-weight: 600;
+         white-space: nowrap;
+      }
+
+      .tv-skeleton {
+         aspect-ratio: 16 / 9;
+         background: #e5e7eb;
+         position: relative;
+         overflow: hidden;
+      }
+
+      .empty-state {
+         text-align: center;
+         padding: 60px 20px;
+         color: #666;
+      }
+
+      .empty-state i {
+         font-size: 64px;
+         color: #ddd;
+         margin-bottom: 20px;
+         display: block;
+      }
+
+      .empty-state h4 {
+         color: #999;
+         margin-bottom: 10px;
+      }
+
+      /* Add-content form */
+      .tv-form-grid {
+         display: grid;
+         grid-template-columns: 2fr 1fr 1fr;
+         gap: 16px;
+         margin-bottom: 8px;
+      }
+
+      .tv-form-grid .full {
+         grid-column: 1 / -1;
+      }
+
+      @media (max-width: 640px) {
+         .tv-form-grid {
+            grid-template-columns: 1fr 1fr;
+         }
+      }
+
+      .field-label {
+         display: block;
+         font-size: 13px;
+         font-weight: 600;
+         color: #374151;
+         margin-bottom: 6px;
+      }
+
+      .field-label .required {
+         color: #dc2626;
+      }
+
+      .tv-input {
+         width: 100%;
+         padding: 10px 12px;
+         border: 1px solid #d1d5db;
+         border-radius: 8px;
+         font-size: 14px;
+         color: #333;
+         background: white;
+      }
+
+      .tv-input:focus {
+         outline: none;
+         border-color: #006073;
+         box-shadow: 0 0 0 3px rgba(0, 96, 115, 0.1);
+      }
+
+      .tv-input.has-error {
+         border-color: #dc2626;
+      }
+
+      .field-error {
+         color: #dc2626;
+         font-size: 12px;
+         margin-top: 4px;
+         display: block;
+      }
+
+      .field-hint {
+         color: #6b7280;
+         font-size: 12px;
+      }
+
+      .section-title {
+         font-size: 13px;
+         font-weight: 700;
+         color: #006073;
+         text-transform: uppercase;
+         letter-spacing: 0.5px;
+         margin: 18px 0 10px 0;
+         padding-bottom: 6px;
+         border-bottom: 1px solid #e5e7eb;
+      }
+
+      /* Cropper */
+      .cropper-stage {
+         position: relative;
+         width: 100%;
+         background: #111827;
+         border-radius: 8px;
+         overflow: hidden;
+      }
+
+      .cropper-stage canvas {
+         display: block;
+         width: 100%;
+         height: auto;
+         touch-action: none;
+         visibility: hidden;
+      }
+
+      .cropper-stage canvas.ready {
+         visibility: visible;
+         cursor: grab;
+      }
+
+      .cropper-stage canvas.ready:active {
+         cursor: grabbing;
+      }
+
+      .cropper-placeholder {
+         position: absolute;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         color: #9ca3af;
+         font-size: 14px;
+      }
+
+      .cropper-controls {
+         display: flex;
+         align-items: center;
+         gap: 8px;
+         margin-top: 10px;
+      }
+
+      .cropper-controls input[type=range] {
+         flex: 1;
+         min-width: 0;
+      }
+
+      .cropper-hint {
+         margin-top: 8px;
+         font-size: 12px;
+         color: #6b7280;
+      }
+
+      .cropper-warn {
+         color: #b45309;
+         font-weight: 600;
+      }
+
+      .preview-img {
+         width: 100%;
+         aspect-ratio: 16 / 9;
+         object-fit: contain;
+         background: #111827;
+         border-radius: 8px;
+      }
+   </style>
+
+</head>
+
+<body class="animated-content" ng-app="tvContentApp" ng-controller="tvContentController" ng-cloak ng-init="init()">
+   <header id="topnav" class="navbar navbar-default navbar-fixed-top" role="banner">
+      <div class="logo-area">
+         <span id="trigger-sidebar" class="toolbar-trigger toolbar-icon-bg">
+            <a data-toggle="tooltips" data-placement="right" title="Toggle Sidebar">
+               <span class="icon-bg"><i class="ti ti-menu"></i></span>
+            </a>
+         </span>
+         <span class="navbar-brand animated-brand" style="width: 125px" id="animatedBrand">VegaPilot</span>
+      </div>
+
+      <div style="position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center;">
+         <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: white;">
+            <i class="ti ti-desktop" style="margin-right: 8px; color: white;"></i> TV Content
+         </h2>
+      </div>
+
+      <div style="flex: 1;"></div>
+
+      <ul class="nav navbar-nav toolbar pull-right">
+         <li style="display: flex; align-items: center; margin-right: 10px;">
+            <button class="btn"
+               style="background: #ffb706; color: #006073; border: none; font-weight: 600; padding: 10px 20px; border-radius: 6px; font-size: 14px; transition: all 0.2s ease; white-space: nowrap; margin-top: 7px;"
+               ng-click="openAddModal()"
+               onmouseover="this.style.background='#ffa500'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(255, 183, 6, 0.3)'"
+               onmouseout="this.style.background='#ffb706'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+               <i class="ti ti-plus"></i> Add Content
+            </button>
+         </li>
+         <li class="toolbar-icon-bg hidden-xs" id="trigger-fullscreen">
+            <a href="#" class="toggle-fullscreen"><span class="icon-bg"><i class="ti ti-zoom-in"></i></span></a>
+         </li>
+         <li class="dropdown toolbar-icon-bg">
+            <a href="#" class="dropdown-toggle username" data-toggle="dropdown">
+               <img class="img-circle" src="assets/img/default_user.png" alt="" />
+            </a>
+            <ul class="dropdown-menu userinfo arrow">
+               <li ng-click="logoutNow()"><a href="#/"><i class="ti ti-shift-right"></i><span>Sign Out</span></a></li>
+            </ul>
+         </li>
+      </ul>
+   </header>
+
+   <div id="wrapper">
+      <div id="layout-static">
+         <div class="static-sidebar-wrapper sidebar-default">
+            <div class="static-sidebar">
+               <div class="sidebar">
+                  <div class="widget stay-on-collapse" id="widget-sidebar">
+                     <nav role="navigation" class="widget-body">
+                        <ul class="acc-menu">
+
+                           <li class="nav-separator"><span>Programs</span></li>
+                           <li><a href="courses-list.html"><i class="ti ti-book"></i><span>Courses</span></a></li>
+                           <li><a href="test-series-list.html"><i class="ti ti-layers"></i><span>Test Series</span></a>
+                           </li>
+                           <li><a href="candidate-profile.html"><i class="ti ti-user"></i><span>Students</span></a></li>
+                           <li><a href="batch.html"><i class="ti ti-layout-grid2"></i><span>Batches</span></a></li>
+
+                           <li class="nav-separator"><span>Exams & Quizzes</span></li>
+                           <li><a href="quiz-listing.html"><i class="ti ti-files"></i><span>Practice Quizzes</span></a>
+                           </li>
+                           <li><a href="exam-listing.html"><i class="ti ti-clipboard"></i><span>Exams</span></a></li>
+
+                           <li class="nav-separator"><span>Content Library</span></li>
+                           <li><a href="question-bank.html"><i class="ti ti-help-alt"></i><span>Question Bank</span></a>
+                           </li>
+                           <li><a href="video-content.html"><i class="ti ti-video-clapper"></i><span>Video
+                                    Library</span></a></li>
+                           <li><a href="practice-questions.html"><i class="ti ti-write"></i><span>Practice
+                                    Questions</span></a></li>
+                           <li><a href="bunny-admin.html"><i class="ti ti-cloud-up"></i><span>Video Hosting</span></a>
+                           </li>
+
+                           <li class="nav-separator"><span>Commerce</span></li>
+                           <li><a href="catalog.html"><i class="ti ti-shopping-cart"></i><span>Catalog</span></a></li>
+                           <li><a href="orders.html"><i class="ti ti-receipt"></i><span>Orders</span></a></li>
+                           <li><a href="instructor-payouts.html"><i class="ti ti-time"></i><span>Instructor Payouts</span></a></li>
+
+                           <li class="nav-separator"><span>Marketing</span></li>
+                           <li><a href="web-content-manager.html"><i class="ti ti-world"></i><span>Web Content Manager</span></a></li>
+                           <li><a href="tv-content.html" class="active"><i class="ti ti-desktop"></i><span>TV Content</span></a></li>
+                           <li><a href="leads-management.html"><i class="ti ti-target"></i><span>Leads</span></a></li>
+                           <li class="nav-separator"><span>People</span></li>
+                           <li><a href="instructor-portfolio.html"><i
+                                    class="ti ti-id-badge"></i><span>Instructors</span></a></li>
+                           <li><a href="mentor-profiles.html"><i
+                                    class="ti ti-comments-smiley"></i><span>Mentors</span></a></li>
+                        </ul>
+                     </nav>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="static-content-wrapper">
+            <div class="static-content">
+               <div class="page-content">
+                  <div class="container-fluid" style="padding-top: 1%;">
+
+                     <!-- Loading skeleton -->
+                     <div class="tv-grid" ng-if="isLoading">
+                        <div class="tv-card" ng-repeat="i in getSkeletonRows() track by $index">
+                           <div class="tv-skeleton">
+                              <div class="skeleton-shimmer"></div>
+                           </div>
+                           <div class="tv-card-meta">
+                              <div class="skeleton-col text-medium" style="width: 100%;">
+                                 <div class="skeleton-shimmer"></div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+
+                     <!-- Playing content -->
+                     <div class="tv-grid" ng-if="!isLoading && items.length > 0">
+                        <div class="tv-card" ng-repeat="item in items track by item.id">
+                           <div class="tv-thumb" ng-click="openPreview(item)" title="Click to view full size">
+                              <img ng-src="{{item.imageData}}" alt="{{item.title}}">
+                           </div>
+                           <div class="tv-card-meta">
+                              <div class="tv-card-title" title="{{item.title}}">{{item.title}}</div>
+                              <span class="tv-duration"><i class="ti ti-timer"></i> {{formatDuration(item.duration)}}</span>
+                           </div>
+                        </div>
+                     </div>
+
+                     <!-- Error State -->
+                     <div class="empty-state" ng-if="!isLoading && loadError">
+                        <i class="ti ti-alert"></i>
+                        <h4>Could not load TV content</h4>
+                        <p>{{loadError}}</p>
+                        <button class="btn btn-default" ng-click="loadContent()"><i class="ti ti-reload"></i>
+                           Retry</button>
+                     </div>
+
+                     <!-- Empty State -->
+                     <div class="empty-state" ng-if="!isLoading && !loadError && items.length === 0">
+                        <i class="ti ti-desktop"></i>
+                        <h4>No TV Content Yet</h4>
+                        <p>Nothing is playing right now. Use <strong>Add Content</strong> to upload an image.</p>
+                     </div>
+
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Add Content Modal -->
+   <div class="crispr-modal-backdrop" ng-class="{active: addModalOpen}">
+      <div class="crispr-modal-dialog" style="max-width: 820px;">
+         <div class="crispr-modal-header">
+            <h3><i class="ti ti-image"></i> Add TV Content</h3>
+            <button class="crispr-modal-close" ng-click="closeAddModal()">
+               <i class="ti ti-close"></i>
+            </button>
+         </div>
+         <div class="crispr-modal-body">
+            <div class="tv-form-grid">
+               <div class="full">
+                  <label class="field-label">Title <span class="required">*</span></label>
+                  <input type="text" class="tv-input" maxlength="120" ng-model="form.title"
+                     ng-class="{'has-error': errors.title}">
+                  <span class="field-error" ng-if="errors.title">{{errors.title}}</span>
+               </div>
+               <div>
+                  <label class="field-label">Duration (seconds) <span class="required">*</span></label>
+                  <input type="number" min="1" step="1" class="tv-input" ng-model="form.duration"
+                     ng-class="{'has-error': errors.duration}">
+                  <span class="field-error" ng-if="errors.duration">{{errors.duration}}</span>
+               </div>
+               <div>
+                  <label class="field-label">Width (px)</label>
+                  <input type="number" class="tv-input" ng-model="form.width" ng-change="onOutputSizeChanged()"
+                     ng-class="{'has-error': errors.size}">
+               </div>
+               <div>
+                  <label class="field-label">Height (px)</label>
+                  <input type="number" class="tv-input" ng-model="form.height" ng-change="onOutputSizeChanged()"
+                     ng-class="{'has-error': errors.size}">
+               </div>
+               <div class="full">
+                  <span class="field-hint">Saved as PNG at {{OUTPUT_DPI}} DPI. Default output is
+                     {{DEFAULT_WIDTH}}×{{DEFAULT_HEIGHT}}.</span>
+                  <span class="field-error" ng-if="errors.size">{{errors.size}}</span>
+               </div>
+            </div>
+
+            <div class="section-title"><i class="ti ti-image"></i> Image</div>
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+               <button type="button" class="btn btn-default" ng-click="chooseFile()">
+                  <i class="ti ti-upload"></i> {{crop.loaded ? 'Choose a different image' : 'Choose image'}}
+               </button>
+               <input type="file" id="tvImageFile" accept="image/*" style="display: none;">
+               <span class="field-error" ng-if="errors.image" style="margin: 0;">{{errors.image}}</span>
+            </div>
+
+            <div class="cropper-stage">
+               <canvas id="cropCanvas" width="640" height="360"></canvas>
+               <div class="cropper-placeholder" ng-if="!crop.loaded">
+                  {{crop.loading ? 'Loading image…' : 'Choose an image to crop'}}
+               </div>
+            </div>
+            <div class="cropper-controls">
+               <button type="button" class="btn btn-default" ng-disabled="!crop.loaded" ng-click="zoomBy(1 / 1.15)"
+                  title="Zoom out"><i class="ti ti-minus"></i></button>
+               <input type="range" step="any" ng-attr-min="{{crop.minZoom}}" max="4" ng-model="crop.zoom"
+                  ng-disabled="!crop.loaded" ng-change="onZoomSlider()">
+               <button type="button" class="btn btn-default" ng-disabled="!crop.loaded" ng-click="zoomBy(1.15)"
+                  title="Zoom in"><i class="ti ti-plus"></i></button>
+               <button type="button" class="btn btn-default" ng-disabled="!crop.loaded"
+                  ng-click="setZoom(1, true)">Fill</button>
+               <button type="button" class="btn btn-default" ng-disabled="!crop.loaded"
+                  ng-click="setZoom(0, true)">Fit</button>
+            </div>
+            <div class="cropper-hint">
+               Drag to reposition · scroll or use the slider to resize · <strong>Fit</strong> shows the whole image
+               with black bars.
+               <span class="cropper-warn" ng-if="crop.upscaled"> The image is smaller than the output size and will be
+                  upscaled.</span>
+            </div>
+         </div>
+         <div class="crispr-modal-footer">
+            <button class="btn btn-default" ng-click="closeAddModal()" ng-disabled="isSaving">Cancel</button>
+            <button class="btn btn-success" ng-click="saveContent()" ng-disabled="isSaving">
+               <i class="ti ti-check"></i> {{isSaving ? 'Uploading...' : 'Upload'}}
+            </button>
+         </div>
+      </div>
+   </div>
+
+   <!-- Preview Modal -->
+   <div class="crispr-modal-backdrop" ng-class="{active: !!previewItem}" ng-click="closePreview()">
+      <div class="crispr-modal-dialog" style="max-width: 960px;" ng-click="$event.stopPropagation()">
+         <div class="crispr-modal-header">
+            <h3><i class="ti ti-image"></i> {{previewItem.title}}</h3>
+            <button class="crispr-modal-close" ng-click="closePreview()">
+               <i class="ti ti-close"></i>
+            </button>
+         </div>
+         <div class="crispr-modal-body">
+            <img class="preview-img" ng-if="previewItem" ng-src="{{previewItem.imageData}}"
+               alt="{{previewItem.title}}">
+            <p class="field-hint" style="margin-top: 10px;">Plays for {{formatDuration(previewItem.duration)}}.</p>
+         </div>
+      </div>
+   </div>
+
+   <!-- Scripts -->
+   <script type="text/javascript" src="assets/js/jquery-1.10.2.min.js"></script>
+   <script type="text/javascript" src="assets/js/jqueryui-1.10.3.min.js"></script>
+   <script type="text/javascript" src="assets/js/angular.min.js"></script>
+   <script type="text/javascript" src="assets/js/angular-cookies.min.js"></script>
+   <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+   <script type="text/javascript" src="assets/js/enquire.min.js"></script>
+   <script type="text/javascript" src="assets/plugins/velocityjs/velocity.min.js"></script>
+   <script type="text/javascript" src="assets/plugins/velocityjs/velocity.ui.min.js"></script>
+   <script type="text/javascript" src="assets/plugins/wijets/wijets.js"></script>
+   <script type="text/javascript" src="assets/plugins/nanoScroller/js/jquery.nanoscroller.min.js"></script>
+   <script type="text/javascript" src="assets/js/application.js"></script>
+   <script type="text/javascript" src="assets/js/toaster.js"></script>
+   <script src="controllers/tv-content.js"></script>
+
+   <!-- Toaster Container -->
+   <div class="toaster-container">
+      <div class="toaster" ng-repeat="toaster in toasters track by $index"
+         ng-class="[toaster.type, {'hiding': toaster.hiding}]">
+         <div class="toaster-icon">
+            <i class="ti" ng-class="{
+                'ti-check': toaster.type === 'success',
+                'ti-alert': toaster.type === 'error',
+                'ti-info-alt': toaster.type === 'info',
+                'ti-bell': toaster.type === 'warning'
+             }"></i>
+         </div>
+         <div class="toaster-content">
+            <div class="toaster-title">{{toaster.title}}</div>
+            <div class="toaster-message">{{toaster.message}}</div>
+         </div>
+         <button class="toaster-close" ng-click="removeToaster($index)">
+            <i class="ti ti-close"></i>
+         </button>
+      </div>
+   </div>
+
+</body>
+
+</html>
