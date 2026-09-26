@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="utf-8">
+   <title>Absentee Tracker - VegaPilot</title>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+   <meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta name="apple-touch-fullscreen" content="yes">
+   <meta name="description" content="VegaPilot Absentee Tracker">
+   <meta name="author" content="VegaPilot">
+   <link type='text/css' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400italic,600'
+      rel='stylesheet'>
+   <link type="text/css" href="assets/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+   <link type="text/css" href="assets/fonts/themify-icons/themify-icons.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/styles.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/scroll-fix.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/crispr-table.css" rel="stylesheet">
+   <link type="text/css" href="assets/plugins/codeprettifier/prettify.css" rel="stylesheet">
+   <link type="text/css" href="assets/plugins/iCheck/skins/minimal/blue.css" rel="stylesheet">
+   <link type="text/css" href="assets/css/crispr-modals.css" rel="stylesheet">
+
+   <style type="text/css">
+      /* Header Layout */
+      #topnav {
+         display: flex !important;
+         align-items: center !important;
+         justify-content: flex-start !important;
+         background: linear-gradient(135deg, #006073 0%, #005a6b 100%) !important;
+         position: relative !important;
+      }
+
+      #topnav .navbar-brand,
+      #topnav h2,
+      #topnav .toolbar-icon-bg a {
+         color: white !important;
+      }
+
+      #topnav .logo-area .navbar-brand {
+         color: white !important;
+      }
+
+      #topnav .toolbar-icon-bg .icon-bg {
+         background: rgba(255, 255, 255, 0.15) !important;
+         border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      }
+
+      #topnav .toolbar-icon-bg:hover .icon-bg {
+         background: rgba(255, 255, 255, 0.25) !important;
+         border-color: rgba(255, 255, 255, 0.3) !important;
+      }
+
+      #topnav .toolbar-icon-bg i {
+         color: white !important;
+      }
+
+      #topnav #trigger-sidebar .icon-bg {
+         background: rgba(255, 255, 255, 0.15) !important;
+         border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      }
+
+      #topnav #trigger-sidebar:hover .icon-bg {
+         background: rgba(255, 255, 255, 0.25) !important;
+      }
+
+      .acc-menu li a.active {
+         border-left: 5px solid #005e70 !important;
+         color: #005e6f !important;
+         font-weight: bold !important;
+         background: rgba(0, 94, 112, 0.1) !important;
+      }
+
+      .acc-menu li a.active i {
+         color: #005e6f !important;
+      }
+
+      #wrapper {
+         padding: 0 !important;
+      }
+
+
+      /* Summary cards */
+      .at-summary {
+         display: grid;
+         grid-template-columns: repeat(4, minmax(0, 1fr));
+         gap: 14px;
+         margin-bottom: 16px;
+      }
+
+      @media (max-width: 900px) {
+         .at-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+
+      .at-card {
+         background: white;
+         border: 1px solid #e5e7eb;
+         border-left: 4px solid var(--bd, #006073);
+         border-radius: 10px;
+         padding: 12px 16px;
+      }
+
+      .at-card.present { --bd: #86efac; }
+      .at-card.absent { --bd: #fca5a5; }
+      .at-card.alerted { --bd: #93c5fd; }
+
+      .at-card-label {
+         font-size: 12px;
+         font-weight: 600;
+         color: #6b7280;
+         text-transform: uppercase;
+         letter-spacing: 0.4px;
+      }
+
+      .at-card-value {
+         font-size: 22px;
+         font-weight: 600;
+         color: #111827;
+         margin-top: 2px;
+         font-variant-numeric: tabular-nums;
+      }
+
+      .at-card.absent .at-card-value { color: #b91c1c; }
+
+      /* Toolbar */
+      .at-toolbar {
+         display: flex;
+         flex-wrap: wrap;
+         align-items: center;
+         gap: 10px;
+         margin-bottom: 12px;
+      }
+
+      .at-search {
+         position: relative;
+         flex: 0 1 300px;
+      }
+
+      .at-search i {
+         position: absolute;
+         left: 11px;
+         top: 50%;
+         transform: translateY(-50%);
+         color: #9ca3af;
+      }
+
+      .at-input {
+         width: 100%;
+         padding: 8px 12px;
+         border: 1px solid #d1d5db;
+         border-radius: 8px;
+         font-size: 14px;
+         color: #333;
+         background: white;
+      }
+
+      .at-search .at-input { padding-left: 32px; }
+      input[type="date"].at-input { width: auto; }
+
+      .at-input:focus {
+         outline: none;
+         border-color: #006073;
+         box-shadow: 0 0 0 3px rgba(0, 96, 115, 0.1);
+      }
+
+      .at-spacer { flex: 1; }
+
+      .at-alert-btn {
+         background: #dc2626;
+         color: white;
+         font-weight: 600;
+         border: none;
+         border-radius: 8px;
+         padding: 8px 16px;
+      }
+
+      .at-alert-btn:hover, .at-alert-btn:focus { background: #b91c1c; color: white; }
+      .at-alert-btn[disabled] { background: #e5e7eb; color: #6b7280; cursor: not-allowed; opacity: 1; }
+
+      .at-link {
+         background: none;
+         border: none;
+         color: #006073;
+         font-size: 13px;
+         padding: 0 4px;
+      }
+
+      /* Notices */
+      .at-notice {
+         display: flex;
+         gap: 10px;
+         align-items: flex-start;
+         border-radius: 10px;
+         padding: 10px 14px;
+         margin-bottom: 12px;
+         font-size: 13px;
+         border: 1px solid;
+      }
+
+      .at-notice i { margin-top: 2px; }
+      .at-notice.warn { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+      .at-notice.info { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+
+      /* Table */
+      .at-table-wrap {
+         background: white;
+         border: 1px solid #e5e7eb;
+         border-radius: 10px;
+         overflow: auto;
+         max-height: calc(100vh - 300px);
+         min-height: 240px;
+      }
+
+      .at-table {
+         width: 100%;
+         border-collapse: separate;
+         border-spacing: 0;
+         font-size: 13px;
+      }
+
+      .at-table th,
+      .at-table td {
+         padding: 9px 10px;
+         border-bottom: 1px solid #f1f3f5;
+         background: white;
+         vertical-align: middle;
+      }
+
+      .at-table thead th {
+         position: sticky;
+         top: 0;
+         z-index: 2;
+         background: #006073;
+         color: white;
+         font-weight: 600;
+         font-size: 12px;
+         text-transform: uppercase;
+         letter-spacing: 0.4px;
+         border-bottom: none;
+         text-align: left;
+         white-space: nowrap;
+      }
+
+      .at-table .at-check { width: 36px; text-align: center; }
+      .at-table input[type="checkbox"] { width: 16px; height: 16px; margin: 0; cursor: pointer; vertical-align: middle; }
+      .at-table input[type="checkbox"][disabled] { cursor: not-allowed; }
+
+      .at-table tbody tr.selectable { cursor: pointer; }
+      .at-table tbody tr.selectable:hover td { background: #f9fafb; }
+      .at-table tbody tr.selected td { background: #fef2f2; }
+
+      .at-name { font-weight: 600; color: #111827; }
+      .at-sub { font-size: 11px; color: #6b7280; }
+      .at-nowrap { white-space: nowrap; }
+
+      .at-badge {
+         display: inline-flex;
+         align-items: center;
+         gap: 4px;
+         padding: 3px 10px;
+         border-radius: 12px;
+         font-size: 11px;
+         font-weight: 700;
+         letter-spacing: 0.3px;
+         white-space: nowrap;
+         border: 1px solid;
+      }
+
+      .at-badge.alerted { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
+      .at-badge.missing { background: #f3f4f6; color: #4b5563; border-color: #d1d5db; }
+      .at-badge.streak { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+
+      .empty-state {
+         text-align: center;
+         padding: 60px 20px;
+         color: #666;
+      }
+
+      .empty-state > i {
+         font-size: 64px;
+         color: #ddd;
+         margin-bottom: 20px;
+         display: block;
+      }
+
+      .empty-state h4 {
+         color: #999;
+         margin-bottom: 10px;
+      }
+
+      /* Confirm modal */
+      .at-warning {
+         display: flex;
+         gap: 12px;
+         background: #fef2f2;
+         border: 1px solid #fecaca;
+         color: #991b1b;
+         border-radius: 10px;
+         padding: 12px 14px;
+         margin-bottom: 16px;
+      }
+
+      .at-warning i { font-size: 20px; margin-top: 2px; }
+
+      .at-section-title {
+         font-size: 12px;
+         font-weight: 700;
+         color: #006073;
+         text-transform: uppercase;
+         letter-spacing: 0.5px;
+         margin: 16px 0 6px;
+      }
+
+      .at-preview {
+         background: #e7f6e7;
+         border-radius: 10px;
+         padding: 12px 14px;
+         font-size: 13px;
+         color: #1f2937;
+         line-height: 1.5;
+      }
+
+      .at-preview p { margin: 0 0 8px; }
+      .at-preview p:last-child { margin: 0; }
+      .at-preview strong.hl { background: #fff; border-radius: 4px; padding: 0 3px; }
+
+      .at-recipients {
+         max-height: 180px;
+         overflow: auto;
+         border: 1px solid #e5e7eb;
+         border-radius: 8px;
+         margin: 0;
+         padding: 0;
+         list-style: none;
+      }
+
+      .at-recipients li {
+         display: flex;
+         justify-content: space-between;
+         gap: 10px;
+         padding: 7px 12px;
+         border-bottom: 1px solid #f1f3f5;
+         font-size: 13px;
+      }
+
+      .at-recipients li:last-child { border-bottom: none; }
+   </style>
+
+</head>
+
+<body class="animated-content" ng-app="absenteeTrackerApp" ng-controller="absenteeTrackerController" ng-cloak ng-init="init()">
+   <header id="topnav" class="navbar navbar-default navbar-fixed-top" role="banner">
+      <div class="logo-area">
+         <span id="trigger-sidebar" class="toolbar-trigger toolbar-icon-bg">
+            <a data-toggle="tooltips" data-placement="right" title="Toggle Sidebar">
+               <span class="icon-bg"><i class="ti ti-menu"></i></span>
+            </a>
+         </span>
+         <span class="navbar-brand animated-brand" style="width: 125px" id="animatedBrand">VegaPilot</span>
+      </div>
+
+      <div style="position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center;">
+         <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: white;">
+            <i class="ti ti-alarm-clock" style="margin-right: 8px; color: white;"></i> Absentee Tracker
+         </h2>
+      </div>
+
+      <div style="flex: 1;"></div>
+
+      <ul class="nav navbar-nav toolbar pull-right">
+         <li style="display: flex; align-items: center; margin-right: 10px;">
+            <button class="btn" ng-click="load()" ng-disabled="isLoading || isSending"
+               style="background: #fff; color: #006073; border: 1px solid #006073; font-weight: 600; padding: 9px 20px; border-radius: 6px; font-size: 14px; white-space: nowrap; margin-top: 7px;">
+               <i class="ti ti-reload"></i> Refresh
+            </button>
+         </li>
+         <li class="toolbar-icon-bg hidden-xs" id="trigger-fullscreen">
+            <a href="#" class="toggle-fullscreen"><span class="icon-bg"><i class="ti ti-zoom-in"></i></span></a>
+         </li>
+         <li class="dropdown toolbar-icon-bg">
+            <a href="#" class="dropdown-toggle username" data-toggle="dropdown">
+               <img class="img-circle" src="assets/img/default_user.png" alt="" />
+            </a>
+            <ul class="dropdown-menu userinfo arrow">
+               <li ng-click="logoutNow()"><a href="#/"><i class="ti ti-shift-right"></i><span>Sign Out</span></a></li>
+            </ul>
+         </li>
+      </ul>
+   </header>
+
+   <div id="wrapper">
+      <div id="layout-static">
+         <div class="static-sidebar-wrapper sidebar-default">
+            <div class="static-sidebar">
+               <div class="sidebar">
+                  <div class="widget stay-on-collapse" id="widget-sidebar">
+                     <nav role="navigation" class="widget-body">
+                        <ul class="acc-menu">
+                           <li class="nav-separator"><span>Content Library</span></li>
+                           <li><a href="class-notes.html"><i class="ti ti-notepad"></i><span>Class Notes</span></a></li>
+                           <li><a href="tv-content.html"><i class="ti ti-desktop"></i><span>TV Content</span></a></li>
+                           <li class="nav-separator"><span>Hostel</span></li>
+                           <li><a href="hostel-fee.html"><i class="ti ti-home"></i><span>Hostel Fee</span></a></li>
+                           <li><a href="leave-requests.html"><i class="ti ti-calendar"></i><span>Leave Requests</span></a></li>
+                           <li class="nav-separator"><span>Attendance</span></li>
+                           <li><a href="absentee-tracker.html" class="active"><i class="ti ti-alarm-clock"></i><span>Absentee Tracker</span></a></li>
+                        </ul>
+                     </nav>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="static-content-wrapper">
+            <div class="static-content">
+               <div class="page-content">
+                  <div class="container-fluid" style="padding-top: 1%;">
+
+                     <!-- Day + search + alert -->
+                     <div class="at-toolbar">
+                        <input type="date" class="at-input" ng-model="filters.date" ng-change="onDateChange()"
+                           max="{{today}}" ng-disabled="isLoading || isSending" aria-label="Day">
+                        <div class="at-search" ng-if="!isLoading && !loadError && absentees.length > 0">
+                           <i class="ti ti-search"></i>
+                           <input type="text" class="at-input" placeholder="Search student, parent, mobile or ID"
+                              ng-model="filters.search" ng-model-options="{debounce: 150}">
+                        </div>
+                        <div class="at-spacer"></div>
+                        <span class="at-sub" ng-if="selection.count > 0">
+                           {{selection.count}} selected
+                           <button type="button" class="at-link" ng-click="clearSelection()" ng-disabled="isSending">Clear</button>
+                        </span>
+                        <button type="button" class="btn at-alert-btn" ng-if="canAlert() && selection.count > 0"
+                           ng-click="openConfirm()" ng-disabled="!alertsOpen || isSending"
+                           title="{{alertsOpen ? '' : 'Parents can be alerted from ' + alertsOpenLabel}}">
+                           <i class="ti" ng-class="alertsOpen ? 'ti-bell' : 'ti-time'"></i>
+                           <span ng-if="alertsOpen">Alert Parents of {{selection.count}} {{selection.count === 1 ? 'Student' : 'Students'}}</span>
+                           <span ng-if="!alertsOpen">Alerts open at {{alertsOpenLabel}}</span>
+                        </button>
+                     </div>
+
+                     <!-- Summary -->
+                     <div class="at-summary" ng-if="!isLoading && !loadError">
+                        <div class="at-card">
+                           <div class="at-card-label">Students</div>
+                           <div class="at-card-value">{{summary.total}}</div>
+                        </div>
+                        <div class="at-card present">
+                           <div class="at-card-label">Present</div>
+                           <div class="at-card-value">{{summary.present}}</div>
+                        </div>
+                        <div class="at-card absent">
+                           <div class="at-card-label">Absent</div>
+                           <div class="at-card-value">{{summary.absent}}</div>
+                        </div>
+                        <div class="at-card alerted">
+                           <div class="at-card-label">Parents alerted</div>
+                           <div class="at-card-value">{{summary.alerted}}</div>
+                        </div>
+                     </div>
+
+                     <!-- Notices -->
+                     <div ng-if="!isLoading && !loadError">
+                        <div class="at-notice info" ng-if="notYet">
+                           <i class="ti ti-time"></i>
+                           <div>Attendance for {{formatDate(dateKey)}} is not available yet. Refresh in a while.</div>
+                        </div>
+                        <div class="at-notice warn" ng-if="noAttendance">
+                           <i class="ti ti-info-alt"></i>
+                           <div>No student is marked present on {{formatDate(dateKey)}}. This is probably a holiday, or attendance has not synced yet, so parent alerts are turned off for this day.</div>
+                        </div>
+                        <div class="at-notice warn" ng-if="statusError">
+                           <i class="ti ti-alert"></i>
+                           <div>Parent contacts could not be loaded ({{statusError}}), so alerts are unavailable. <a href="" ng-click="load()">Try again</a></div>
+                        </div>
+                        <div class="at-notice info" ng-if="!isToday && !noAttendance && !statusError && absentees.length > 0">
+                           <i class="ti ti-info-alt"></i>
+                           <div>Showing {{formatDate(dateKey)}}. Parents can only be alerted for today's absences.</div>
+                        </div>
+                        <div class="at-notice info" ng-if="isToday && !alertsOpen && canAlert() && absentees.length > 0">
+                           <i class="ti ti-time"></i>
+                           <div>Attendance is still coming in. You can select students now; parents can be alerted from {{alertsOpenLabel}}.</div>
+                        </div>
+                     </div>
+
+                     <!-- Loading skeleton -->
+                     <div class="skeleton-loader-container" ng-if="isLoading">
+                        <div class="skeleton-row" ng-repeat="i in [1,2,3,4,5,6,7,8] track by $index">
+                           <div class="skeleton-col text-short"><div class="skeleton-shimmer"></div></div>
+                           <div class="skeleton-col text-medium"><div class="skeleton-shimmer"></div></div>
+                           <div class="skeleton-col text-long"><div class="skeleton-shimmer"></div></div>
+                        </div>
+                     </div>
+
+                     <!-- Absentees -->
+                     <div class="at-table-wrap" ng-if="!isLoading && !loadError && absentees.length > 0">
+                        <table class="at-table">
+                           <thead>
+                              <tr>
+                                 <th class="at-check">
+                                    <input type="checkbox" ng-if="canAlert()" ng-checked="selection.allVisible"
+                                       ng-click="toggleAll()" ng-disabled="!selection.anySelectable || isSending"
+                                       aria-label="Select all">
+                                 </th>
+                                 <th>Student</th>
+                                 <th>Parent</th>
+                                 <th>Absent streak</th>
+                                 <th>Alert</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr ng-repeat="a in visible track by a.id"
+                                 ng-class="{selectable: canAlert() && a.selectable, selected: a.selected}"
+                                 ng-click="canAlert() && !isSending && toggle(a)">
+                                 <td class="at-check">
+                                    <input type="checkbox" ng-if="canAlert()" ng-checked="a.selected"
+                                       ng-disabled="!a.selectable || isSending" ng-click="$event.stopPropagation(); toggle(a)"
+                                       aria-label="Select {{a.name}}">
+                                 </td>
+                                 <td>
+                                    <div class="at-name">{{a.name}}</div>
+                                    <div class="at-sub">ID {{a.id}}</div>
+                                 </td>
+                                 <td>
+                                    <div ng-if="a.parent">{{a.parent.name || 'Parent'}}<span class="at-sub" ng-if="a.parent.relation"> &middot; {{a.parent.relation}}</span></div>
+                                    <div class="at-sub" ng-if="a.parent.mobile">{{a.parent.mobile}}</div>
+                                    <span class="at-sub" ng-if="!a.parent">—</span>
+                                 </td>
+                                 <td class="at-nowrap">
+                                    <span class="at-badge streak" ng-if="a.streak > 1">{{a.streak}} days in a row</span>
+                                    <span class="at-sub" ng-if="a.streak <= 1">Today only</span>
+                                 </td>
+                                 <td class="at-nowrap">
+                                    <span class="at-badge alerted" ng-if="a.alert"><i class="ti ti-check"></i> Alerted<span ng-if="a.alert.sentOn">at {{formatTime(a.alert.sentOn)}}</span></span>
+                                    <span class="at-badge missing" ng-if="rowNote(a)">{{rowNote(a)}}</span>
+                                 </td>
+                              </tr>
+                              <tr ng-if="visible.length === 0">
+                                 <td colspan="5" class="empty-state">
+                                    <i class="ti ti-filter"></i>
+                                    <h4>No absentees match "{{filters.search}}"</h4>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+
+                     <!-- Error State -->
+                     <div class="empty-state" ng-if="!isLoading && loadError">
+                        <i class="ti ti-alert"></i>
+                        <h4>Could not load attendance</h4>
+                        <p>{{loadError}}</p>
+                        <button class="btn btn-default" ng-click="load()"><i class="ti ti-reload"></i> Retry</button>
+                     </div>
+
+                     <!-- Empty State -->
+                     <div class="empty-state" ng-if="!isLoading && !loadError && absentees.length === 0 && !notYet">
+                        <i class="ti ti-face-smile"></i>
+                        <h4 ng-if="summary.total > 0">Everyone is present on {{formatDate(dateKey)}}</h4>
+                        <h4 ng-if="summary.total === 0">No students are on the attendance roster</h4>
+                     </div>
+
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Confirm: alert parents -->
+   <div class="crispr-modal-backdrop" ng-class="{active: !!confirm}" ng-click="closeConfirm()">
+      <div class="crispr-modal-dialog" style="max-width: 560px;" ng-click="$event.stopPropagation()">
+         <div class="crispr-modal-header">
+            <h3><i class="ti ti-bell"></i> Alert {{confirm.students.length}} {{confirm.students.length === 1 ? 'parent' : 'parents'}}</h3>
+            <button class="crispr-modal-close" ng-click="closeConfirm()" ng-disabled="isSending">
+               <i class="ti ti-close"></i>
+            </button>
+         </div>
+         <div class="crispr-modal-body">
+            <div class="at-warning">
+               <i class="ti ti-alert"></i>
+               <div>
+                  <strong>This sends a WhatsApp message to each parent right away and cannot be undone.</strong>
+                  Make sure these students really are absent today. Each parent is alerted at most once a day.
+               </div>
+            </div>
+
+            <div class="at-section-title">Message</div>
+            <div class="at-preview">
+               <p><strong>Attendance Alert</strong></p>
+               <p>This is to inform you that your child, <strong class="hl">{{confirm.student}}</strong>, was marked 🔴 ABSENT for today's class (<strong class="hl">{{confirm.date}}</strong>) as per the automated attendance tracking system at Crispr Learning.</p>
+               <p>Please contact the class teacher if you believe there is any discrepancy. You can check more details on the Hero's Portal.</p>
+            </div>
+            <div class="at-sub" style="margin-top: 4px;" ng-if="confirm.students.length > 1">Each parent gets their own child's name and ID.</div>
+
+            <div class="at-section-title">Recipients</div>
+            <ul class="at-recipients">
+               <li ng-repeat="a in confirm.students track by a.id">
+                  <span><strong>{{a.name}}</strong> <span class="at-sub">ID {{a.id}}</span></span>
+                  <span class="at-sub">{{a.parent.name || 'Parent'}} &middot; {{a.parent.mobile}}</span>
+               </li>
+            </ul>
+         </div>
+         <div class="crispr-modal-footer">
+            <button type="button" class="btn btn-default" ng-click="closeConfirm()" ng-disabled="isSending">Cancel</button>
+            <button type="button" class="btn at-alert-btn" ng-click="sendAlerts()" ng-disabled="isSending">
+               <i class="ti" ng-class="isSending ? 'ti-reload' : 'ti-bell'"></i>
+               {{isSending ? 'Sending...' : 'Send ' + confirm.students.length + ' WhatsApp ' + (confirm.students.length === 1 ? 'alert' : 'alerts')}}
+            </button>
+         </div>
+      </div>
+   </div>
+
+   <!-- Send outcome: students whose parent was not alerted -->
+   <div class="crispr-modal-backdrop" ng-class="{active: !!outcome}" ng-click="closeOutcome()">
+      <div class="crispr-modal-dialog" style="max-width: 520px;" ng-click="$event.stopPropagation()">
+         <div class="crispr-modal-header">
+            <h3><i class="ti ti-alert"></i> {{outcome.problems.length}} {{outcome.problems.length === 1 ? 'parent was' : 'parents were'}} not alerted</h3>
+            <button class="crispr-modal-close" ng-click="closeOutcome()">
+               <i class="ti ti-close"></i>
+            </button>
+         </div>
+         <div class="crispr-modal-body">
+            <p class="at-sub" style="font-size: 13px;">
+               {{outcome.counts.sent || 0}} sent &middot; {{outcome.counts.failed || 0}} failed &middot; {{outcome.counts.skipped || 0}} skipped.
+               Failed ones stay selectable, so you can retry them or call the parent.
+            </p>
+            <ul class="at-recipients" style="max-height: 300px;">
+               <li ng-repeat="p in outcome.problems track by p.id">
+                  <span><strong>{{p.name}}</strong> <span class="at-sub">ID {{p.id}}</span></span>
+                  <span class="at-sub" ng-style="{color: p.status === 'failed' ? '#b91c1c' : ''}">{{p.error}}</span>
+               </li>
+            </ul>
+         </div>
+         <div class="crispr-modal-footer">
+            <button type="button" class="btn btn-default" ng-click="closeOutcome()">Close</button>
+         </div>
+      </div>
+   </div>
+
+   <!-- Scripts -->
+   <script type="text/javascript" src="assets/js/jquery-1.10.2.min.js"></script>
+   <script type="text/javascript" src="assets/js/jqueryui-1.10.3.min.js"></script>
+   <script type="text/javascript" src="assets/js/angular.min.js"></script>
+   <script type="text/javascript" src="assets/js/angular-cookies.min.js"></script>
+   <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+   <script type="text/javascript" src="assets/js/enquire.min.js"></script>
+   <script type="text/javascript" src="assets/plugins/velocityjs/velocity.min.js"></script>
+   <script type="text/javascript" src="assets/plugins/velocityjs/velocity.ui.min.js"></script>
+   <script type="text/javascript" src="assets/plugins/wijets/wijets.js"></script>
+   <script type="text/javascript" src="assets/plugins/nanoScroller/js/jquery.nanoscroller.min.js"></script>
+   <script type="text/javascript" src="assets/js/application.js"></script>
+   <script type="text/javascript" src="assets/js/toaster.js"></script>
+   <script src="controllers/absentee-tracker.js"></script>
+
+
+   <!-- Toaster Container -->
+   <div class="toaster-container">
+      <div class="toaster" ng-repeat="toaster in toasters track by $index"
+         ng-class="[toaster.type, {'hiding': toaster.hiding}]">
+         <div class="toaster-icon">
+            <i class="ti" ng-class="{
+                'ti-check': toaster.type === 'success',
+                'ti-alert': toaster.type === 'error',
+                'ti-info-alt': toaster.type === 'info',
+                'ti-bell': toaster.type === 'warning'
+             }"></i>
+         </div>
+         <div class="toaster-content">
+            <div class="toaster-title">{{toaster.title}}</div>
+            <div class="toaster-message">{{toaster.message}}</div>
+         </div>
+         <button class="toaster-close" ng-click="removeToaster($index)">
+            <i class="ti ti-close"></i>
+         </button>
+      </div>
+   </div>
+
+</body>
+
+</html>
