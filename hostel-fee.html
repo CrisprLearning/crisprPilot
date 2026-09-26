@@ -375,12 +375,11 @@
          margin-left: 3px;
       }
 
-      .hf-amt .hf-part {
-         display: block;
-         clear: both;
-         font-size: 10px;
-         font-weight: 600;
-         color: #166534;
+      .hf-amt .hf-struck {
+         font-size: 11px;
+         font-weight: 400;
+         opacity: 0.6;
+         margin-right: 3px;
       }
 
       .hf-empty-cell {
@@ -821,8 +820,13 @@
                                        title="{{s.cells[key].status | uppercase}} · click for details">
                                        <i class="ti hf-amt-icon" ng-class="statusIcon(s.cells[key].status)"></i>
                                        <span class="hf-count" ng-if="s.cells[key].entries.length > 1">{{s.cells[key].entries.length}}</span>
-                                       {{money(s.cells[key].amount)}}
-                                       <span class="hf-part" ng-if="s.cells[key].status !== 'paid' && s.cells[key].paid > 0">{{money(s.cells[key].paid)}} paid</span>
+                                       <!-- Part paid: strike the invoiced amount, show what is still due -->
+                                       <span ng-if="s.cells[key].status !== 'paid' && s.cells[key].paid > 0"
+                                          title="{{money(s.cells[key].paid)}} paid of {{money(s.cells[key].amount)}}">
+                                          <s class="hf-struck">{{money(s.cells[key].amount)}}</s>
+                                          {{money(s.cells[key].amount - s.cells[key].paid)}}
+                                       </span>
+                                       <span ng-if="!(s.cells[key].status !== 'paid' && s.cells[key].paid > 0)">{{money(s.cells[key].amount)}}</span>
                                     </button>
                                     <span class="hf-empty-cell" ng-if="!s.cells[key]">—</span>
                                  </td>
