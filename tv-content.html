@@ -146,6 +146,21 @@
          white-space: nowrap;
       }
 
+      .tv-card-actions {
+         display: flex;
+         align-items: center;
+         gap: 6px;
+         padding: 0 14px 12px;
+      }
+
+      .tv-card-actions .btn {
+         flex: 1;
+      }
+
+      .tv-card-actions .btn-delete {
+         color: #dc2626;
+      }
+
       .tv-skeleton {
          aspect-ratio: 16 / 9;
          background: #e5e7eb;
@@ -429,6 +444,14 @@
                               <div class="tv-card-title" title="{{item.title}}">{{item.title}}</div>
                               <span class="tv-duration"><i class="ti ti-timer"></i> {{formatDuration(item.duration)}}</span>
                            </div>
+                           <div class="tv-card-actions">
+                              <button type="button" class="btn btn-default btn-sm" ng-click="openEdit(item)">
+                                 <i class="ti ti-timer"></i> Edit Duration
+                              </button>
+                              <button type="button" class="btn btn-default btn-sm btn-delete" ng-click="confirmDelete(item)">
+                                 <i class="ti ti-trash"></i> Delete
+                              </button>
+                           </div>
                         </div>
                      </div>
 
@@ -539,6 +562,52 @@
             <button class="btn btn-default" ng-click="closeAddModal()" ng-disabled="isSaving">Cancel</button>
             <button class="btn btn-success" ng-click="saveContent()" ng-disabled="isSaving">
                <i class="ti ti-check"></i> {{isSaving ? 'Uploading...' : 'Upload'}}
+            </button>
+         </div>
+      </div>
+   </div>
+
+   <!-- Edit Duration Modal -->
+   <div class="crispr-modal-backdrop" ng-class="{active: !!editItem}">
+      <div class="crispr-modal-dialog" style="max-width: 420px;">
+         <div class="crispr-modal-header">
+            <h3><i class="ti ti-timer"></i> Edit Duration</h3>
+            <button class="crispr-modal-close" ng-click="closeEdit()">
+               <i class="ti ti-close"></i>
+            </button>
+         </div>
+         <div class="crispr-modal-body">
+            <p style="margin-bottom: 12px;"><strong>{{editItem.title}}</strong></p>
+            <label class="field-label">Duration (seconds) <span class="required">*</span></label>
+            <input type="number" min="1" step="1" class="tv-input" ng-model="editForm.duration"
+               ng-class="{'has-error': editError}" ng-keyup="$event.keyCode === 13 && saveDuration()">
+            <span class="field-error" ng-if="editError">{{editError}}</span>
+         </div>
+         <div class="crispr-modal-footer">
+            <button class="btn btn-default" ng-click="closeEdit()" ng-disabled="isUpdating">Cancel</button>
+            <button class="btn btn-success" ng-click="saveDuration()" ng-disabled="isUpdating">
+               <i class="ti ti-check"></i> {{isUpdating ? 'Saving...' : 'Save'}}
+            </button>
+         </div>
+      </div>
+   </div>
+
+   <!-- Delete Confirmation Modal -->
+   <div class="crispr-modal-backdrop" ng-class="{active: !!deleteItem}">
+      <div class="crispr-modal-dialog" style="max-width: 420px;">
+         <div class="crispr-modal-header">
+            <h3><i class="ti ti-trash"></i> Delete TV Content</h3>
+            <button class="crispr-modal-close" ng-click="closeDelete()">
+               <i class="ti ti-close"></i>
+            </button>
+         </div>
+         <div class="crispr-modal-body">
+            <p>Delete <strong>{{deleteItem.title}}</strong>? It will stop playing on the TV screens and the image will be removed permanently.</p>
+         </div>
+         <div class="crispr-modal-footer">
+            <button class="btn btn-default" ng-click="closeDelete()" ng-disabled="isDeleting">Cancel</button>
+            <button class="btn btn-danger" ng-click="deleteContent()" ng-disabled="isDeleting">
+               <i class="ti ti-trash"></i> {{isDeleting ? 'Deleting...' : 'Delete'}}
             </button>
          </div>
       </div>

@@ -47,6 +47,8 @@ app.controller('tvContentController', ['$scope', '$http', '$cookies', '$timeout'
 
     var LIST_URL = BASE_URL + '/public/tv-content.php';
     var ADD_URL = BASE_URL + '/restricted/tv-content/add-tv-content.php';
+    var UPDATE_URL = BASE_URL + '/restricted/tv-content/update-tv-content.php';
+    var DELETE_URL = BASE_URL + '/restricted/tv-content/delete-tv-content.php';
 
     // ===== Constants =====
     $scope.DEFAULT_WIDTH = 1920;
@@ -67,6 +69,12 @@ app.controller('tvContentController', ['$scope', '$http', '$cookies', '$timeout'
     $scope.isSaving = false;
     $scope.uploadProgress = 0;
     $scope.previewItem = null;
+    $scope.editItem = null;
+    $scope.editForm = { duration: '' };
+    $scope.editError = '';
+    $scope.isUpdating = false;
+    $scope.deleteItem = null;
+    $scope.isDeleting = false;
     $scope.errors = {};
     $scope.form = newForm();
     $scope.crop = { loaded: false, loading: false, zoom: 1, minZoom: 1, upscaled: false };
@@ -135,6 +143,76 @@ app.controller('tvContentController', ['$scope', '$http', '$cookies', '$timeout'
 
     $scope.openPreview = function (item) { $scope.previewItem = item; };
     $scope.closePreview = function () { $scope.previewItem = null; };
+
+    // ===== Edit duration =====
+    $scope.openEdit = function (item) {
+        $scope.editItem = item;
+        $scope.editForm = { duration: Number(item.duration) || 10 };
+        $scope.editError = '';
+    };
+
+    $scope.closeEdit = function () {
+        if ($scope.isUpdating) return;
+        $scope.editItem = null;
+    };
+
+    $scope.saveDuration = function () {
+        var item = $scope.editItem;
+        if (!item || $scope.isUpdating) return;
+        var d = Number($scope.editForm.duration);
+        if (!isFinite(d) || Math.floor(d) !== d || d <= 0) {
+            $scope.editError = 'Enter a whole number of seconds.';
+            return;
+        }
+        $scope.editError = '';
+        $scope.isUpdating = true;
+        $http.post(UPDATE_URL, { id: item.id, duration: d }, {
+            headers: { 'X-Access-Token': getAdminTokenFromCookie(), 'Content-Type': 'application/json' }
+        })
+            .then(function (response) {
+                unwrap(response);
+                item.duration = d;
+                $scope.showToaster('success', 'Updated', 'Duration updated.');
+                $scope.isUpdating = false;
+                $scope.editItem = null;
+            })
+            .catch(function (err) {
+                $scope.showToaster('error', 'Could not update duration', errorMessage(err));
+            })
+            .finally(function () {
+                $scope.isUpdating = false;
+            });
+    };
+
+    // ===== Delete =====
+    $scope.confirmDelete = function (item) { $scope.deleteItem = item; };
+
+    $scope.closeDelete = function () {
+        if ($scope.isDeleting) return;
+        $scope.deleteItem = null;
+    };
+
+    $scope.deleteContent = function () {
+        var item = $scope.deleteItem;
+        if (!item || $scope.isDeleting) return;
+        $scope.isDeleting = true;
+        $http.post(DELETE_URL, { id: item.id }, {
+            headers: { 'X-Access-Token': getAdminTokenFromCookie(), 'Content-Type': 'application/json' }
+        })
+            .then(function (response) {
+                unwrap(response);
+                $scope.showToaster('success', 'Deleted', 'TV content deleted.');
+                $scope.isDeleting = false;
+                $scope.deleteItem = null;
+                $scope.loadContent();
+            })
+            .catch(function (err) {
+                $scope.showToaster('error', 'Could not delete content', errorMessage(err));
+            })
+            .finally(function () {
+                $scope.isDeleting = false;
+            });
+    };
 
     // ===== Add-content modal =====
     $scope.openAddModal = function () {

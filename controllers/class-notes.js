@@ -93,12 +93,6 @@ app.controller('classNotesController', ['$scope', '$http', '$cookies', '$timeout
         file: null
     };
 
-    $scope.summaryData = {
-        totalNotes: 0,
-        totalChapters: 0,
-        totalSize: 0
-    };
-
     // Skeleton loader helper
     $scope.getSkeletonRows = function () {
         return new Array(5);
@@ -146,7 +140,6 @@ app.controller('classNotesController', ['$scope', '$http', '$cookies', '$timeout
                     });
                 });
                 $scope.chapters = flat;
-                $scope.summaryData.totalChapters = flat.length;
             })
             .catch(function (error) {
                 console.warn('Could not load chapter list:', error);
@@ -195,8 +188,6 @@ app.controller('classNotesController', ['$scope', '$http', '$cookies', '$timeout
             $scope.pageSize = body.size || $scope.pageSize;
             $scope.totalItems = (body.total != null) ? body.total : $scope.notes.length;
             $scope.totalPages = body.totalPages || Math.max(1, Math.ceil($scope.totalItems / $scope.pageSize));
-
-            $scope.calculateSummary();
         }).catch(function (error) {
             console.warn('Could not load class notes:', error);
             $scope.notes = [];
@@ -222,9 +213,7 @@ app.controller('classNotesController', ['$scope', '$http', '$cookies', '$timeout
             fileName: fileName,
             displayName: row.displayName || row.originalName || prettyNameFromStored(fileName),
             fileUrl: fileUrl,
-            fileSize: row.fileSize || row.size || 0,
-            hidden: row.hidden || row.isHidden || false,
-            uploadedOn: row.uploadedOn || row.createdOn
+            hidden: row.hidden || row.isHidden || false
         };
     }
 
@@ -244,15 +233,6 @@ app.controller('classNotesController', ['$scope', '$http', '$cookies', '$timeout
         var m = /^[0-9a-fA-F-]{8,}_\d{8}_(.+)$/.exec(name);
         return m ? m[1] : name;
     }
-
-    // ===== Summary =====
-    $scope.calculateSummary = function () {
-        // Total reflects the full result set; size is summed over the loaded page.
-        $scope.summaryData.totalNotes = $scope.totalItems || $scope.notes.length;
-        $scope.summaryData.totalSize = $scope.notes.reduce(function (sum, n) {
-            return sum + (Number(n.fileSize) || 0);
-        }, 0);
-    };
 
     // ===== Search / Filter (server-side) =====
     // Any filter change resets to page 1 and re-queries. Search is debounced so
@@ -464,25 +444,6 @@ app.controller('classNotesController', ['$scope', '$http', '$cookies', '$timeout
     }
 
     // ===== Helpers =====
-    $scope.formatBytes = function (bytes) {
-        bytes = Number(bytes) || 0;
-        if (bytes === 0) return '0 B';
-        var k = 1024;
-        var sizes = ['B', 'KB', 'MB', 'GB'];
-        var i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    };
-
-    $scope.formatDate = function (timestamp) {
-        if (!timestamp) return '—';
-        // Accept both unix seconds and ISO strings.
-        var date = (typeof timestamp === 'number' || /^\d+$/.test(timestamp))
-            ? new Date(Number(timestamp) * 1000)
-            : new Date(timestamp);
-        if (isNaN(date.getTime())) return '—';
-        return date.toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' });
-    };
-
     $scope.openNote = function (note) {
         if (note.fileUrl) {
             window.open(note.fileUrl, '_blank');
