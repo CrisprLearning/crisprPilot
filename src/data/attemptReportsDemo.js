@@ -45,6 +45,8 @@ export function generateAttempts({ totalQuestions = 60, maximumMarks = 240, coun
     return {
       studentId,
       studentName,
+      // Demo profile photo (CORS-enabled placeholder); the poster tool falls back to initials if unreachable.
+      photoUrl: `https://api.dicebear.com/9.x/avataaars/png?size=400&seed=${encodeURIComponent(studentName)}`,
       studentEmail: `${studentName.toLowerCase().replace(/\s+/g, '.')}@example.com`,
       rollNumber: `R${2024000 + index + 1}`,
       courseId: course.id,

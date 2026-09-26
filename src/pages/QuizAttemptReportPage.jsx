@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ToastRegion from '../components/ToastRegion';
+import RankPosterFlow from '../components/RankPosterDesigner';
 import { availableBatches, availableCourses, ensureAttempts } from '../data/attemptReportsDemo';
 import { draftQuizzesDemo, publishedQuizzesDemo } from '../data/quizzesDemo';
 
@@ -199,6 +200,7 @@ export default function QuizAttemptReportPage() {
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [showReEvaluateModal, setShowReEvaluateModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
+  const [showPosterFlow, setShowPosterFlow] = useState(false);
   const [exportColumns, setExportColumns] = useState({
     rank: true, studentName: true, rollNumber: true, totalScore: true,
     percentage: true, totalAttempts: true, correctAttempts: true, wrongAttempts: true,
@@ -509,6 +511,16 @@ export default function QuizAttemptReportPage() {
           >
             <i className="ti ti-download" /> Export Rank List to PDF
           </button>
+          <button
+            type="button"
+            className="qar-btn-poster"
+            title="Create rank poster"
+            aria-label="Create rank poster"
+            disabled={filteredRankings.length === 0}
+            onClick={() => setShowPosterFlow(true)}
+          >
+            <i className="ti ti-cup" />
+          </button>
         </div>
       </div>
 
@@ -630,6 +642,17 @@ export default function QuizAttemptReportPage() {
             : <p>No students have attempted this quiz yet.</p>}
         </div>
       )}
+
+      {/* ── Rank Poster (type chooser → designer) ── */}
+      <RankPosterFlow
+        open={showPosterFlow}
+        rankings={filteredRankings}
+        maxMarks={quiz.maximumMarks}
+        title={quiz.title}
+        hasActiveFilters={hasActiveFilters}
+        onClose={() => setShowPosterFlow(false)}
+        onExported={(how) => showToast('success', how === 'copy' ? 'Poster Copied' : 'Poster Downloaded', how === 'copy' ? 'The poster image is on your clipboard.' : 'The poster PNG has been saved.')}
+      />
 
       {/* ── Filter Modal ── */}
       {showFilterModal && (
