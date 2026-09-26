@@ -111,7 +111,7 @@ angular.module('AdminLoginApp', ['ngCookies'])
                 if ($cookies.get("vegaPilotAdminToken")) {
                     $scope.showSuccessScreen('Already logged in!', 'Redirecting to dashboard...');
                     $timeout(function () {
-                        window.location = "candidate-profile.html";
+                        window.location = "class-notes.html";
                     }, 1000);
                 } else {
                     // Hide loading screen to show login form
