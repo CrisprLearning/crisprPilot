@@ -179,13 +179,22 @@ app.controller('hostelFeeController', ['$scope', '$http', '$cookies', '$timeout'
 
     // ===== Derived data =====
 
+    // Part payments leave an invoice pending with amountPaid < amount.
+    function paidOf(e) {
+        return e.status === 'paid' ? e.amount : (e.amountPaid || 0);
+    }
+
+    $scope.balanceOf = function (e) {
+        return e.amount - paidOf(e);
+    };
+
     // Sum a cell's invoices; its colour is the worst status among them.
     function buildCell(entries) {
         if (!entries || entries.length === 0) return null;
         var cell = { entries: entries, amount: 0, paid: 0, status: 'paid' };
         entries.forEach(function (e) {
             cell.amount += e.amount;
-            if (e.status === 'paid') cell.paid += e.amount;
+            cell.paid += paidOf(e);
             if (STATUS_RANK[e.status] > STATUS_RANK[cell.status]) cell.status = e.status;
         });
         return cell;
@@ -208,8 +217,8 @@ app.controller('hostelFeeController', ['$scope', '$http', '$cookies', '$timeout'
             if (!cell) return;
             cell.entries.forEach(function (e) {
                 s.invoiced += e.amount;
-                if (e.status === 'overdue') s.overdue += e.amount;
-                if (e.status === 'pending') s.pending += e.amount;
+                if (e.status === 'overdue') s.overdue += $scope.balanceOf(e);
+                if (e.status === 'pending') s.pending += $scope.balanceOf(e);
             });
             s.balance += cell.amount - cell.paid;
             if (STATUS_RANK[cell.status] > STATUS_RANK[s.worst]) s.worst = cell.status;
@@ -413,7 +422,10 @@ app.controller('hostelFeeController', ['$scope', '$http', '$cookies', '$timeout'
 
     // ===== Record payment =====
     $scope.startPayment = function (entry) {
-        $scope.payForm = { entryId: entry.id, paidOn: fromIsoDate($scope.today), mode: '', receiptNo: '', note: '' };
+        $scope.payForm = {
+            entryId: entry.id, amount: $scope.balanceOf(entry), paidOn: fromIsoDate($scope.today),
+            mode: '', receiptNo: '', note: ''
+        };
         $scope.payErrors = {};
     };
 
@@ -433,10 +445,22 @@ app.controller('hostelFeeController', ['$scope', '$http', '$cookies', '$timeout'
         return value.getFullYear() + '-' + pad(value.getMonth() + 1) + '-' + pad(value.getDate());
     }
 
+    $scope.isPartPayment = function (entry) {
+        var amt = $scope.payForm.amount;
+        return typeof amt === 'number' && amt > 0 && amt < $scope.balanceOf(entry);
+    };
+
     $scope.submitPayment = function (entry) {
         var form = $scope.payForm;
         var paidOn = toIsoDate(form.paidOn);
+        var balance = $scope.balanceOf(entry);
         var errors = {};
+
+        if (typeof form.amount !== 'number' || !isFinite(form.amount) || form.amount <= 0 || form.amount % 1 !== 0) {
+            errors.amount = 'Enter a whole amount of at least ₹1.';
+        } else if (form.amount > balance) {
+            errors.amount = 'Cannot be more than the balance due (' + $scope.money(balance) + ').';
+        }
 
         if (!/^\d{4}-\d{2}-\d{2}$/.test(paidOn)) {
             errors.paidOn = 'Enter the date the payment was received.';
@@ -456,6 +480,7 @@ app.controller('hostelFeeController', ['$scope', '$http', '$cookies', '$timeout'
             headers: { 'X-Access-Token': getAdminTokenFromCookie(), 'Content-Type': 'application/json' },
             data: {
                 id: entry.id,
+                amount: form.amount,
                 paidOn: paidOn,
                 mode: form.mode,
                 receiptNo: (form.receiptNo || '').trim(),
@@ -463,6 +488,7 @@ app.controller('hostelFeeController', ['$scope', '$http', '$cookies', '$timeout'
             }
         })
             .then(function (response) {
+                var paidNow = form.amount;
                 angular.extend(entry, unwrap(response).data);
 
                 var detail = $scope.detail;
@@ -471,8 +497,16 @@ app.controller('hostelFeeController', ['$scope', '$http', '$cookies', '$timeout'
                 detail.cell = detail.student.cells[detail.key];
                 $scope.cancelPayment();
 
+                if (entry.status !== 'paid') {
+                    // Part payment: keep the modal open showing paid-so-far / balance.
+                    $scope.showToaster('success', 'Part payment recorded',
+                        $scope.money(paidNow) + ' · ' + detail.title + ' · ' + detail.student.name +
+                        ' · ' + $scope.money($scope.balanceOf(entry)) + ' still due');
+                    return;
+                }
+
                 $scope.showToaster('success', 'Payment recorded',
-                    $scope.money(entry.amount) + ' · ' + detail.title + ' · ' + detail.student.name);
+                    $scope.money(paidNow) + ' · ' + detail.title + ' · ' + detail.student.name);
 
                 var stillUnpaid = detail.cell.entries.filter(function (e) { return e.status !== 'paid'; });
                 if (stillUnpaid.length === 0) {

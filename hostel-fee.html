@@ -309,8 +309,6 @@
       .hf-muted { color: #9ca3af; }
 
       .hf-group td {
-         position: sticky;
-         left: 0;
          background: #eef6f7 !important;
          color: #006073;
          font-weight: 700;
@@ -318,6 +316,13 @@
          text-transform: uppercase;
          letter-spacing: 0.5px;
          padding: 8px 10px;
+      }
+
+      /* The label (not the full-width cell) sticks, so it stays readable when
+         the months are scrolled horizontally. */
+      .hf-group-label {
+         position: sticky;
+         left: 10px;
       }
 
       .hf-group .hf-group-meta {
@@ -368,6 +373,14 @@
          padding: 0 5px;
          margin-top: 2px;
          margin-left: 3px;
+      }
+
+      .hf-amt .hf-part {
+         display: block;
+         clear: both;
+         font-size: 10px;
+         font-weight: 600;
+         color: #166534;
       }
 
       .hf-empty-cell {
@@ -788,10 +801,10 @@
                            <tbody ng-repeat="group in groups track by group.id">
                               <tr class="hf-group">
                                  <td ng-attr-colspan="{{5 + cellKeys.length}}">
-                                    <i class="ti ti-home"></i> {{group.name}}
-                                    <span class="hf-group-meta">{{group.students.length}} students
-                                       <span ng-if="group.overdue > 0"> &middot; {{money(group.overdue)}}
-                                          overdue</span></span>
+                                    <span class="hf-group-label"><i class="ti ti-home"></i> {{group.name}}
+                                       <span class="hf-group-meta">{{group.students.length}} students
+                                          <span ng-if="group.overdue > 0"> &middot; {{money(group.overdue)}}
+                                             overdue</span></span></span>
                                  </td>
                               </tr>
                               <tr ng-repeat="s in group.students track by s.candidateId">
@@ -809,6 +822,7 @@
                                        <i class="ti hf-amt-icon" ng-class="statusIcon(s.cells[key].status)"></i>
                                        <span class="hf-count" ng-if="s.cells[key].entries.length > 1">{{s.cells[key].entries.length}}</span>
                                        {{money(s.cells[key].amount)}}
+                                       <span class="hf-part" ng-if="s.cells[key].status !== 'paid' && s.cells[key].paid > 0">{{money(s.cells[key].paid)}} paid</span>
                                     </button>
                                     <span class="hf-empty-cell" ng-if="!s.cells[key]">—</span>
                                  </td>
@@ -917,23 +931,31 @@
                </div>
 
                <dl class="hf-kv">
+                  <div ng-if="e.status !== 'paid' && e.amountPaid > 0">
+                     <dt>Paid so far</dt>
+                     <dd style="color: #166534; font-weight: 600;">{{money(e.amountPaid)}}</dd>
+                  </div>
+                  <div ng-if="e.status !== 'paid' && e.amountPaid > 0">
+                     <dt>Balance</dt>
+                     <dd style="color: #991b1b; font-weight: 600;">{{money(balanceOf(e))}}</dd>
+                  </div>
                   <div>
                      <dt>Due on</dt>
                      <dd>{{formatDate(e.dueOn)}}
                         <div class="hf-late" ng-if="e.status === 'overdue'">{{daysLate(e)}} days overdue</div>
                      </dd>
                   </div>
-                  <div ng-if="e.status === 'paid'">
-                     <dt>Paid on</dt>
+                  <div ng-if="e.status === 'paid' || e.amountPaid > 0">
+                     <dt>{{e.status === 'paid' ? 'Paid on' : 'Last paid on'}}</dt>
                      <dd>{{e.paidOn ? formatDate(e.paidOn) : '—'}}
-                        <div class="hf-late" ng-if="e.paidOn && e.paidOn > e.dueOn">Paid late</div>
+                        <div class="hf-late" ng-if="e.status === 'paid' && e.paidOn && e.paidOn > e.dueOn">Paid late</div>
                      </dd>
                   </div>
-                  <div ng-if="e.status === 'paid'">
+                  <div ng-if="e.status === 'paid' || e.amountPaid > 0">
                      <dt>Mode</dt>
                      <dd>{{e.mode || '—'}}</dd>
                   </div>
-                  <div ng-if="e.status === 'paid'">
+                  <div ng-if="e.status === 'paid' || e.amountPaid > 0">
                      <dt>Receipt no.</dt>
                      <dd>{{e.receiptNo || '—'}}</dd>
                   </div>
@@ -941,7 +963,7 @@
                      <dt>Note</dt>
                      <dd>{{e.note}}</dd>
                   </div>
-                  <div ng-if="e.status === 'paid' && e.lastModifiedAt" style="grid-column: 1 / -1;">
+                  <div ng-if="(e.status === 'paid' || e.amountPaid > 0) && e.lastModifiedAt" style="grid-column: 1 / -1;">
                      <dt>Recorded</dt>
                      <dd class="hf-sub">{{formatTimestamp(e.lastModifiedAt)}}<span ng-if="e.lastModifiedBy"> by
                            {{e.lastModifiedBy}}</span></dd>
@@ -959,12 +981,18 @@
                   <form class="hf-pay-form" ng-if="payForm.entryId === e.id" ng-submit="submitPayment(e)" novalidate>
                      <div class="hf-form-grid">
                         <div>
-                           <label class="field-label">Amount</label>
-                           <input type="text" class="hf-input" ng-value="money(e.amount)" disabled>
+                           <label class="field-label">Amount (₹) <span class="required">*</span></label>
+                           <input type="number" class="hf-input" min="1" step="1" ng-attr-max="{{balanceOf(e)}}"
+                              ng-model="payForm.amount" ng-model-options="{allowInvalid: true}" ng-change="payErrors.amount = ''"
+                              ng-class="{'has-error': payErrors.amount}">
+                           <span class="field-error" ng-if="payErrors.amount">{{payErrors.amount}}</span>
+                           <span class="hf-sub" ng-if="!payErrors.amount && isPartPayment(e)">Part payment · {{money(balanceOf(e) - payForm.amount)}}
+                              will remain pending</span>
+                           <span class="hf-sub" ng-if="!payErrors.amount && !isPartPayment(e)">Balance due {{money(balanceOf(e))}}</span>
                         </div>
                         <div>
                            <label class="field-label">Paid on <span class="required">*</span></label>
-                           <input type="date" class="hf-input" ng-model="payForm.paidOn" ng-attr-max="{{today}}"
+                           <input type="date" class="hf-input" ng-model="payForm.paidOn" ng-attr-max="{{today}}" ng-change="payErrors.paidOn = ''"
                               ng-class="{'has-error': payErrors.paidOn}">
                            <span class="field-error" ng-if="payErrors.paidOn">{{payErrors.paidOn}}</span>
                         </div>
@@ -972,7 +1000,7 @@
                            <label class="field-label">Mode <span class="required">*</span></label>
                            <div class="hf-modes" ng-class="{'has-error': payErrors.mode}">
                               <button type="button" ng-repeat="m in paymentModes"
-                                 ng-class="{active: payForm.mode === m}" ng-click="payForm.mode = m">{{m}}</button>
+                                 ng-class="{active: payForm.mode === m}" ng-click="payForm.mode = m; payErrors.mode = ''">{{m}}</button>
                            </div>
                            <span class="field-error" ng-if="payErrors.mode">{{payErrors.mode}}</span>
                         </div>
@@ -991,7 +1019,7 @@
                         <button type="button" class="btn btn-default" ng-click="cancelPayment()"
                            ng-disabled="isPaying">Cancel</button>
                         <button type="submit" class="btn btn-success" ng-disabled="isPaying">
-                           <i class="ti ti-check"></i> {{isPaying ? 'Saving...' : 'Mark as paid'}}
+                           <i class="ti ti-check"></i> {{isPaying ? 'Saving...' : (isPartPayment(e) ? 'Record part payment' : 'Mark as paid')}}
                         </button>
                      </div>
                   </form>
