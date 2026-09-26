@@ -562,6 +562,76 @@
          gap: 8px;
          margin-top: 14px;
       }
+
+      /* Passcode soft lock (not a security boundary; the APIs still need the admin token) */
+      .hf-lock {
+         position: fixed;
+         inset: 0;
+         z-index: 100000;
+         background: linear-gradient(135deg, #006073 0%, #00455a 100%);
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         padding: 16px;
+      }
+
+      .hf-lock-card {
+         background: white;
+         border-radius: 16px;
+         padding: 28px 28px 24px;
+         width: 100%;
+         max-width: 340px;
+         text-align: center;
+         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      }
+
+      .hf-lock-card > i {
+         font-size: 36px;
+         color: #006073;
+      }
+
+      .hf-lock-card h3 {
+         margin: 10px 0 4px;
+         font-size: 20px;
+         font-weight: 600;
+         color: #111827;
+      }
+
+      .hf-lock-card p {
+         color: #6b7280;
+         margin-bottom: 18px;
+      }
+
+      .hf-lock-input {
+         width: 100%;
+         padding: 10px 12px;
+         font-size: 24px;
+         letter-spacing: 14px;
+         text-align: center;
+         border: 1px solid #d1d5db;
+         border-radius: 10px;
+      }
+
+      .hf-lock-input:focus {
+         outline: none;
+         border-color: #006073;
+         box-shadow: 0 0 0 3px rgba(0, 96, 115, 0.15);
+      }
+
+      .hf-lock-input.has-error {
+         border-color: #dc2626;
+         animation: hfShake 0.3s;
+      }
+
+      @keyframes hfShake {
+         25% { transform: translateX(-6px); }
+         75% { transform: translateX(6px); }
+      }
+
+      .hf-lock-card .btn {
+         width: 100%;
+         margin-top: 14px;
+      }
    </style>
 
 </head>
@@ -802,6 +872,20 @@
             </div>
          </div>
       </div>
+   </div>
+
+   <!-- Passcode soft lock -->
+   <div class="hf-lock" ng-if="locked">
+      <form class="hf-lock-card" ng-submit="unlock()" novalidate>
+         <i class="ti ti-lock"></i>
+         <h3>Hostel Fee</h3>
+         <p>Enter the passcode to continue.</p>
+         <input type="password" class="hf-lock-input" inputmode="numeric" maxlength="4" autocomplete="off"
+            ng-model="lock.code" ng-change="onPasscodeChange()" ng-class="{'has-error': lock.error}"
+            aria-label="Passcode">
+         <span class="field-error" ng-if="lock.error">{{lock.error}}</span>
+         <button type="submit" class="btn btn-success"><i class="ti ti-unlock"></i> Unlock</button>
+      </form>
    </div>
 
    <!-- Payment details / record payment -->

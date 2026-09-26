@@ -96,8 +96,46 @@ app.controller('hostelFeeController', ['$scope', '$http', '$cookies', '$timeout'
     }
 
     // ===== Init / load =====
-    $scope.init = function () {
+    // ===== Passcode soft lock =====
+    // A deterrent only: the passcode ships in this file. Real protection is the
+    // admin token checked by the APIs. Unlocking lasts for the browser tab.
+    var PASSCODE = '2024';
+    var UNLOCK_KEY = 'hostelFeeUnlocked';
+
+    $scope.lock = { code: '', error: '' };
+    $scope.locked = true;
+    try {
+        $scope.locked = sessionStorage.getItem(UNLOCK_KEY) !== '1';
+    } catch (e) { /* storage blocked: stay locked */ }
+
+    $scope.onPasscodeChange = function () {
+        $scope.lock.error = '';
+        // Unlock as soon as the 4th digit is typed.
+        if (($scope.lock.code || '').length === PASSCODE.length) $scope.unlock();
+    };
+
+    $scope.unlock = function () {
+        if ($scope.lock.code !== PASSCODE) {
+            $scope.lock = { code: '', error: 'Incorrect passcode' };
+            return;
+        }
+        try {
+            sessionStorage.setItem(UNLOCK_KEY, '1');
+        } catch (e) { /* ignore */ }
+        $scope.locked = false;
         $scope.loadLedger();
+    };
+
+    $scope.init = function () {
+        if (!$scope.locked) {
+            $scope.loadLedger();
+            return;
+        }
+        // `autofocus` doesn't fire for elements inserted by ng-if.
+        $timeout(function () {
+            var input = document.querySelector('.hf-lock-input');
+            if (input) input.focus();
+        });
     };
 
     $scope.loadLedger = function () {
