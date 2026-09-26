@@ -460,6 +460,9 @@ app.controller('hostelFeeController', ['$scope', '$http', '$cookies', '$timeout'
             errors.amount = 'Enter a whole amount of at least ₹1.';
         } else if (form.amount > balance) {
             errors.amount = 'Cannot be more than the balance due (' + $scope.money(balance) + ').';
+        } else if (entry.amountPaid > 0 && form.amount !== balance) {
+            // At most two payments per invoice: the second must clear it.
+            errors.amount = 'A part payment was already made. Pay the full balance (' + $scope.money(balance) + ').';
         }
 
         if (!/^\d{4}-\d{2}-\d{2}$/.test(paidOn)) {

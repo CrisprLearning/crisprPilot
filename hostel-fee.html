@@ -988,11 +988,14 @@
                            <label class="field-label">Amount (₹) <span class="required">*</span></label>
                            <input type="number" class="hf-input" min="1" step="1" ng-attr-max="{{balanceOf(e)}}"
                               ng-model="payForm.amount" ng-model-options="{allowInvalid: true}" ng-change="payErrors.amount = ''"
+                              ng-disabled="e.amountPaid > 0"
                               ng-class="{'has-error': payErrors.amount}">
                            <span class="field-error" ng-if="payErrors.amount">{{payErrors.amount}}</span>
                            <span class="hf-sub" ng-if="!payErrors.amount && isPartPayment(e)">Part payment · {{money(balanceOf(e) - payForm.amount)}}
                               will remain pending</span>
-                           <span class="hf-sub" ng-if="!payErrors.amount && !isPartPayment(e)">Balance due {{money(balanceOf(e))}}</span>
+                           <span class="hf-sub" ng-if="!payErrors.amount && !isPartPayment(e) && !(e.amountPaid > 0)">Balance due {{money(balanceOf(e))}}</span>
+                           <span class="hf-sub" ng-if="!payErrors.amount && e.amountPaid > 0">A part payment was already made, so the
+                              balance must be paid in full.</span>
                         </div>
                         <div>
                            <label class="field-label">Paid on <span class="required">*</span></label>
