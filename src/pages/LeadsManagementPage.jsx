@@ -15,6 +15,7 @@ import {
   listAssociates,
   extractApiError,
 } from '../lib/leadsApi';
+import Icon from '../components/Icon';
 
 function getPageNumbers(currentPage, totalPages) {
   const pages = [];
@@ -559,7 +560,7 @@ export default function LeadsManagementPage() {
       {/* Page Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', padding: '20px', background: 'linear-gradient(135deg, #006073 0%, #005a6b 100%)', borderRadius: '8px', color: 'white' }}>
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-bullhorn" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-bullhorn" /></span>
           <div>
             <h2 style={{ margin: '0 0 8px 0', fontSize: '28px', fontWeight: 600, color: 'white' }}>
               Leads Management
@@ -569,10 +570,10 @@ export default function LeadsManagementPage() {
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
           <button onClick={handleExportPDF} style={{ background: 'rgba(255,255,255,0.15)', color: 'white', border: '1px solid rgba(255,255,255,0.3)', padding: '10px 18px', borderRadius: '6px', fontWeight: 600, cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <i className="ti ti-export"></i> Export List
+            <Icon className="ti ti-export" /> Export List
           </button>
           <button onClick={openNewLead} style={{ background: '#ffb706', color: '#006073', border: 'none', padding: '10px 22px', borderRadius: '6px', fontWeight: 700, cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <i className="ti ti-plus"></i> Add New Lead
+            <Icon className="ti ti-plus" /> Add New Lead
           </button>
         </div>
       </div>
@@ -588,7 +589,7 @@ export default function LeadsManagementPage() {
         ].map(s => (
           <div key={s.label} style={{ background: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', gap: '15px' }}>
             <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: s.bg, color: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', flexShrink: 0 }}>
-              <i className={`ti ${s.icon}`}></i>
+              <Icon className={`ti ${s.icon}`} />
             </div>
             <div>
               <div style={{ fontSize: '12px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.5px' }}>{s.label}</div>
@@ -602,7 +603,7 @@ export default function LeadsManagementPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', flexWrap: 'wrap', gap: '10px' }}>
           <div style={{ position: 'relative' }}>
             <input type="text" placeholder="Search by name, phone, email..." style={{ padding: '8px 12px 8px 35px', borderRadius: '6px', border: '1px solid #d1d5db', width: '300px', fontSize: '14px' }} value={searchQuery} onChange={e => { setSearchQuery(e.target.value); setCurrentPage(1); }} />
-            <i className="ti ti-search" style={{ position: 'absolute', left: '12px', top: '10px', color: '#9ca3af' }}></i>
+            <Icon className="ti ti-search" style={{ position: 'absolute', left: '12px', top: '10px', color: '#9ca3af' }} />
           </div>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
             <select style={selStyle} value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setCurrentPage(1); }}>
@@ -625,8 +626,8 @@ export default function LeadsManagementPage() {
               onClick={() => setFollowUpMenuOpen(o => !o)}
               style={{ ...selStyle, display: 'flex', alignItems: 'center', gap: '8px', minWidth: '160px', justifyContent: 'space-between', cursor: 'pointer', borderColor: dateFilter ? '#006073' : '#d1d5db' }}
             >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><i className="ti ti-calendar" style={{ fontSize: '13px', color: '#6b7280' }}></i>{followUpLabel}</span>
-              <i className={`ti ti-angle-${followUpMenuOpen ? 'up' : 'down'}`} style={{ fontSize: '12px' }}></i>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Icon className="ti ti-calendar" style={{ fontSize: '13px', color: '#6b7280' }} />{followUpLabel}</span>
+              <Icon className={`ti ti-angle-${followUpMenuOpen ? 'up' : 'down'}`} style={{ fontSize: '12px' }} />
             </button>
             {followUpMenuOpen && (
               <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, zIndex: 30, minWidth: '180px', background: 'white', border: '1px solid #e5e7eb', borderRadius: '8px', boxShadow: '0 8px 20px rgba(0,0,0,0.12)', overflow: 'hidden' }}>
@@ -642,7 +643,7 @@ export default function LeadsManagementPage() {
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '9px 14px', border: 'none', background: (dateFilter === f.key && f.key !== 'custom') ? '#e0f2f1' : 'white', color: '#374151', fontSize: '13px', textAlign: 'left', cursor: 'pointer', fontWeight: dateFilter === f.key ? 600 : 400 }}
                   >
                     {f.label}
-                    {dateFilter === f.key && <i className="ti ti-check" style={{ color: '#006073', fontSize: '12px' }}></i>}
+                    {dateFilter === f.key && <Icon className="ti ti-check" style={{ color: '#006073', fontSize: '12px' }} />}
                   </button>
                 ))}
                 <button
@@ -651,7 +652,7 @@ export default function LeadsManagementPage() {
                   style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '9px 14px', border: 'none', borderTop: '1px solid #f1f5f9', background: dateFilter === 'custom' ? '#e0f2f1' : 'white', color: '#374151', fontSize: '13px', textAlign: 'left', cursor: 'pointer', fontWeight: dateFilter === 'custom' ? 600 : 400 }}
                 >
                   Select a Date
-                  {dateFilter === 'custom' && <i className="ti ti-check" style={{ color: '#006073', fontSize: '12px' }}></i>}
+                  {dateFilter === 'custom' && <Icon className="ti ti-check" style={{ color: '#006073', fontSize: '12px' }} />}
                 </button>
                 {(pickingDate || dateFilter === 'custom') && (
                   <div style={{ padding: '10px 14px', borderTop: '1px solid #f1f5f9' }}>
@@ -669,7 +670,7 @@ export default function LeadsManagementPage() {
           </div>
           {dateFilter && (
             <button onClick={() => { setDateFilter(''); setCustomDatePick(''); setCurrentPage(1); }} style={{ padding: '3px 10px', borderRadius: '20px', border: '1px solid #fecaca', background: '#fee2e2', color: '#dc2626', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>
-              <i className="ti ti-close" style={{ fontSize: '10px' }}></i> Clear
+              <Icon className="ti ti-close" style={{ fontSize: '10px' }} /> Clear
             </button>
           )}
           </div>
@@ -733,7 +734,7 @@ export default function LeadsManagementPage() {
                     </td>
                     <td style={tdStyle}>
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 10px', background: '#f1f5f9', borderRadius: '6px', fontSize: '13px', fontWeight: 500, color: '#475569' }}>
-                        <i className={`ti ${sourceIcons[lead.source] || 'ti-info-alt'}`}></i>{lead.source}
+                        <Icon className={`ti ${sourceIcons[lead.source] || 'ti-info-alt'}`} />{lead.source}
                       </span>
                     </td>
                     <td style={tdStyle}>
@@ -765,12 +766,12 @@ export default function LeadsManagementPage() {
                     <td style={{ ...tdStyle, textAlign: 'center' }}>
                       <div className="kebab-menu-container">
                         <button type="button" className="kebab-button" onClick={(e) => { e.stopPropagation(); setActiveDropdown(activeDropdown === lead.id ? null : lead.id); }}>
-                          <i className="ti ti-more-alt"></i>
+                          <Icon className="ti ti-more-alt" />
                         </button>
                         <div className={`kebab-dropdown ${activeDropdown === lead.id ? 'active' : ''}`} onClick={e => e.stopPropagation()}>
-                          <button type="button" className="kebab-dropdown-item" onClick={() => openLeadDetail(lead)}><i className="ti ti-eye"></i> View Details</button>
-                          <button type="button" className="kebab-dropdown-item" onClick={() => { setEditingLead(lead); setActiveDropdown(null); }}><i className="ti ti-pencil"></i> Edit Lead</button>
-                          <button type="button" className="kebab-dropdown-item" onClick={() => { setReassignLead(lead); setActiveDropdown(null); }}><i className="ti ti-exchange-vertical"></i> Reassign</button>
+                          <button type="button" className="kebab-dropdown-item" onClick={() => openLeadDetail(lead)}><Icon className="ti ti-eye" /> View Details</button>
+                          <button type="button" className="kebab-dropdown-item" onClick={() => { setEditingLead(lead); setActiveDropdown(null); }}><Icon className="ti ti-pencil" /> Edit Lead</button>
+                          <button type="button" className="kebab-dropdown-item" onClick={() => { setReassignLead(lead); setActiveDropdown(null); }}><Icon className="ti ti-exchange-vertical" /> Reassign</button>
                           {statusOptions.filter(s => s !== lead.status).map(s => (
                             <button key={s} type="button" className="kebab-dropdown-item" style={{ color: statusConfig[s].color }} onClick={() => { handleStatusChange(lead.id, s); setActiveDropdown(null); }}>
                               Mark as {s}
@@ -805,7 +806,7 @@ export default function LeadsManagementPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={currentPage === 1} onClick={() => setCurrentPage(p => Math.max(1, p - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {getPageNumbers(currentPage, totalPages).map((page, index) => (
                 page === '...'
@@ -822,7 +823,7 @@ export default function LeadsManagementPage() {
                   )
               ))}
               <button type="button" className="pagination-btn" disabled={currentPage >= totalPages} onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
@@ -833,8 +834,8 @@ export default function LeadsManagementPage() {
         <div className="crispr-modal-backdrop active" onClick={() => setSelectedLead(null)}>
           <div className="crispr-modal-dialog" style={{ maxWidth: '850px', width: '100%' }} onClick={e => e.stopPropagation()}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-user"></i> {selectedLead.name}</h3>
-              <button className="crispr-modal-close" onClick={() => setSelectedLead(null)}><i className="ti ti-close"></i></button>
+              <h3><Icon className="ti ti-user" /> {selectedLead.name}</h3>
+              <button className="crispr-modal-close" onClick={() => setSelectedLead(null)}><Icon className="ti ti-close" /></button>
             </div>
             <div className="crispr-modal-body" style={{ padding: 0, background: '#f8fafc' }}>
               {/* Lead Summary Bar */}
@@ -857,7 +858,7 @@ export default function LeadsManagementPage() {
                 {/* Description */}
                 <div style={{ background: 'white', borderRadius: '8px', padding: '15px', border: '1px solid #e2e8f0', marginBottom: '18px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                    <i className={`ti ${sourceIcons[selectedLead.source] || 'ti-info-alt'}`} style={{ color: '#006073' }}></i>
+                    <Icon className={`ti ${sourceIcons[selectedLead.source] || 'ti-info-alt'}`} style={{ color: '#006073' }} />
                     <strong style={{ fontSize: '13px', color: '#475569' }}>Source: {selectedLead.source}</strong>
                     <span style={{ marginLeft: 'auto', fontSize: '12px', color: '#9ca3af' }}>Created {formatDateTime(selectedLead.createdAt)}</span>
                   </div>
@@ -866,23 +867,23 @@ export default function LeadsManagementPage() {
 
                 {/* Preferences */}
                 <div style={{ background: 'white', borderRadius: '8px', padding: '15px', border: '1px solid #e2e8f0', marginBottom: '18px' }}>
-                  <h5 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 600, color: '#1e293b' }}><i className="ti ti-settings" style={{ marginRight: '5px', color: '#006073' }}></i>Contact Preferences</h5>
+                  <h5 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 600, color: '#1e293b' }}><Icon className="ti ti-settings" style={{ marginRight: '5px', color: '#006073' }} />Contact Preferences</h5>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
                     <div>
-                      <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '6px' }}><i className="ti ti-time" style={{ marginRight: '4px' }}></i>Preferred Time Slot</label>
+                      <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '6px' }}><Icon className="ti ti-time" style={{ marginRight: '4px' }} />Preferred Time Slot</label>
                       <select value={selectedLead.preferredTimeSlot || ''} onChange={e => updateLeadField('preferredTimeSlot', e.target.value)} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e2e8f0', borderRadius: '6px', fontSize: '13px', background: 'white' }}>
                         <option value="">Not Set</option>
                         {timeSlotOptions.map(ts => <option key={ts} value={ts}>{ts}</option>)}
                       </select>
                     </div>
                     <div>
-                      <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '6px' }}><i className="ti ti-comments" style={{ marginRight: '4px' }}></i>Preferred Communication</label>
+                      <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '6px' }}><Icon className="ti ti-comments" style={{ marginRight: '4px' }} />Preferred Communication</label>
                       <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                         {commOptions.map(co => {
                           const active = selectedLead.preferredComm === co.key;
                           return (
                             <button key={co.key} type="button" onClick={() => updateLeadField('preferredComm', active ? '' : co.key)} style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid', borderColor: active ? '#006073' : '#e2e8f0', background: active ? '#e0f2f1' : 'white', color: active ? '#006073' : '#64748b', fontSize: '12px', fontWeight: active ? 600 : 400, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', transition: 'all 0.15s' }}>
-                              <i className={`ti ${co.icon}`}></i>{co.key}
+                              <Icon className={`ti ${co.icon}`} />{co.key}
                             </button>
                           );
                         })}
@@ -894,7 +895,7 @@ export default function LeadsManagementPage() {
                 {/* Interested Courses */}
                 <div style={{ background: 'white', borderRadius: '8px', padding: '15px', border: '1px solid #e2e8f0', marginBottom: '18px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                    <h5 style={{ margin: 0, fontSize: '14px', fontWeight: 600, color: '#1e293b' }}><i className="ti ti-book" style={{ marginRight: '5px', color: '#006073' }}></i>Interested Courses / Products</h5>
+                    <h5 style={{ margin: 0, fontSize: '14px', fontWeight: 600, color: '#1e293b' }}><Icon className="ti ti-book" style={{ marginRight: '5px', color: '#006073' }} />Interested Courses / Products</h5>
                     <button onClick={() => setCourseSelectOpen(!courseSelectOpen)} style={{ padding: '4px 12px', borderRadius: '4px', border: '1px solid #006073', background: courseSelectOpen ? '#006073' : 'white', color: courseSelectOpen ? 'white' : '#006073', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>
                       {courseSelectOpen ? 'Done' : '+ Map Course'}
                     </button>
@@ -907,7 +908,7 @@ export default function LeadsManagementPage() {
                         return ci ? (
                           <span key={code} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 12px', background: '#e0f2f1', color: '#006073', borderRadius: '6px', fontSize: '13px', fontWeight: 500 }}>
                             {ci.title}
-                            <button type="button" onClick={() => toggleCatalogItem(code)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#dc2626', fontSize: '13px', lineHeight: 1 }}><i className="ti ti-close"></i></button>
+                            <button type="button" onClick={() => toggleCatalogItem(code)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#dc2626', fontSize: '13px', lineHeight: 1 }}><Icon className="ti ti-close" /></button>
                           </span>
                         ) : null;
                       })}
@@ -936,7 +937,7 @@ export default function LeadsManagementPage() {
 
                 {/* Follow-up Timeline (Vertical) */}
                 <h4 style={{ margin: '0 0 15px 0', fontSize: '15px', fontWeight: 600, color: '#1e293b' }}>
-                  <i className="ti ti-comment-alt" style={{ marginRight: '6px', color: '#006073' }}></i>Timeline ({selectedLead.timeline.length})
+                  <Icon className="ti ti-comment-alt" style={{ marginRight: '6px', color: '#006073' }} />Timeline ({selectedLead.timeline.length})
                 </h4>
                 <div style={{ maxHeight: '300px', overflowY: 'auto', marginBottom: '20px', paddingLeft: '18px', position: 'relative' }}>
                   {/* Vertical line */}
@@ -951,7 +952,7 @@ export default function LeadsManagementPage() {
                           <div style={{ flex: 1, padding: '10px 14px', borderRadius: '8px', background: '#fffbeb', border: '1px solid #fde68a' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <span style={{ fontSize: '13px', fontWeight: 600, color: '#92400e' }}>
-                                <i className="ti ti-exchange-vertical" style={{ marginRight: '4px' }}></i>Reassigned
+                                <Icon className="ti ti-exchange-vertical" style={{ marginRight: '4px' }} />Reassigned
                               </span>
                               <span style={{ fontSize: '12px', color: '#b45309' }}>{formatDateTime(evt.at)}</span>
                             </div>
@@ -981,7 +982,7 @@ export default function LeadsManagementPage() {
                     );
                   }) : (
                     <div style={{ textAlign: 'center', padding: '30px', color: '#9ca3af', background: 'white', borderRadius: '8px', border: '1px dashed #e2e8f0', marginLeft: '-18px' }}>
-                      <i className="ti ti-comment" style={{ fontSize: '32px', display: 'block', marginBottom: '8px', opacity: 0.5 }}></i>
+                      <Icon className="ti ti-comment" style={{ fontSize: '32px', display: 'block', marginBottom: '8px', opacity: 0.5 }} />
                       No activity yet. Add a follow-up note below.
                     </div>
                   )}
@@ -989,7 +990,7 @@ export default function LeadsManagementPage() {
 
                 {/* Add Follow-up Section */}
                 <div style={{ background: 'white', borderRadius: '8px', padding: '15px', border: '1px solid #e2e8f0' }}>
-                  <h5 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 600, color: '#1e293b' }}><i className="ti ti-plus" style={{ marginRight: '5px', color: '#006073' }}></i>Add Follow-up Note</h5>
+                  <h5 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 600, color: '#1e293b' }}><Icon className="ti ti-plus" style={{ marginRight: '5px', color: '#006073' }} />Add Follow-up Note</h5>
                   <textarea value={followUpText} onChange={e => setFollowUpText(e.target.value)} placeholder="Type your follow-up note here..." style={{ width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: '6px', fontSize: '14px', minHeight: '70px', resize: 'vertical', fontFamily: 'inherit' }}></textarea>
                   <div style={{ display: 'flex', gap: '12px', marginTop: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
                     <div>
@@ -1005,7 +1006,7 @@ export default function LeadsManagementPage() {
                       <input type="date" value={followUpNextDate || nextFollowUpDate(followUpInterest)} onChange={e => setFollowUpNextDate(e.target.value)} style={{ padding: '6px 12px', border: '1px solid #e2e8f0', borderRadius: '6px', fontSize: '13px' }} />
                     </div>
                     <button onClick={handleAddFollowUp} style={{ background: '#006073', color: 'white', border: 'none', padding: '8px 18px', borderRadius: '6px', fontWeight: 600, cursor: 'pointer', fontSize: '13px', marginLeft: 'auto', alignSelf: 'flex-end' }}>
-                      <i className="ti ti-check"></i> Save Note
+                      <Icon className="ti ti-check" /> Save Note
                     </button>
                   </div>
                 </div>
@@ -1030,8 +1031,8 @@ export default function LeadsManagementPage() {
         <div className="crispr-modal-backdrop active" onClick={() => setEditingLead(null)}>
           <div className="crispr-modal-dialog" style={{ maxWidth: '600px' }} onClick={e => e.stopPropagation()}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-pencil-alt"></i> {editingLead.id ? 'Edit Lead' : 'Add New Lead'}</h3>
-              <button className="crispr-modal-close" onClick={() => setEditingLead(null)}><i className="ti ti-close"></i></button>
+              <h3><Icon className="ti ti-pencil-alt" /> {editingLead.id ? 'Edit Lead' : 'Add New Lead'}</h3>
+              <button className="crispr-modal-close" onClick={() => setEditingLead(null)}><Icon className="ti ti-close" /></button>
             </div>
             <form onSubmit={handleSaveLead}>
               <div className="crispr-modal-body">
@@ -1099,8 +1100,8 @@ export default function LeadsManagementPage() {
         <div className="crispr-modal-backdrop active" onClick={() => setReassignLead(null)}>
           <div className="crispr-modal-dialog" style={{ maxWidth: '400px' }} onClick={e => e.stopPropagation()}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-exchange-vertical"></i> Reassign Associate</h3>
-              <button className="crispr-modal-close" onClick={() => setReassignLead(null)}><i className="ti ti-close"></i></button>
+              <h3><Icon className="ti ti-exchange-vertical" /> Reassign Associate</h3>
+              <button className="crispr-modal-close" onClick={() => setReassignLead(null)}><Icon className="ti ti-close" /></button>
             </div>
             <div className="crispr-modal-body">
               <p style={{ margin: '0 0 15px 0', color: '#475569', fontSize: '14px' }}>
@@ -1116,7 +1117,7 @@ export default function LeadsManagementPage() {
                       <strong style={{ fontSize: '14px', color: '#1e293b' }}>{a.name}</strong>
                       {reassignLead.associate === a.name && <span style={{ fontSize: '11px', color: '#006073', marginLeft: '8px' }}>(Current)</span>}
                     </div>
-                    {reassignLead.associate === a.name && <i className="ti ti-check" style={{ color: '#006073', fontSize: '18px' }}></i>}
+                    {reassignLead.associate === a.name && <Icon className="ti ti-check" style={{ color: '#006073', fontSize: '18px' }} />}
                   </div>
                 ))}
               </div>

@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { paymentLabel, statusMeta, summarizeOrder } from '../lib/paymentsModel';
 import { updateDueDates } from '../lib/paymentsStore';
+import Icon from './Icon';
 
 const INR = (n) => `₹${Number(n || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const fmtDate = (ts) => (ts ? new Date(ts * 1000).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) : '—');
@@ -35,25 +36,25 @@ export default function UpdateDueDatesModal({ order, payments, onClose, onSaved 
     <div className="crispr-modal-backdrop active" role="presentation" onClick={onClose}>
       <div className="crispr-modal-dialog due-dates-dialog" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
         <div className="crispr-modal-header">
-          <h3><i className="ti ti-calendar" /> Update Due Dates - {order.orderNumber}</h3>
-          <button type="button" className="crispr-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <h3><Icon className="ti ti-calendar" /> Update Due Dates - {order.orderNumber}</h3>
+          <button type="button" className="crispr-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <form className="orders-modal-form form-modal" onSubmit={(e) => { e.preventDefault(); submit(); }}>
           <div className="crispr-modal-body">
             <div className="order-modal-header">
               <div>
-                <i className="ti ti-user" /> {order.customer.name}
-                <span><i className="ti ti-book" /> {order.item.title}</span>
+                <Icon className="ti ti-user" /> {order.customer.name}
+                <span><Icon className="ti ti-book" /> {order.item.title}</span>
               </div>
               <span className={`status-badge ${summary.outstanding > 0 ? 'status-pending' : 'status-completed'}`}>
                 {summary.outstanding > 0 ? `${INR(summary.outstanding)} due` : 'Fully settled'}
               </span>
             </div>
             {editable.length === 0 ? (
-              <p className="field-static-label"><i className="ti ti-check" /> No upcoming installments to reschedule on this order.</p>
+              <p className="field-static-label"><Icon className="ti ti-check" /> No upcoming installments to reschedule on this order.</p>
             ) : (
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-time" /> Upcoming Installments</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-time" /> Upcoming Installments</div>
                 <div className="due-dates-list">
                   {editable.map((p) => (
                     <div key={p.id} className="due-dates-row">
@@ -80,7 +81,7 @@ export default function UpdateDueDatesModal({ order, payments, onClose, onSaved 
             <button type="button" className="legacy-btn legacy-btn-default" onClick={onClose}>Cancel</button>
             {editable.length > 0 && (
               <button type="submit" className="legacy-btn legacy-btn-success" disabled={changes.length === 0}>
-                <i className="ti ti-check" /> Save {changes.length > 0 ? `${changes.length} Change${changes.length === 1 ? '' : 's'}` : 'Changes'}
+                <Icon className="ti ti-check" /> Save {changes.length > 0 ? `${changes.length} Change${changes.length === 1 ? '' : 's'}` : 'Changes'}
               </button>
             )}
           </div>

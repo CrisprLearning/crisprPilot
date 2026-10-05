@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Icon from './Icon';
 
 /**
  * Standard inline search-bar filter dropdown.
@@ -71,7 +72,7 @@ export default function FilterDropdown({
         aria-expanded={open}
       >
         <span className="filter-dropdown-label">{display}</span>
-        <i className={`ti ti-angle-${open ? 'up' : 'down'}`} />
+        <Icon className={`ti ti-angle-${open ? 'up' : 'down'}`} />
       </button>
       <div
         className={`filter-dropdown-menu${open ? ' active' : ''}${align === 'right' ? ' align-right' : ''}`}

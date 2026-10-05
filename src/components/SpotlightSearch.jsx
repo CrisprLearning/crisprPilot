@@ -4,6 +4,7 @@ import { useUser } from '../lib/userStore';
 import { canSearchStaff, getSearchablePages, searchPages, searchPeople } from '../lib/spotlightSearch';
 import useDebouncedValue from '../hooks/useDebouncedValue';
 import Avatar from './Avatar';
+import Icon from './Icon';
 
 const POS_KEY = 'spotlight_fab_pos_v2'; // v2: offsets measured from right/bottom
 const FAB_SIZE = 52;
@@ -124,8 +125,14 @@ export default function SpotlightSearch() {
         setOpen((o) => !o);
       }
     };
+    // The sidebar's Search button opens the palette via this event.
+    const onOpen = () => setOpen(true);
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener('spotlight:open', onOpen);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('spotlight:open', onOpen);
+    };
   }, []);
 
   useEffect(() => {
@@ -198,14 +205,14 @@ export default function SpotlightSearch() {
         onPointerUp={onPointerUp}
         onPointerCancel={() => { dragRef.current = null; setDragging(false); }}
       >
-        <i className="fa fa-search" />
+        <Icon className="fa fa-search" />
       </button>
 
       {open && (
         <div className="spotlight-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) close(); }}>
           <div className="spotlight-panel" role="dialog" aria-modal="true" aria-label="Spotlight Search">
             <div className="spotlight-input-row">
-              <i className="fa fa-search spotlight-input-icon" />
+              <Icon className="fa fa-search spotlight-input-icon" />
               <input
                 ref={inputRef}
                 className="spotlight-input"
@@ -253,7 +260,7 @@ export default function SpotlightSearch() {
                         >
                           {item.kind === 'page' ? (
                             <span className="spotlight-item-icon">
-                              <i className={`${item.icon.startsWith('ti') ? '' : 'fa '}${item.icon}`} />
+                              <Icon className={`${item.icon.startsWith('ti') ? '' : 'fa '}${item.icon}`} />
                             </span>
                           ) : (
                             <span className="spotlight-item-avatar">

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import Icon from '../../components/Icon';
 
 /**
  * Chips multi-select for role assignment. Emits role ids.
@@ -110,7 +111,7 @@ export default function MultiRoleSelect({
                     fontSize: 13,
                   }}
                 >
-                  <i className="fa fa-times" />
+                  <Icon className="fa fa-times" />
                 </button>
               )}
             </span>
@@ -133,7 +134,7 @@ export default function MultiRoleSelect({
               cursor: 'pointer',
             }}
           >
-            <i className="fa fa-plus" /> {placeholder}
+            <Icon className="fa fa-plus" /> {placeholder}
           </button>
         )}
       </div>

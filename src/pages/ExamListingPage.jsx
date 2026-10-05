@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ToastRegion from '../components/ToastRegion';
 import FilterDropdown from '../components/FilterDropdown';
 import { examsDemo } from '../data/examsDemo';
+import Icon from '../components/Icon';
 
 function generateUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
@@ -276,36 +277,36 @@ export default function ExamListingPage() {
 
       <div className="page-header-section">
         <div>
-          <h2><i className="ti ti-clipboard" /> Exam Listing</h2>
+          <h2><Icon className="ti ti-clipboard" /> Exam Listing</h2>
           <p>Manage exam drafts, published tests, and attempt reports without changing the legacy workflow.</p>
         </div>
         <button type="button" className="create-exam-button" onClick={() => navigate('/exam-creation-wizard')}>
-          <i className="ti ti-plus" /> Create New Exam
+          <Icon className="ti ti-plus" /> Create New Exam
         </button>
       </div>
 
       <div className="stats-row">
         <button type="button" className={`stat-card ${!filterStatus ? 'filterAppliedTile' : ''}`} onClick={() => { setFilterStatus(''); setCurrentPage(1); }}>
-          <div className="stat-icon blue"><i className="ti ti-clipboard" /></div>
+          <div className="stat-icon blue"><Icon className="ti ti-clipboard" /></div>
           <div className="stat-info"><h3>{summary.totalExams}</h3><p>Total Exams</p></div>
         </button>
         <button type="button" className="stat-card plain-button" onClick={() => { setSearchQuery(''); setFilterStatus(''); }}>
-          <div className="stat-icon green"><i className="ti ti-help-alt" /></div>
+          <div className="stat-icon green"><Icon className="ti ti-help-alt" /></div>
           <div className="stat-info"><h3>{summary.totalQuestions}</h3><p>Total Questions</p></div>
         </button>
         <button type="button" className={`stat-card ${filterStatus === 'active' ? 'filterAppliedTile' : ''}`} onClick={() => { setFilterStatus('active'); setCurrentPage(1); }}>
-          <div className="stat-icon orange"><i className="ti ti-check-box" /></div>
+          <div className="stat-icon orange"><Icon className="ti ti-check-box" /></div>
           <div className="stat-info"><h3>{summary.totalActive}</h3><p>Active</p></div>
         </button>
         <button type="button" className={`stat-card ${filterStatus === 'inactive' ? 'filterAppliedTile' : ''}`} onClick={() => { setFilterStatus('inactive'); setCurrentPage(1); }}>
-          <div className="stat-icon indigo"><i className="ti ti-pencil-alt" /></div>
+          <div className="stat-icon indigo"><Icon className="ti ti-pencil-alt" /></div>
           <div className="stat-info"><h3>{summary.totalDraft}</h3><p>Draft / Inactive</p></div>
         </button>
       </div>
 
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} />
+          <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} />
           <input
             type="text"
             className="search-input"
@@ -335,24 +336,24 @@ export default function ExamListingPage() {
             <tr>
               <th className={`sortable ${sortColumn === 'displayKey' ? 'active' : ''}`} onClick={() => handleSort('displayKey')}>
                 Exam ID
-                <i className={`sort-icon ti ${sortIcon('displayKey')}`} />
+                <Icon className={`sort-icon ti ${sortIcon('displayKey')}`} />
               </th>
               <th className={`sortable ${sortColumn === 'title' ? 'active' : ''}`} onClick={() => handleSort('title')}>
                 Exam Name
-                <i className={`sort-icon ti ${sortIcon('title')}`} />
+                <Icon className={`sort-icon ti ${sortIcon('title')}`} />
               </th>
               <th>Sections</th>
               <th className={`sortable center-align ${sortColumn === 'totalQuestions' ? 'active' : ''}`} onClick={() => handleSort('totalQuestions')}>
                 Questions
-                <i className={`sort-icon ti ${sortIcon('totalQuestions')}`} />
+                <Icon className={`sort-icon ti ${sortIcon('totalQuestions')}`} />
               </th>
               <th className={`sortable ${sortColumn === 'duration' ? 'active' : ''}`} onClick={() => handleSort('duration')}>
                 Duration
-                <i className={`sort-icon ti ${sortIcon('duration')}`} />
+                <Icon className={`sort-icon ti ${sortIcon('duration')}`} />
               </th>
               <th className={`sortable ${sortColumn === 'status' ? 'active' : ''}`} onClick={() => handleSort('status')}>
                 Status
-                <i className={`sort-icon ti ${sortIcon('status')}`} />
+                <Icon className={`sort-icon ti ${sortIcon('status')}`} />
               </th>
               <th className="center-align">Actions</th>
             </tr>
@@ -389,32 +390,32 @@ export default function ExamListingPage() {
                     </div>
                   </td>
                   <td className="center-align"><div className="questions-count">{exam.totalQuestions}</div></td>
-                  <td><div className="time-info"><i className="ti ti-time" /> {exam.duration} min</div></td>
+                  <td><div className="time-info"><Icon className="ti ti-time" /> {exam.duration} min</div></td>
                   <td><span className={`status-badge ${getStatusClass(exam.status)}`}>{getStatusLabel(exam.status)}</span></td>
                   <td className="center-align">
                     <div className="kebab-menu-container">
                       <button type="button" className="kebab-button" onClick={(event) => toggleKebabMenu(exam, event)}>
-                        <i className="ti ti-more-alt" />
+                        <Icon className="ti ti-more-alt" />
                       </button>
                       <div className={`kebab-dropdown ${activeKebabId === exam.id ? 'active' : ''}`}>
                         <button type="button" className="kebab-dropdown-item" onClick={() => viewExam(exam)}>
-                          <i className="ti ti-eye" />
+                          <Icon className="ti ti-eye" />
                           <span>View Details</span>
                         </button>
                         <button type="button" className="kebab-dropdown-item report-action" onClick={() => viewAttempts(exam)}>
-                          <i className="ti ti-bar-chart" />
+                          <Icon className="ti ti-bar-chart" />
                           <span>View Attempts</span>
                         </button>
                         <button type="button" className="kebab-dropdown-item edit-action" onClick={() => editExam(exam)}>
-                          <i className="ti ti-pencil" />
+                          <Icon className="ti ti-pencil" />
                           <span>Edit Exam</span>
                         </button>
                         <button type="button" className="kebab-dropdown-item duplicate-action" onClick={() => duplicateExam(exam)}>
-                          <i className="ti ti-files" />
+                          <Icon className="ti ti-files" />
                           <span>Duplicate Exam</span>
                         </button>
                         <button type="button" className="kebab-dropdown-item delete-action" onClick={() => { setExamToDelete(exam); setActiveKebabId(null); }}>
-                          <i className="ti ti-trash" />
+                          <Icon className="ti ti-trash" />
                           <span>Delete Exam</span>
                         </button>
                       </div>
@@ -428,7 +429,7 @@ export default function ExamListingPage() {
 
         {!isLoading && filteredExams.length === 0 ? (
           <div className="exam-empty-state">
-            <i className="ti ti-list" />
+            <Icon className="ti ti-list" />
             <h3>No exams found</h3>
             {searchQuery || filterStatus ? (
               <p>Try adjusting your search criteria or <button type="button" className="inline-link" onClick={() => { setSearchQuery(''); setFilterStatus(''); }}>clear all filters</button></p>
@@ -450,7 +451,7 @@ export default function ExamListingPage() {
           </div>
           <div className="pagination-controls">
             <button type="button" className="pagination-btn" onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} disabled={safeCurrentPage === 1}>
-              <i className="ti ti-angle-left" /> Previous
+              <Icon className="ti ti-angle-left" /> Previous
             </button>
             {pageNumbers.map((page) => (
               <button key={page} type="button" className={`pagination-btn ${page === safeCurrentPage ? 'active' : ''}`} onClick={() => setCurrentPage(page)}>
@@ -458,7 +459,7 @@ export default function ExamListingPage() {
               </button>
             ))}
             <button type="button" className="pagination-btn" onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} disabled={safeCurrentPage === totalPages}>
-              Next <i className="ti ti-angle-right" />
+              Next <Icon className="ti ti-angle-right" />
             </button>
           </div>
         </div>
@@ -467,9 +468,9 @@ export default function ExamListingPage() {
       <div className={`legacy-modal-backdrop ${Boolean(selectedExam) ? 'active' : ''}`} onClick={() => setSelectedExam(null)}>
         <div className="legacy-modal-dialog exam-view-dialog" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
           <div className="legacy-modal-header">
-            <h3><i className="ti ti-eye" /> Exam Details</h3>
+            <h3><Icon className="ti ti-eye" /> Exam Details</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setSelectedExam(null)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
@@ -494,23 +495,23 @@ export default function ExamListingPage() {
                 </div>
 
                 <div className="exam-section-block">
-                  <h5><i className="ti ti-layout" /> Exam Sections</h5>
+                  <h5><Icon className="ti ti-layout" /> Exam Sections</h5>
                   {(selectedExam.sectionsData || []).map((section) => (
                     <div key={`${selectedExam.id}-${section.order}`} className="exam-section-card">
                       <div className="exam-section-main">
                         <div className="exam-section-copy">
                           <h6><span className="section-order-pill">{section.order}</span>{section.name}</h6>
                           <div className="exam-section-meta">
-                            <i className="ti ti-clock" /> {section.duration} min
+                            <Icon className="ti ti-clock" /> {section.duration} min
                             <span>|</span>
-                            <i className="ti ti-help-alt" /> {section.totalQuestions} questions
+                            <Icon className="ti ti-help-alt" /> {section.totalQuestions} questions
                             <span>|</span>
-                            <i className="ti ti-timer" /> {section.enableSectionWiseTimer ? 'Section Timer Enabled' : 'No Section Timer'}
+                            <Icon className="ti ti-timer" /> {section.enableSectionWiseTimer ? 'Section Timer Enabled' : 'No Section Timer'}
                           </div>
                         </div>
                         <div className="exam-section-action">
                           <button type="button" className="section-view-btn" onClick={() => showToast('info', 'Section Questions', `Section has ${section.questions.length} questions (IDs: ${section.questions.map((question) => question.qi).join(', ')})`)}>
-                            <i className="ti ti-eye" /> View Questions ({section.questions.length})
+                            <Icon className="ti ti-eye" /> View Questions ({section.questions.length})
                           </button>
                         </div>
                       </div>
@@ -520,13 +521,13 @@ export default function ExamListingPage() {
 
                 {selectedExam.specialTerms ? (
                   <div className="exam-terms-block">
-                    <h5><i className="ti ti-info" /> Special Terms & Conditions</h5>
+                    <h5><Icon className="ti ti-info" /> Special Terms & Conditions</h5>
                     <div className="exam-terms-box">{selectedExam.specialTerms.replace(/<[^>]+>/g, ' ')}</div>
                   </div>
                 ) : null}
 
                 <div className="exam-settings-block">
-                  <h5><i className="ti ti-settings" /> Exam Settings</h5>
+                  <h5><Icon className="ti ti-settings" /> Exam Settings</h5>
                   <table className="exam-settings-table">
                     <tbody>
                       <tr><td>Switch Sections Allowed:</td><td>{selectedExam.switchSectionsAllowed ? 'Yes' : 'No'}</td></tr>
@@ -540,13 +541,13 @@ export default function ExamListingPage() {
           </div>
           <div className="legacy-modal-footer">
             <button type="button" className="legacy-btn legacy-btn-success" onClick={() => selectedExam && editExam(selectedExam)}>
-              <i className="ti ti-pencil" /> Edit Exam
+              <Icon className="ti ti-pencil" /> Edit Exam
             </button>
             <button type="button" className="legacy-btn legacy-btn-default exam-duplicate-btn" onClick={() => selectedExam && duplicateExam(selectedExam)}>
-              <i className="ti ti-files" /> Duplicate
+              <Icon className="ti ti-files" /> Duplicate
             </button>
             <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setSelectedExam(null)}>
-              <i className="ti ti-close" /> Close
+              <Icon className="ti ti-close" /> Close
             </button>
           </div>
         </div>
@@ -555,15 +556,15 @@ export default function ExamListingPage() {
       <div className={`legacy-modal-backdrop ${Boolean(examToDelete) ? 'active' : ''}`} onClick={() => setExamToDelete(null)}>
         <div className="legacy-modal-dialog legacy-confirm" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
           <div className="legacy-modal-header legacy-danger-header">
-            <h3><i className="ti ti-alert" /> Confirm Delete</h3>
+            <h3><Icon className="ti ti-alert" /> Confirm Delete</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setExamToDelete(null)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
             {examToDelete ? (
               <div className="exam-delete-copy">
-                <div className="exam-delete-icon"><i className="ti ti-alert" /></div>
+                <div className="exam-delete-icon"><Icon className="ti ti-alert" /></div>
                 <div>
                   <h4>Delete "{examToDelete.title}"?</h4>
                   <p>Are you sure you want to delete the exam "{examToDelete.title}"? This action cannot be undone.</p>
@@ -574,7 +575,7 @@ export default function ExamListingPage() {
           <div className="legacy-modal-footer">
             <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setExamToDelete(null)}>Cancel</button>
             <button type="button" className="legacy-btn legacy-btn-danger" onClick={confirmDelete}>
-              <i className="ti ti-trash" /> Delete Exam
+              <Icon className="ti ti-trash" /> Delete Exam
             </button>
           </div>
         </div>

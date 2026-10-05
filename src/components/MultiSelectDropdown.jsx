@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Icon from './Icon';
 
 /**
  * Searchable multi-select dropdown — trigger button + fixed-position checkbox
@@ -7,11 +8,16 @@ import React, { useEffect, useRef, useState } from 'react';
  * added at the top of the panel.
  *
  * `value` is an array of option ids; `options` the full id list.
+ *
+ * `joinSelected` is for ordered picks: the trigger lists the selected labels
+ * in pick order and each ticked option shows its position. `panelZIndex` lifts
+ * the panel above a modal; `panelMinWidth` lets it grow past a narrow trigger.
  */
 export default function MultiSelectDropdown({
   value, onChange, options, getLabel = (o) => o,
   allLabel = 'All', plural = 'items',
   searchPlaceholder = 'Search…', disabled = false, buttonClassName = '',
+  joinSelected = false, panelZIndex, panelMinWidth = 0,
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -55,6 +61,7 @@ export default function MultiSelectDropdown({
   const label =
     value.length === 0 ? allLabel
     : value.length === 1 ? getLabel(value[0])
+    : joinSelected ? value.map(getLabel).join(', ')
     : `${value.length} ${plural}`;
 
   const filtered = query.trim()
@@ -73,9 +80,10 @@ export default function MultiSelectDropdown({
         className={`msd-trigger ${buttonClassName}`}
         onClick={() => !disabled && setOpen((o) => !o)}
         disabled={disabled}
+        title={joinSelected && value.length > 1 ? label : undefined}
       >
         <span className="msd-trigger-label">{label}</span>
-        <i className={`ti ${open ? 'ti-angle-up' : 'ti-angle-down'}`} />
+        <Icon className={`ti ${open ? 'ti-angle-up' : 'ti-angle-down'}`} />
       </button>
       {open && rect && (() => {
         // Flip the panel above the trigger when there isn't enough room below.
@@ -91,12 +99,13 @@ export default function MultiSelectDropdown({
               position: 'fixed',
               ...(openUp ? { bottom: window.innerHeight - rect.top + 4 } : { top: rect.bottom + 4 }),
               left: rect.left,
-              width: rect.width,
+              width: Math.max(rect.width, panelMinWidth),
               maxHeight,
+              ...(panelZIndex ? { zIndex: panelZIndex } : null),
             }}
           >
             <div className="msd-search">
-              <i className="ti ti-search" />
+              <Icon className="ti ti-search" />
               <input
                 ref={searchRef}
                 type="text"
@@ -104,11 +113,11 @@ export default function MultiSelectDropdown({
                 placeholder={searchPlaceholder}
                 onChange={(e) => setQuery(e.target.value)}
               />
-              {query ? <button type="button" className="msd-search-clear" onClick={() => { setQuery(''); searchRef.current?.focus(); }}><i className="ti ti-close" /></button> : null}
+              {query ? <button type="button" className="msd-search-clear" onClick={() => { setQuery(''); searchRef.current?.focus(); }}><Icon className="ti ti-close" /></button> : null}
             </div>
             {value.length > 0 && (
               <button type="button" className="msd-clear" onClick={() => onChange([])}>
-                <i className="ti ti-close" /> Clear all ({value.length})
+                <Icon className="ti ti-close" /> Clear all ({value.length})
               </button>
             )}
             <div className="msd-options">
@@ -120,6 +129,9 @@ export default function MultiSelectDropdown({
                   <label key={id} className={`msd-option ${sel ? 'selected' : ''}`}>
                     <input type="checkbox" checked={sel} onChange={() => toggle(id)} />
                     <span>{getLabel(id)}</span>
+                    {joinSelected && sel && value.length > 1 ? (
+                      <span className="msd-order" aria-label={`Position ${value.indexOf(id) + 1}`}>{value.indexOf(id) + 1}</span>
+                    ) : null}
                   </label>
                 );
               })}

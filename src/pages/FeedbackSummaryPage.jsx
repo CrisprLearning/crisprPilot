@@ -6,6 +6,7 @@ import { examsDemo } from '../data/examsDemo';
 import { feedbackDemoData } from '../data/feedbackDemo';
 import { feedbackSummary, listFeedback } from '../lib/feedbackApi';
 import useDebouncedValue from '../hooks/useDebouncedValue';
+import Icon from '../components/Icon';
 
 function formatLastReceived(unixSeconds) {
   if (!unixSeconds) return 'No submissions yet';
@@ -29,9 +30,9 @@ function RatingStars({ rating }) {
         const fill = Math.round(Math.max(0, Math.min(1, value - i)) * 2) / 2;
         return (
           <span key={i} style={{ position: 'relative', display: 'inline-block' }}>
-            <i className="fa fa-star" style={{ color: '#d6dde0' }} />
+            <Icon className="fa fa-star" style={{ color: '#d6dde0' }} />
             <span style={{ position: 'absolute', left: 0, top: 0, width: `${fill * 100}%`, height: '100%', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-              <i className="fa fa-star" style={{ color: '#fbbf24' }} />
+              <Icon className="fa fa-star" style={{ color: '#fbbf24' }} />
             </span>
           </span>
         );
@@ -130,7 +131,7 @@ function BatchMultiselect({ batches, selected, onChange, disabled }) {
         <span>{getLabel()}</span>
         <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           {selected.length > 0 && <span className="ear-batch-count">{selected.length}</span>}
-          <i className="ti ti-angle-down" />
+          <Icon className="ti ti-angle-down" />
         </span>
       </button>
       {open && !disabled && (
@@ -159,7 +160,7 @@ function StarRating({ rating }) {
   return (
     <div style={{ display: 'flex', color: '#fbbf24', fontSize: '16px', gap: '2px' }}>
       {[1, 2, 3, 4, 5].map((star) => (
-        <i key={star} className="fa fa-star" style={{ color: star <= rating ? '#fbbf24' : '#d6dde0' }} />
+        <Icon key={star} className="fa fa-star" style={{ color: star <= rating ? '#fbbf24' : '#d6dde0' }} />
       ))}
     </div>
   );
@@ -451,7 +452,7 @@ export default function FeedbackSummaryPage() {
       {/* ── Standard Page Header ── */}
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-star-half-o" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-star-half-o" /></span>
           <div>
             <h2>Feedback Summary</h2>
             <p>Consolidated view of all student feedback for courses and exams.</p>
@@ -473,7 +474,7 @@ export default function FeedbackSummaryPage() {
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, gap: 12 }}>
           <h4 style={{ margin: 0, color: '#16353c', fontSize: 15, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <i className="ti ti-time" style={{ color: '#006073' }} />
+            <Icon className="ti ti-time" style={{ color: '#006073' }} />
             Feedback on Recent Sessions
             {summaryLoading && <span style={{ fontSize: 12, color: '#59757b', fontWeight: 'normal' }}>Loading…</span>}
             {summaryError && <span style={{ fontSize: 12, color: '#c0392b', fontWeight: 'normal' }}>{summaryError}</span>}
@@ -501,7 +502,7 @@ export default function FeedbackSummaryPage() {
                 onClick={() => setTilesPage((p) => Math.max(1, p - 1))}
                 aria-label="Previous tiles"
               >
-                <i className="ti ti-angle-left" />
+                <Icon className="ti ti-angle-left" />
               </button>
             )}
             <div
@@ -572,7 +573,7 @@ export default function FeedbackSummaryPage() {
                 onClick={() => setTilesPage((p) => Math.min(tilesLastPage, p + 1))}
                 aria-label="Next tiles"
               >
-                <i className="ti ti-angle-right" />
+                <Icon className="ti ti-angle-right" />
               </button>
             )}
           </div>
@@ -582,7 +583,7 @@ export default function FeedbackSummaryPage() {
       {/* ── Search bar + Filters button (standard) ── */}
       <div className="filter-bar">
         <div className="search-wrapper" style={selectedTile ? { opacity: 0.5 } : undefined}>
-          <i className="ti ti-search search-icon" />
+          <Icon className="ti ti-search search-icon" />
           <input
             type="text"
             className="search-input"
@@ -598,12 +599,12 @@ export default function FeedbackSummaryPage() {
           disabled={!!selectedTile}
           onClick={() => setShowFilterModal(true)}
         >
-          <i className="ti ti-filter" /> Filters
+          <Icon className="ti ti-filter" /> Filters
           {modalFilterCount > 0 && <span className="filter-count">{modalFilterCount}</span>}
         </button>
         {hasActiveFilters && (
           <button type="button" className="filter-clear-btn" onClick={clearFilters}>
-            <i className="ti ti-reload" /> Clear
+            <Icon className="ti ti-reload" /> Clear
           </button>
         )}
         {hasActiveFilters && summary.count > 0 && (
@@ -621,7 +622,7 @@ export default function FeedbackSummaryPage() {
               fontWeight: 600,
             }}
           >
-            <i className="fa fa-star" style={{ color: '#fbbf24' }} />
+            <Icon className="fa fa-star" style={{ color: '#fbbf24' }} />
             {summary.avg} from {summary.count} review{summary.count === 1 ? '' : 's'}
           </span>
         )}
@@ -634,7 +635,7 @@ export default function FeedbackSummaryPage() {
           disabled={listTotal === 0}
           onClick={() => setShowExportModal(true)}
         >
-          <i className="ti ti-download" /> Export List to PDF
+          <Icon className="ti ti-download" /> Export List to PDF
         </button>
       </div>
 
@@ -649,13 +650,13 @@ export default function FeedbackSummaryPage() {
             <div className="legacy-modal-header">
               <h3>Filter Feedback</h3>
               <button type="button" className="legacy-modal-close" onClick={() => setShowFilterModal(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <form className="form-modal" onSubmit={(event) => { event.preventDefault(); setShowFilterModal(false); }}>
               <div className="legacy-modal-body">
                 <div className="asset-form-section">
-                  <div className="asset-form-section-title"><i className="ti ti-calendar" /> Date Range</div>
+                  <div className="asset-form-section-title"><Icon className="ti ti-calendar" /> Date Range</div>
                   <div className="asset-form-grid">
                     <label className="field-cell">
                       <div className="float-field float-always date-custom">
@@ -694,7 +695,7 @@ export default function FeedbackSummaryPage() {
                 </div>
 
                 <div className="asset-form-section">
-                  <div className="asset-form-section-title"><i className="ti ti-filter" /> Filters</div>
+                  <div className="asset-form-section-title"><Icon className="ti ti-filter" /> Filters</div>
                   <div className="asset-form-grid">
                     <label className="field-cell">
                       <div className="float-field float-always">
@@ -773,43 +774,43 @@ export default function FeedbackSummaryPage() {
                     {searchQuery && (
                       <span className="ear-filter-badge">
                         Search: &ldquo;{searchQuery}&rdquo;
-                        <button type="button" onClick={() => setSearchQuery('')}><i className="ti ti-close" /></button>
+                        <button type="button" onClick={() => setSearchQuery('')}><Icon className="ti ti-close" /></button>
                       </span>
                     )}
                     {dateFrom && (
                       <span className="ear-filter-badge">
                         From: {new Date(dateFrom).toLocaleDateString()}
-                        <button type="button" onClick={() => setDateFrom('')}><i className="ti ti-close" /></button>
+                        <button type="button" onClick={() => setDateFrom('')}><Icon className="ti ti-close" /></button>
                       </span>
                     )}
                     {dateTo && (
                       <span className="ear-filter-badge">
                         To: {new Date(dateTo).toLocaleDateString()}
-                        <button type="button" onClick={() => setDateTo('')}><i className="ti ti-close" /></button>
+                        <button type="button" onClick={() => setDateTo('')}><Icon className="ti ti-close" /></button>
                       </span>
                     )}
                     {selectedCourseFilter && (
                       <span className="ear-filter-badge">
                         Course: {getCourseName(selectedCourseFilter)}
-                        <button type="button" onClick={() => { setSelectedCourseFilter(''); setSelectedChapterFilter(''); setSelectedBatchFilters([]); }}><i className="ti ti-close" /></button>
+                        <button type="button" onClick={() => { setSelectedCourseFilter(''); setSelectedChapterFilter(''); setSelectedBatchFilters([]); }}><Icon className="ti ti-close" /></button>
                       </span>
                     )}
                     {selectedChapterFilter && (
                       <span className="ear-filter-badge">
                         Chapter: {selectedChapterFilter}
-                        <button type="button" onClick={() => setSelectedChapterFilter('')}><i className="ti ti-close" /></button>
+                        <button type="button" onClick={() => setSelectedChapterFilter('')}><Icon className="ti ti-close" /></button>
                       </span>
                     )}
                     {selectedExamFilter && (
                       <span className="ear-filter-badge">
                         Exam: {getExamName(selectedExamFilter)}
-                        <button type="button" onClick={() => setSelectedExamFilter('')}><i className="ti ti-close" /></button>
+                        <button type="button" onClick={() => setSelectedExamFilter('')}><Icon className="ti ti-close" /></button>
                       </span>
                     )}
                     {selectedBatchFilters.map((batchId) => (
                       <span key={batchId} className="ear-filter-badge">
                         Batch: {getBatchName(batchId)}
-                        <button type="button" onClick={() => setSelectedBatchFilters((c) => c.filter((id) => id !== batchId))}><i className="ti ti-close" /></button>
+                        <button type="button" onClick={() => setSelectedBatchFilters((c) => c.filter((id) => id !== batchId))}><Icon className="ti ti-close" /></button>
                       </span>
                     ))}
                   </div>
@@ -817,10 +818,10 @@ export default function FeedbackSummaryPage() {
               </div>
               <div className="legacy-modal-footer">
                 <button type="button" className="legacy-btn legacy-btn-default" onClick={clearFilters}>
-                  <i className="ti ti-reload" /> Clear Filters
+                  <Icon className="ti ti-reload" /> Clear Filters
                 </button>
                 <button type="submit" className="legacy-btn legacy-btn-success">
-                  <i className="ti ti-check" /> Apply Filters
+                  <Icon className="ti ti-check" /> Apply Filters
                 </button>
               </div>
             </form>
@@ -846,7 +847,7 @@ export default function FeedbackSummaryPage() {
           }}
         >
           <span>
-            <i className="ti ti-filter" style={{ marginRight: 6, color: '#006073' }} />
+            <Icon className="ti ti-filter" style={{ marginRight: 6, color: '#006073' }} />
             Showing reviews for <strong>{getSummaryTileTitle(selectedTile)}</strong>
           </span>
           <button
@@ -855,7 +856,7 @@ export default function FeedbackSummaryPage() {
             style={{ fontSize: 12, padding: '4px 10px' }}
             onClick={() => { setSelectedTile(null); setCurrentPage(1); }}
           >
-            <i className="ti ti-list" /> Show All Reviews
+            <Icon className="ti ti-list" /> Show All Reviews
           </button>
         </div>
       )}
@@ -867,17 +868,17 @@ export default function FeedbackSummaryPage() {
             <thead>
               <tr>
                 <th className={`sortable${sortColumn === 'studentName' ? ' active' : ''}`} onClick={() => toggleSort('studentName')}>
-                  Student <i className={`ti ${getSortIcon('studentName')} sort-icon`} />
+                  Student <Icon className={`ti ${getSortIcon('studentName')} sort-icon`} />
                 </th>
                 <th className={`sortable${sortColumn === 'itemType' ? ' active' : ''}`} onClick={() => toggleSort('itemType')}>
-                  Context <i className={`ti ${getSortIcon('itemType')} sort-icon`} />
+                  Context <Icon className={`ti ${getSortIcon('itemType')} sort-icon`} />
                 </th>
                 <th>Remarks</th>
                 <th className={`sortable${sortColumn === 'rating' ? ' active' : ''}`} style={{ width: 140 }} onClick={() => toggleSort('rating')}>
-                  Rating <i className={`ti ${getSortIcon('rating')} sort-icon`} />
+                  Rating <Icon className={`ti ${getSortIcon('rating')} sort-icon`} />
                 </th>
                 <th className={`sortable${sortColumn === 'submittedAt' ? ' active' : ''}`} style={{ width: 180 }} onClick={() => toggleSort('submittedAt')}>
-                  Date <i className={`ti ${getSortIcon('submittedAt')} sort-icon`} />
+                  Date <Icon className={`ti ${getSortIcon('submittedAt')} sort-icon`} />
                 </th>
               </tr>
             </thead>
@@ -907,7 +908,7 @@ export default function FeedbackSummaryPage() {
                           )}
                         </>
                       ) : (
-                        <span className="ear-td-muted"><i className="ti ti-na" /> Anonymous</span>
+                        <span className="ear-td-muted"><Icon className="ti ti-na" /> Anonymous</span>
                       )}
                     </td>
                     <td>
@@ -948,7 +949,7 @@ export default function FeedbackSummaryPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={safePage === 1} onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {getPageNumbers(safePage, totalPages).map((page, index) => (
                 page === '...'
@@ -965,14 +966,14 @@ export default function FeedbackSummaryPage() {
                   )
               ))}
               <button type="button" className="pagination-btn" disabled={safePage === totalPages} onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
         </div>
       ) : (
         <div className="ear-empty-state">
-          <i className="ti ti-search" />
+          <Icon className="ti ti-search" />
           <h4>No Feedbacks Found</h4>
           <p>{hasActiveFilters ? 'Try adjusting your search or filters.' : 'No student feedback has been submitted yet.'}</p>
         </div>
@@ -985,12 +986,12 @@ export default function FeedbackSummaryPage() {
             <div className="legacy-modal-header">
               <h3>Export Feedback Report</h3>
               <button type="button" className="legacy-modal-close" onClick={() => setShowExportModal(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="legacy-modal-body">
               <div className="ear-modal-center">
-                <i className="ti ti-file-pdf" style={{ fontSize: 48, color: '#00a8cc', marginBottom: 12 }} />
+                <Icon className="ti ti-file-pdf" style={{ fontSize: 48, color: '#00a8cc', marginBottom: 12 }} />
                 <h4 className="ear-modal-heading">Generate PDF Report</h4>
                 <p className="ear-modal-subtext">You are about to export <strong>{listTotal}</strong> feedback(s) based on your current filters.</p>
               </div>
@@ -1005,7 +1006,7 @@ export default function FeedbackSummaryPage() {
                   showToast('success', 'Download Started', 'Your PDF export is being generated.');
                 }}
               >
-                <i className="ti ti-download" /> Download PDF
+                <Icon className="ti ti-download" /> Download PDF
               </button>
             </div>
           </div>

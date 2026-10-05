@@ -5,6 +5,7 @@ import FilterDropdown from '../components/FilterDropdown';
 import { Can, usePermission } from '../lib/userStore';
 import { PERMS } from '../lib/permissions';
 import { draftQuizzesDemo, publishedQuizzesDemo, withSampleAttempts } from '../data/quizzesDemo';
+import Icon from '../components/Icon';
 
 function getQuizzesFromStorage() {
   const published = window.localStorage.getItem('publishedQuizzes');
@@ -223,7 +224,7 @@ export default function QuizListingPage() {
 
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-list-ul" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-list-ul" /></span>
           <div>
             <h2>Quiz Listing</h2>
             <p>Manage practice quizzes, review student attempts, and publish draft quizzes.</p>
@@ -231,7 +232,7 @@ export default function QuizListingPage() {
         </div>
         <Can permission={PERMS.QUIZZES_EDIT}>
           <button type="button" className="create-quiz-button" onClick={() => navigate('/quiz-creation')}>
-            <i className="ti ti-plus" /> Create Quiz
+            <Icon className="ti ti-plus" /> Create Quiz
           </button>
         </Can>
       </div>
@@ -239,7 +240,7 @@ export default function QuizListingPage() {
       {(allQuizzes.length > 0 || quizSearchQuery) ? (
         <div className="filter-bar">
           <div className="search-wrapper">
-            <i className={`ti ${quizSearchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setQuizSearchQuery('')} />
+            <Icon className={`ti ${quizSearchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setQuizSearchQuery('')} />
             <input
               className="search-input"
               type="text"
@@ -270,26 +271,26 @@ export default function QuizListingPage() {
             <thead>
               <tr>
                 <th className={`sortable ${sortColumn === 'title' ? 'active' : ''}`} onClick={() => handleSort('title')}>
-                  Quiz Title <i className={`sort-icon ti ${sortIcon('title', sortColumn, sortReverse)}`} />
+                  Quiz Title <Icon className={`sort-icon ti ${sortIcon('title', sortColumn, sortReverse)}`} />
                 </th>
                 <th className={`sortable ${sortColumn === 'status' ? 'active' : ''}`} onClick={() => handleSort('status')}>
-                  Status <i className={`sort-icon ti ${sortIcon('status', sortColumn, sortReverse)}`} />
+                  Status <Icon className={`sort-icon ti ${sortIcon('status', sortColumn, sortReverse)}`} />
                 </th>
                 <th className={`sortable ${sortColumn === 'totalQuestions' ? 'active' : ''}`} onClick={() => handleSort('totalQuestions')}>
-                  Questions <i className={`sort-icon ti ${sortIcon('totalQuestions', sortColumn, sortReverse)}`} />
+                  Questions <Icon className={`sort-icon ti ${sortIcon('totalQuestions', sortColumn, sortReverse)}`} />
                 </th>
                 <th className={`sortable ${sortColumn === 'duration' ? 'active' : ''}`} onClick={() => handleSort('duration')}>
-                  Duration <i className={`sort-icon ti ${sortIcon('duration', sortColumn, sortReverse)}`} />
+                  Duration <Icon className={`sort-icon ti ${sortIcon('duration', sortColumn, sortReverse)}`} />
                 </th>
                 <th className={`sortable ${sortColumn === 'maximumMarks' ? 'active' : ''}`} onClick={() => handleSort('maximumMarks')}>
-                  Max Marks <i className={`sort-icon ti ${sortIcon('maximumMarks', sortColumn, sortReverse)}`} />
+                  Max Marks <Icon className={`sort-icon ti ${sortIcon('maximumMarks', sortColumn, sortReverse)}`} />
                 </th>
                 <th>Schedule</th>
                 <th className={`sortable ${sortColumn === 'attemptCount' ? 'active' : ''}`} onClick={() => handleSort('attemptCount')}>
-                  Attempts <i className={`sort-icon ti ${sortIcon('attemptCount', sortColumn, sortReverse)}`} />
+                  Attempts <Icon className={`sort-icon ti ${sortIcon('attemptCount', sortColumn, sortReverse)}`} />
                 </th>
                 <th className={`sortable ${sortColumn === 'createdAt' ? 'active' : ''}`} onClick={() => handleSort('createdAt')}>
-                  Created <i className={`sort-icon ti ${sortIcon('createdAt', sortColumn, sortReverse)}`} />
+                  Created <Icon className={`sort-icon ti ${sortIcon('createdAt', sortColumn, sortReverse)}`} />
                 </th>
                 <th className="center-align actions-column">Actions</th>
               </tr>
@@ -348,28 +349,28 @@ export default function QuizListingPage() {
                           setActiveKebabId((current) => (current === quiz.id ? null : quiz.id));
                         }}
                       >
-                        <i className="ti ti-more-alt" />
+                        <Icon className="ti ti-more-alt" />
                       </button>
                       <div className={`kebab-dropdown ${activeKebabId === quiz.id ? 'active' : ''}`}>
                         <button type="button" className="kebab-dropdown-item view-action" onClick={() => { setSelectedQuiz(quiz); setActiveKebabId(null); }}>
-                          <i className="ti ti-eye" />
+                          <Icon className="ti ti-eye" />
                           <span>View Details</span>
                         </button>
                         {quiz.attempts?.length ? (
                           <button type="button" className="kebab-dropdown-item report-action" onClick={() => viewReport(quiz)}>
-                            <i className="ti ti-bar-chart" />
+                            <Icon className="ti ti-bar-chart" />
                             <span>View Report</span>
                           </button>
                         ) : null}
                         {quiz.status === 'draft' && can(PERMS.QUIZZES_EDIT) ? (
                           <button type="button" className="kebab-dropdown-item publish-action" onClick={() => { setQuizToPublish(quiz); setActiveKebabId(null); }}>
-                            <i className="ti ti-check" />
+                            <Icon className="ti ti-check" />
                             <span>Publish Quiz</span>
                           </button>
                         ) : null}
                         {can(PERMS.QUIZZES_DELETE) && (
                           <button type="button" className="kebab-dropdown-item delete-action" onClick={() => { setQuizToDelete(quiz); setActiveKebabId(null); }}>
-                            <i className="ti ti-trash" />
+                            <Icon className="ti ti-trash" />
                             <span>Delete Quiz</span>
                           </button>
                         )}
@@ -401,7 +402,7 @@ export default function QuizListingPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={page === 1} onClick={() => setCurrentPage((current) => Math.max(1, current - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {paginationPages.map((pageNumber) => (
                 <button key={pageNumber} type="button" className={`pagination-btn ${pageNumber === page ? 'active' : ''}`} onClick={() => setCurrentPage(pageNumber)}>
@@ -409,14 +410,14 @@ export default function QuizListingPage() {
                 </button>
               ))}
               <button type="button" className="pagination-btn" disabled={page === totalPages} onClick={() => setCurrentPage((current) => Math.min(totalPages, current + 1))}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
         </div>
       ) : (
         <div className="empty-state">
-          <i className="ti ti-clipboard" />
+          <Icon className="ti ti-clipboard" />
           <h4>No Quizzes Found</h4>
           <p>{currentTab === 'all' ? "You haven't created any quizzes yet." : currentTab === 'published' ? "You haven't published any quizzes yet." : "You don't have any draft quizzes."}</p>
         </div>
@@ -479,8 +480,8 @@ function QuizDetailsModal({ quiz, onClose }) {
     <div className="crispr-modal-backdrop active" role="presentation" onClick={onClose}>
       <div className="crispr-modal-dialog" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
         <div className="crispr-modal-header">
-          <h3><i className="ti ti-eye" /> Quiz Details</h3>
-          <button type="button" className="crispr-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <h3><Icon className="ti ti-eye" /> Quiz Details</h3>
+          <button type="button" className="crispr-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <div className="crispr-modal-body">
           <h4 className="quiz-modal-title">{quiz.title}</h4>
@@ -535,13 +536,13 @@ function ConfirmModal({ tone, icon, title, heading, body, actionLabel, onClose, 
     <div className="crispr-modal-backdrop active" role="presentation" onClick={onClose}>
       <div className="crispr-modal-dialog quiz-confirm-dialog" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
         <div className={`crispr-modal-header ${isDanger ? 'danger-header' : 'success-header'}`}>
-          <h3><i className={`ti ${icon}`} /> {title}</h3>
-          <button type="button" className="crispr-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <h3><Icon className={`ti ${icon}`} /> {title}</h3>
+          <button type="button" className="crispr-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <div className="crispr-modal-body">
           <div className="quiz-confirm-body">
             <div className={`quiz-confirm-icon ${isDanger ? 'danger' : 'success'}`}>
-              <i className={`ti ${isDanger ? 'ti-alert' : 'ti-check'}`} />
+              <Icon className={`ti ${isDanger ? 'ti-alert' : 'ti-check'}`} />
             </div>
             <div>
               <h4>{heading}</h4>
@@ -552,7 +553,7 @@ function ConfirmModal({ tone, icon, title, heading, body, actionLabel, onClose, 
         <div className="crispr-modal-footer">
           <button type="button" className="btn btn-default" onClick={onClose}>Cancel</button>
           <button type="button" className={`btn ${isDanger ? 'btn-danger' : 'btn-success'}`} onClick={onConfirm}>
-            <i className={`ti ${icon}`} /> {actionLabel}
+            <Icon className={`ti ${icon}`} /> {actionLabel}
           </button>
         </div>
       </div>
@@ -565,8 +566,8 @@ function AttemptsModal({ quiz, stats, attemptSearchQuery, onSearchChange, attemp
     <div className="crispr-modal-backdrop active" role="presentation" onClick={onClose}>
       <div className="crispr-modal-dialog attempts-modal" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
         <div className="crispr-modal-header">
-          <h3><i className="ti ti-user" /> Quiz Attempts: {quiz.title}</h3>
-          <button type="button" className="crispr-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <h3><Icon className="ti ti-user" /> Quiz Attempts: {quiz.title}</h3>
+          <button type="button" className="crispr-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <div className="crispr-modal-body">
           <div className="attempt-stats-row">
@@ -629,7 +630,7 @@ function AttemptsModal({ quiz, stats, attemptSearchQuery, onSearchChange, attemp
                 </div>
                 <div className="pagination-controls">
                   <button type="button" className="pagination-btn" disabled={page === 1} onClick={() => onPageChange((current) => Math.max(1, current - 1))}>
-                    <i className="ti ti-angle-left" /> Previous
+                    <Icon className="ti ti-angle-left" /> Previous
                   </button>
                   {getPageNumbers(page, totalPages).map((pageNumber) => (
                     <button key={pageNumber} type="button" className={`pagination-btn ${pageNumber === page ? 'active' : ''}`} onClick={() => onPageChange(pageNumber)}>
@@ -637,14 +638,14 @@ function AttemptsModal({ quiz, stats, attemptSearchQuery, onSearchChange, attemp
                     </button>
                   ))}
                   <button type="button" className="pagination-btn" disabled={page === totalPages} onClick={() => onPageChange((current) => Math.min(totalPages, current + 1))}>
-                    Next <i className="ti ti-angle-right" />
+                    Next <Icon className="ti ti-angle-right" />
                   </button>
                 </div>
               </div>
             </>
           ) : (
             <div className="attempts-empty-state">
-              <i className="ti ti-search" />
+              <Icon className="ti ti-search" />
               <p>No attempts found matching your search.</p>
             </div>
           )}

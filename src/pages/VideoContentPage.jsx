@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ToastRegion from '../components/ToastRegion';
 import FilterDropdown from '../components/FilterDropdown';
 import { bunnyFoldersDemo, bunnyVideosDemo, instructorsDemo, videoLibraryDemo } from '../data/adminRemainingDemo';
+import Icon from '../components/Icon';
 
 const SUBJECTS = ['Biology', 'Chemistry', 'Mathematics', 'Physics'];
 const CHAPTERS = {
@@ -38,17 +39,17 @@ function KebabMenu({ onView, onEdit, onDelete }) {
         className="kebab-button"
         onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
       >
-        <i className="ti ti-more-alt" />
+        <Icon className="ti ti-more-alt" />
       </button>
       <div className={`kebab-dropdown${open ? ' active' : ''}`}>
         <button type="button" className="kebab-dropdown-item" onClick={() => { setOpen(false); onView(); }}>
-          <i className="ti ti-eye" /> View
+          <Icon className="ti ti-eye" /> View
         </button>
         <button type="button" className="kebab-dropdown-item" onClick={() => { setOpen(false); onEdit(); }}>
-          <i className="ti ti-pencil" /> Edit
+          <Icon className="ti ti-pencil" /> Edit
         </button>
         <button type="button" className="kebab-dropdown-item danger-action" onClick={() => { setOpen(false); onDelete(); }}>
-          <i className="ti ti-trash" /> Delete
+          <Icon className="ti ti-trash" /> Delete
         </button>
       </div>
     </div>
@@ -78,9 +79,9 @@ function EditVideoModal({ video, onClose, onSave }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="crispr-modal-header">
-          <h3><i className="ti ti-pencil" /> Edit Video #{video.videoId}</h3>
+          <h3><Icon className="ti ti-pencil" /> Edit Video #{video.videoId}</h3>
           <button type="button" className="crispr-modal-close" onClick={onClose}>
-            <i className="ti ti-close" />
+            <Icon className="ti ti-close" />
           </button>
         </div>
         <div className="crispr-modal-body" style={{ padding: 25 }}>
@@ -88,7 +89,7 @@ function EditVideoModal({ video, onClose, onSave }) {
             <div className="vc-edit-player">
               <div className="vc-video-embed">
                 <div className="vc-video-placeholder">
-                  <i className="ti ti-video-clapper" />
+                  <Icon className="ti ti-video-clapper" />
                   <p>Video Player</p>
                   <span>{video.videoDisplayKey}</span>
                 </div>
@@ -160,7 +161,7 @@ function EditVideoModal({ video, onClose, onSave }) {
               </div>
               <div style={{ marginTop: 25 }}>
                 <button type="button" className="vc-btn-save" onClick={handleSave}>
-                  <i className="ti ti-save" /> Save Changes
+                  <Icon className="ti ti-save" /> Save Changes
                 </button>
               </div>
             </div>
@@ -218,9 +219,9 @@ function LinkVideoModal({ onClose, onSave }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="crispr-modal-header">
-          <h3><i className="ti ti-link" /> Classify Video</h3>
+          <h3><Icon className="ti ti-link" /> Classify Video</h3>
           <button type="button" className="crispr-modal-close" onClick={onClose}>
-            <i className="ti ti-close" />
+            <Icon className="ti ti-close" />
           </button>
         </div>
         <div className="crispr-modal-body">
@@ -326,7 +327,7 @@ function LinkVideoModal({ onClose, onSave }) {
                             onClick={() => removeRow(index)}
                             title="Remove Row"
                           >
-                            <i className="ti ti-close" />
+                            <Icon className="ti ti-close" />
                           </button>
                         )}
                         {index === videoItems.length - 1 && videoItems.length < videosInFolder.length && (
@@ -336,7 +337,7 @@ function LinkVideoModal({ onClose, onSave }) {
                             onClick={addRow}
                             title="Add Row"
                           >
-                            <i className="ti ti-plus" />
+                            <Icon className="ti ti-plus" />
                           </button>
                         )}
                       </div>
@@ -355,7 +356,7 @@ function LinkVideoModal({ onClose, onSave }) {
             disabled={!isComplete()}
             onClick={() => { onSave(form, videoItems); }}
           >
-            <i className="ti ti-save" /> Save
+            <Icon className="ti ti-save" /> Save
           </button>
         </div>
       </div>
@@ -407,8 +408,8 @@ export default function VideoContentPage() {
   }
 
   function SortIcon({ col }) {
-    if (sortKey !== col) return <i className="ti ti-arrows-vertical sort-icon" />;
-    return <i className={`ti ti-arrow-${sortDir === 'asc' ? 'up' : 'down'} sort-icon`} />;
+    if (sortKey !== col) return <Icon className="ti ti-arrows-vertical sort-icon" />;
+    return <Icon className={`ti ti-arrow-${sortDir === 'asc' ? 'up' : 'down'} sort-icon`} />;
   }
 
   const subjectOptions = [
@@ -523,25 +524,24 @@ export default function VideoContentPage() {
       {/* ── Standard Page Header ── */}
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-video-camera" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-video-camera" /></span>
           <div>
             <h2>Video Content</h2>
             <p>Manage linked videos, chapter metadata, and upload state.</p>
           </div>
         </div>
         <button type="button" className="page-action-button" onClick={() => setShowLink(true)}>
-          <i className="ti ti-plus" /> Add New
+          <Icon className="ti ti-plus" /> Add New
         </button>
       </div>
 
       {/* Filter Bar */}
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i
+          <Icon
             className={`ti ${searchText ? 'ti-close' : 'ti-search'}`}
             onClick={() => { setSearchText(''); setCurrentPage(1); }}
-            style={{ cursor: searchText ? 'pointer' : 'default' }}
-          />
+            style={{ cursor: searchText ? 'pointer' : 'default' }} />
           <input
             type="text"
             className="search-input"
@@ -642,7 +642,7 @@ export default function VideoContentPage() {
                         className="vc-thumbnail-placeholder"
                         style={{ display: video.thumbnail ? 'none' : 'flex' }}
                       >
-                        <i className="ti ti-video-clapper" />
+                        <Icon className="ti ti-video-clapper" />
                       </div>
                     </td>
                     <td>
@@ -654,13 +654,13 @@ export default function VideoContentPage() {
                           title="Copy Key"
                           onClick={() => handleCopyKey(video.videoDisplayKey)}
                         >
-                          <i className="ti ti-files" />
+                          <Icon className="ti ti-files" />
                         </span>
                       </div>
                     </td>
                     <td>
                       <span className="profile-subtext" style={{ fontSize: 13 }}>
-                        <i className="ti ti-time" /> {formatDuration(video.durationInSeconds)}
+                        <Icon className="ti ti-time" /> {formatDuration(video.durationInSeconds)}
                       </span>
                     </td>
                     <td>
@@ -715,7 +715,7 @@ export default function VideoContentPage() {
                 disabled={safePage === 1}
                 onClick={() => goToPage(safePage - 1)}
               >
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {pageNumbers().map((p) => (
                 <button
@@ -733,7 +733,7 @@ export default function VideoContentPage() {
                 disabled={safePage === totalPages}
                 onClick={() => goToPage(safePage + 1)}
               >
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
@@ -745,16 +745,16 @@ export default function VideoContentPage() {
         <div className="crispr-modal-backdrop active" onClick={() => setViewVideo(null)}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 600 }} onClick={(e) => e.stopPropagation()}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-eye" /> Video Details</h3>
+              <h3><Icon className="ti ti-eye" /> Video Details</h3>
               <button type="button" className="crispr-modal-close" onClick={() => setViewVideo(null)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="crispr-modal-body" style={{ padding: 25 }}>
               <div className="vc-view-grid">
                 <div className="vc-view-video">
                   <div className="vc-video-placeholder large">
-                    <i className="ti ti-video-clapper" />
+                    <Icon className="ti ti-video-clapper" />
                     <p>Video Preview</p>
                     <span>{viewVideo.videoDisplayKey}</span>
                   </div>
@@ -784,7 +784,7 @@ export default function VideoContentPage() {
             <div className="crispr-modal-footer">
               <button type="button" className="btn-modal-cancel" onClick={() => setViewVideo(null)}>Close</button>
               <button type="button" className="btn-modal-save" onClick={() => { setViewVideo(null); setEditVideo(viewVideo); }}>
-                <i className="ti ti-pencil" /> Edit
+                <Icon className="ti ti-pencil" /> Edit
               </button>
             </div>
           </div>
@@ -817,9 +817,9 @@ export default function VideoContentPage() {
         >
           <div className="crispr-modal-dialog" style={{ maxWidth: 460 }} role="dialog" aria-modal="true">
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-trash" /> Delete Video</h3>
+              <h3><Icon className="ti ti-trash" /> Delete Video</h3>
               <button type="button" className="crispr-modal-close" onClick={() => setDeleteVideo(null)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="crispr-modal-body">
@@ -830,10 +830,10 @@ export default function VideoContentPage() {
             </div>
             <div className="crispr-modal-footer">
               <button type="button" className="btn btn-default" onClick={() => setDeleteVideo(null)}>
-                <i className="ti ti-close" /> Cancel
+                <Icon className="ti ti-close" /> Cancel
               </button>
               <button type="button" className="btn btn-danger" onClick={confirmDelete}>
-                <i className="ti ti-trash" /> Delete
+                <Icon className="ti ti-trash" /> Delete
               </button>
             </div>
           </div>

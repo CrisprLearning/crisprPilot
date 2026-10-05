@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect, useRef } from 'react';
 import ToastRegion from '../components/ToastRegion';
 import FilterDropdown from '../components/FilterDropdown';
 import { catalogItemsDemo } from '../data/adminRemainingDemo';
+import Icon from '../components/Icon';
 
 export default function CatalogPage() {
   const [items, setItems] = useState(catalogItemsDemo);
@@ -269,21 +270,21 @@ export default function CatalogPage() {
       {/* Page Header Section */}
       <div className="page-header-section">
          <div className="page-header-title-group">
-            <span className="page-header-icon-box"><i className="fa fa-th-large" /></span>
+            <span className="page-header-icon-box"><Icon className="fa fa-th-large" /></span>
             <div>
                <h2>Catalog Management</h2>
                <p>Manage catalog entries, pricing, status, and landing page metadata.</p>
             </div>
          </div>
          <button type="button" className="page-action-button" onClick={addNewCatalog}>
-            <i className="ti ti-plus" /> Add New Catalog Item
+            <Icon className="ti ti-plus" /> Add New Catalog Item
          </button>
       </div>
 
       <div className="cat-stats-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '16px', marginBottom: '24px' }}>
          <div className="cat-stat-card" style={{ background: 'white', padding: '18px 20px', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid #e6edf0' }}>
             <div className="cat-stat-icon cat-blue" style={{ width: '46px', height: '46px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', flexShrink: 0, color: '#4f46e5', background: '#e7e9fd' }}>
-               <i className="ti ti-layers"></i>
+               <Icon className="ti ti-layers" />
             </div>
             <div className="cat-stat-info" style={{ flex: 1 }}>
                <h3 style={{ fontSize: '24px', fontWeight: 700, color: '#1e293b', margin: 0, lineHeight: 1 }}>{summary.total}</h3>
@@ -292,7 +293,7 @@ export default function CatalogPage() {
          </div>
          <div className="cat-stat-card" style={{ background: 'white', padding: '18px 20px', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid #e6edf0' }}>
             <div className="cat-stat-icon cat-teal" style={{ width: '46px', height: '46px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', flexShrink: 0, color: '#006073', background: '#e7f5f7' }}>
-               <i className="ti ti-book"></i>
+               <Icon className="ti ti-book" />
             </div>
             <div className="cat-stat-info" style={{ flex: 1 }}>
                <h3 style={{ fontSize: '24px', fontWeight: 700, color: '#1e293b', margin: 0, lineHeight: 1 }}>{summary.courses}</h3>
@@ -301,7 +302,7 @@ export default function CatalogPage() {
          </div>
          <div className="cat-stat-card" style={{ background: 'white', padding: '18px 20px', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid #e6edf0' }}>
             <div className="cat-stat-icon cat-orange" style={{ width: '46px', height: '46px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', flexShrink: 0, color: '#856404', background: '#fff3cd' }}>
-               <i className="ti ti-write"></i>
+               <Icon className="ti ti-write" />
             </div>
             <div className="cat-stat-info" style={{ flex: 1 }}>
                <h3 style={{ fontSize: '24px', fontWeight: 700, color: '#1e293b', margin: 0, lineHeight: 1 }}>{summary.exams}</h3>
@@ -310,7 +311,7 @@ export default function CatalogPage() {
          </div>
          <div className="cat-stat-card" style={{ background: 'white', padding: '18px 20px', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid #e6edf0' }}>
             <div className="cat-stat-icon cat-green" style={{ width: '46px', height: '46px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', flexShrink: 0, color: '#155724', background: '#d4edda' }}>
-               <i className="ti ti-check"></i>
+               <Icon className="ti ti-check" />
             </div>
             <div className="cat-stat-info" style={{ flex: 1 }}>
                <h3 style={{ fontSize: '24px', fontWeight: 700, color: '#1e293b', margin: 0, lineHeight: 1 }}>{summary.active}</h3>
@@ -321,7 +322,7 @@ export default function CatalogPage() {
 
       <div className="filter-bar">
          <div className="search-wrapper">
-            <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'} search-icon`} onClick={() => setSearchQuery('')} aria-hidden="true"></i>
+            <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'} search-icon`} onClick={() => setSearchQuery('')} aria-hidden="true" />
             <input type="text" className="search-input" placeholder="Search catalog items by title, code, or description..." value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }} />
          </div>
 
@@ -380,7 +381,7 @@ export default function CatalogPage() {
                                />
                             ) : (
                                <div className="cat-catalog-image cat-catalog-image-fallback" aria-label="Invalid or no image">
-                                  <i className="ti ti-photo"></i>
+                                  <Icon className="ti ti-photo" />
                                   <span>Invalid or no image</span>
                                </div>
                             )}
@@ -394,7 +395,7 @@ export default function CatalogPage() {
                                title="Actions"
                                onClick={(e) => { e.stopPropagation(); setActiveKebabId(activeKebabId === item.id ? null : item.id); }}
                             >
-                               <i className="ti ti-more-alt"></i>
+                               <Icon className="ti ti-more-alt" />
                             </button>
                             <div className={`cat-kebab-dropdown ${activeKebabId === item.id ? 'active' : ''}`}>
                                <button
@@ -403,7 +404,7 @@ export default function CatalogPage() {
                                   disabled={!item.pageUrl}
                                   onClick={(e) => { e.stopPropagation(); setActiveKebabId(null); window.open(item.pageUrl, '_blank', 'noopener,noreferrer'); }}
                                >
-                                  <i className="ti ti-eye"></i>
+                                  <Icon className="ti ti-eye" />
                                   <span>View Listing Page</span>
                                </button>
                                <button
@@ -411,7 +412,7 @@ export default function CatalogPage() {
                                   className="cat-kebab-item"
                                   onClick={(e) => { e.stopPropagation(); setActiveKebabId(null); editCatalog(item); }}
                                >
-                                  <i className="ti ti-pencil"></i>
+                                  <Icon className="ti ti-pencil" />
                                   <span>Edit</span>
                                </button>
                                <button
@@ -419,7 +420,7 @@ export default function CatalogPage() {
                                   className={`cat-kebab-item ${item.status === 1 ? 'danger-action' : 'enable-action'}`}
                                   onClick={(e) => { e.stopPropagation(); setActiveKebabId(null); toggleCatalogStatus(item); }}
                                >
-                                  <i className={`ti ${item.status === 1 ? 'ti-power-off' : 'ti-reload'}`}></i>
+                                  <Icon className={`ti ${item.status === 1 ? 'ti-power-off' : 'ti-reload'}`} />
                                   <span>{item.status === 1 ? 'Disable' : 'Enable'}</span>
                                </button>
                             </div>
@@ -452,20 +453,20 @@ export default function CatalogPage() {
                 </div>
                 <div className="pagination-controls">
                    <button className="pagination-btn" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>
-                      <i className="ti ti-angle-left"></i> Previous
+                      <Icon className="ti ti-angle-left" /> Previous
                    </button>
                    {getPagesArray().map(page => (
                       <button key={page} className={`pagination-btn ${page === currentPage ? 'active' : ''}`} onClick={() => setCurrentPage(page)}>{page}</button>
                    ))}
                    <button className="pagination-btn" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage >= totalPages}>
-                      Next <i className="ti ti-angle-right"></i>
+                      Next <Icon className="ti ti-angle-right" />
                    </button>
                 </div>
              </div>
           </>
       ) : (
           <div className="cat-empty-state">
-             <i className="ti ti-shopping-cart"></i>
+             <Icon className="ti ti-shopping-cart" />
              <h4>No Catalog Items Found</h4>
              {searchQuery || filterType || filterStatus !== '' ? (
                  <p>No catalog items match your current search criteria or filters. <a href="#!" onClick={() => { setSearchQuery(''); setFilterType(''); setFilterStatus(''); }}>Clear all filters</a> to see all items.</p>
@@ -481,13 +482,13 @@ export default function CatalogPage() {
             <div className="legacy-modal-header">
                <h3>{isEditing ? 'Edit Catalog Item' : 'New Catalog Item'}</h3>
                <button type="button" className="legacy-modal-close" onClick={closeCatalogModal}>
-                  <i className="ti ti-close" />
+                  <Icon className="ti ti-close" />
                </button>
             </div>
             <form className="catalog-modal-form form-modal" onSubmit={(event) => { event.preventDefault(); saveCatalog(); }}>
                <div className="legacy-modal-body">
                   <div className="asset-form-section">
-                     <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Basic Information</div>
+                     <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Basic Information</div>
                      <div className="asset-form-grid basic-grid">
                         <label className="field-cell">
                            <div className="float-field">
@@ -543,10 +544,10 @@ export default function CatalogPage() {
                   </div>
 
                   <div className="asset-form-section">
-                     <div className="asset-form-section-title"><i className="ti ti-photo" /> Display Image</div>
+                     <div className="asset-form-section-title"><Icon className="ti ti-photo" /> Display Image</div>
                      <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
                         <div style={{ width: '150px', height: '100px', background: '#f5f5f5', border: '1px dashed #ccc', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                           {newCatalog.displayImage ? <img src={newCatalog.displayImage} alt="Preview" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} /> : <i className="ti ti-image" style={{ fontSize: '32px', color: '#ccc' }}></i>}
+                           {newCatalog.displayImage ? <img src={newCatalog.displayImage} alt="Preview" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} /> : <Icon className="ti ti-image" style={{ fontSize: '32px', color: '#ccc' }} />}
                         </div>
                         <label className="field-cell" style={{ flex: 1 }}>
                            <div className="float-field">
@@ -558,7 +559,7 @@ export default function CatalogPage() {
                   </div>
 
                   <div className="asset-form-section">
-                     <div className="asset-form-section-title"><i className="ti ti-tag" /> Pricing Information</div>
+                     <div className="asset-form-section-title"><Icon className="ti ti-tag" /> Pricing Information</div>
                      <div className="asset-form-grid config-grid">
                         <label className="field-cell">
                            <div className="float-field">
@@ -609,7 +610,7 @@ export default function CatalogPage() {
             <div className={`legacy-modal-header ${selectedItemForToggle.status === 1 ? 'legacy-danger-header' : ''}`}>
                <h3>{selectedItemForToggle.status === 1 ? 'Disable Catalog Item' : 'Enable Catalog Item'}</h3>
                <button type="button" className="legacy-modal-close" onClick={() => setStatusToggleModalOpen(false)}>
-                  <i className="ti ti-close" />
+                  <Icon className="ti ti-close" />
                </button>
             </div>
             <div className="legacy-modal-body">
@@ -622,7 +623,7 @@ export default function CatalogPage() {
             <div className="legacy-modal-footer">
                <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setStatusToggleModalOpen(false)}>Cancel</button>
                <button type="button" className={`legacy-btn ${selectedItemForToggle.status === 1 ? 'legacy-btn-danger' : 'legacy-btn-success'}`} onClick={confirmToggleStatus}>
-                  <i className={`ti ${selectedItemForToggle.status === 1 ? 'ti-power-off' : 'ti-reload'}`} />
+                  <Icon className={`ti ${selectedItemForToggle.status === 1 ? 'ti-power-off' : 'ti-reload'}`} />
                   {selectedItemForToggle.status === 1 ? 'Disable Item' : 'Enable Item'}
                </button>
             </div>

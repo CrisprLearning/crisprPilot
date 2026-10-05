@@ -3,6 +3,7 @@ import './CourseManagementPage.css';
 import { courseManagementDemo } from '../data/courseManagementDemo';
 import ToastRegion from '../components/ToastRegion';
 import Avatar from '../components/Avatar';
+import Icon from '../components/Icon';
 
 const data = courseManagementDemo;
 
@@ -701,19 +702,19 @@ export default function CourseManagementPage() {
                     <div className="header-left">
                         <div className="welcome-section">
                             {!selectedCourseBundle ? (
-                                <h2 className="welcome-title"><i className="ti ti-layers"></i> Course Management</h2>
+                                <h2 className="welcome-title"><Icon className="ti ti-layers" /> Course Management</h2>
                             ) : (
-                                <h2 className="welcome-title"><i className="ti ti-book"></i> {selectedCourseBundle.title}</h2>
+                                <h2 className="welcome-title"><Icon className="ti ti-book" /> {selectedCourseBundle.title}</h2>
                             )}
                             {selectedCourseBundle && (
                                 <p className="welcome-subtitle" style={{ background: 'rgba(255,255,255,0.15)', padding: '8px 12px', borderRadius: 4, display: 'inline-block', margin: 0 }}>
-                                    <span style={{ fontWeight: 500 }}><i className="ti ti-folder" style={{ marginRight: 4 }}></i>{filteredModules.length} Modules</span>
+                                    <span style={{ fontWeight: 500 }}><Icon className="ti ti-folder" style={{ marginRight: 4 }} />{filteredModules.length} Modules</span>
                                     <span style={{ margin: '0 12px', opacity: 0.5 }}>|</span>
-                                    <span style={{ fontWeight: 500 }}><i className="ti ti-list" style={{ marginRight: 4 }}></i>{filteredChapters.length} Chapters</span>
+                                    <span style={{ fontWeight: 500 }}><Icon className="ti ti-list" style={{ marginRight: 4 }} />{filteredChapters.length} Chapters</span>
                                     {selectedCourseBundle.bundleCode && (
                                         <>
                                             <span style={{ margin: '0 12px', opacity: 0.5 }}>|</span>
-                                            <span style={{ fontWeight: 400, opacity: 0.85 }}><i className="ti ti-tag" style={{ marginRight: 4 }}></i>{selectedCourseBundle.bundleCode}</span>
+                                            <span style={{ fontWeight: 400, opacity: 0.85 }}><Icon className="ti ti-tag" style={{ marginRight: 4 }} />{selectedCourseBundle.bundleCode}</span>
                                         </>
                                     )}
                                 </p>
@@ -722,10 +723,10 @@ export default function CourseManagementPage() {
                     </div>
                     <div className="header-right">
                         <button className="btn btn-primary" style={{ marginRight: 10 }} onClick={() => { setCourseBundleSearchQuery(''); setShowSelectCourseModal(true); }}>
-                            <i className="ti ti-layers"></i> Select Course
+                            <Icon className="ti ti-layers" /> Select Course
                         </button>
                         <button className="btn" style={{ background: '#ffb706', color: '#006073', border: 'none', fontWeight: 600 }} onClick={() => { setNewBundle({ title: '', bundleCode: '', syllabusCode: '' }); setShowBundleModal(true); }}>
-                            <i className="ti ti-plus"></i> New Bundle
+                            <Icon className="ti ti-plus" /> New Bundle
                         </button>
                     </div>
                 </div>
@@ -741,14 +742,14 @@ export default function CourseManagementPage() {
                                 <ul className="nav nav-tabs" role="tablist">
                                     <li role="presentation" className={!editingChapterParts && activeTab !== 'chapters' ? 'active' : (editingChapterParts ? 'disabled' : '')}>
                                         <a href="#" role="tab" onClick={e => { e.preventDefault(); if (!editingChapterParts) { setActiveTab('modules'); } }}>
-                                            <i className="ti ti-folder" style={{ marginRight: 10 }}></i>
+                                            <Icon className="ti ti-folder" style={{ marginRight: 10 }} />
                                             {!selectedModule ? 'Modules' : `Module: ${selectedModule.title}`}
                                         </a>
                                     </li>
                                     {selectedModule && (
                                         <li role="presentation" className={!editingChapterParts && activeTab === 'chapters' ? 'active' : (editingChapterParts ? 'disabled' : '')}>
                                             <a href="#" role="tab" onClick={e => { e.preventDefault(); if (!editingChapterParts) setActiveTab('chapters'); }}>
-                                                <i className="ti ti-book" style={{ marginRight: 10 }}></i>
+                                                <Icon className="ti ti-book" style={{ marginRight: 10 }} />
                                                 {!editingChapterData ? 'Chapters' : `Chapter: ${editingChapterData.code}. ${editingChapterData.title}`}
                                             </a>
                                         </li>
@@ -756,7 +757,7 @@ export default function CourseManagementPage() {
                                     {editingChapterParts && (
                                         <li role="presentation" className="active">
                                             <a href="#" role="tab" onClick={e => e.preventDefault()}>
-                                                <i className="ti ti-video-camera" style={{ marginRight: 10 }}></i>Parts
+                                                <Icon className="ti ti-video-camera" style={{ marginRight: 10 }} />Parts
                                             </a>
                                         </li>
                                     )}
@@ -767,7 +768,7 @@ export default function CourseManagementPage() {
                                     {activeTab === 'modules' && !editingChapterParts && (
                                         <div className="tab-pane active">
                                             {filteredModules.length === 0 ? (
-                                                <div className="alert alert-warning"><i className="ti ti-info"></i> No modules found for this course bundle.</div>
+                                                <div className="alert alert-warning"><Icon className="ti ti-info" /> No modules found for this course bundle.</div>
                                             ) : (
                                                 filteredModules.map(module => (
                                                     <div key={module.moduleKey} className={`module-card${selectedModule && selectedModule.moduleKey === module.moduleKey ? ' selected' : ''}`}>
@@ -780,7 +781,7 @@ export default function CourseManagementPage() {
                                                                 <div className="col-md-8">
                                                                     <div className="module-info">
                                                                         <div className="expand-indicator">
-                                                                            <i className={`fa ${expandedModules[module.moduleKey] ? 'fa-folder-open-o' : 'fa-folder-o'}`}></i>
+                                                                            <Icon className={`fa ${expandedModules[module.moduleKey] ? 'fa-folder-open-o' : 'fa-folder-o'}`} />
                                                                         </div>
                                                                         <div className="module-details">
                                                                             <h3 className="module-title">
@@ -797,7 +798,7 @@ export default function CourseManagementPage() {
                                                                         className="btn btn-success btn-sm"
                                                                         onClick={e => { e.stopPropagation(); selectModule(module); }}
                                                                     >
-                                                                        <i className="ti ti-book"></i> Modify Chapters
+                                                                        <Icon className="ti ti-book" /> Modify Chapters
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -823,7 +824,7 @@ export default function CourseManagementPage() {
                                                                                     {getChaptersForModule(module.moduleKey).length === 0 ? (
                                                                                         <tr>
                                                                                             <td colSpan="6" className="text-center text-muted">
-                                                                                                <i className="ti ti-info"></i> No chapters assigned to this module yet
+                                                                                                <Icon className="ti ti-info" /> No chapters assigned to this module yet
                                                                                             </td>
                                                                                         </tr>
                                                                                     ) : (
@@ -876,7 +877,7 @@ export default function CourseManagementPage() {
                                                 <div className="row">
                                                     <div className="col-md-12">
                                                         <div style={{ textAlign: 'center', padding: '60px 20px', background: '#f9f9f9', borderRadius: 8, border: '2px dashed #ddd' }}>
-                                                            <i className="ti ti-info-alt" style={{ fontSize: 48, color: '#999', marginBottom: 20 }}></i>
+                                                            <Icon className="ti ti-info-alt" style={{ fontSize: 48, color: '#999', marginBottom: 20 }} />
                                                             <h4 style={{ color: '#666', marginBottom: 10 }}>No Module Selected</h4>
                                                             <p style={{ color: '#999' }}>Please select a module from the <strong>Modules</strong> tab to view its chapters.</p>
                                                         </div>
@@ -887,14 +888,14 @@ export default function CourseManagementPage() {
                                                     <div className="row">
                                                         <div className="col-md-12" style={{ marginBottom: 20 }}>
                                                             <button className="btn btn-default" onClick={backToModules}>
-                                                                <i className="ti ti-arrow-left"></i> Back to Modules
+                                                                <Icon className="ti ti-arrow-left" /> Back to Modules
                                                             </button>
                                                         </div>
                                                     </div>
 
                                                     {chaptersForSelectedModule.length === 0 ? (
                                                         <div className="empty-chapters">
-                                                            <div className="empty-icon"><i className="ti ti-book-open"></i></div>
+                                                            <div className="empty-icon"><Icon className="ti ti-book-open" /></div>
                                                             <h4>No Chapters in {selectedModule.title}</h4>
                                                             <p>This module doesn't have any chapters yet.</p>
                                                         </div>
@@ -911,12 +912,12 @@ export default function CourseManagementPage() {
                                                                                 <div className="col-md-8">
                                                                                     <div className="chapter-info">
                                                                                         <div className="expand-indicator">
-                                                                                            <i className={`fa ${expandedChapters[chapter.id] ? 'fa-folder-open-o' : 'fa-folder-o'}`}></i>
+                                                                                            <Icon className={`fa ${expandedChapters[chapter.id] ? 'fa-folder-open-o' : 'fa-folder-o'}`} />
                                                                                         </div>
                                                                                         <div className="chapter-details">
                                                                                             <h4 className="chapter-title">{chapter.title}</h4>
                                                                                             <p className="chapter-meta">
-                                                                                                <span><b>Chapter {chapter.code}</b> | {getPartsCount(chapter.partsIncluded)} parts<i className="fa fa-circle separator-dot" aria-hidden="true"></i>{calculateChapterDuration(chapter)}</span>
+                                                                                                <span><b>Chapter {chapter.code}</b> | {getPartsCount(chapter.partsIncluded)} parts<Icon className="fa fa-circle separator-dot" aria-hidden="true" />{calculateChapterDuration(chapter)}</span>
                                                                                             </p>
                                                                                         </div>
                                                                                     </div>
@@ -939,7 +940,7 @@ export default function CourseManagementPage() {
                                                                                                 <div className="teacher-rating-simple">
                                                                                                     <div className="star-rating">
                                                                                                         {[0, 1, 2, 3, 4].map(i => (
-                                                                                                            <i key={i} className={`fa ${getStarClass(chapter.teacher.rating, i)}`}></i>
+                                                                                                            <Icon key={i} className={`fa ${getStarClass(chapter.teacher.rating, i)}`} />
                                                                                                         ))}
                                                                                                     </div>
                                                                                                     <span className="rating-value">({chapter.teacher.rating})</span>
@@ -952,7 +953,7 @@ export default function CourseManagementPage() {
                                                                                             onClick={e => { e.stopPropagation(); assignInstructorToChapter(chapter); }}
                                                                                             style={{ cursor: 'pointer', padding: '8px 10px', border: '2px dashed #ccc', borderRadius: 6, display: 'flex', alignItems: 'center', gap: 8, background: '#f9f9f9', transition: 'all 0.3s ease' }}
                                                                                         >
-                                                                                            <i className="ti ti-user" style={{ fontSize: 20, color: '#999' }}></i>
+                                                                                            <Icon className="ti ti-user" style={{ fontSize: 20, color: '#999' }} />
                                                                                             <div style={{ textAlign: 'left', flex: 1 }}>
                                                                                                 <div style={{ color: '#666', fontSize: 12, fontWeight: 500, lineHeight: 1.2 }}>Not Mapped</div>
                                                                                                 <div style={{ color: '#999', fontSize: 10, lineHeight: 1.2 }}>Click to assign</div>
@@ -966,7 +967,7 @@ export default function CourseManagementPage() {
                                                                                             className="btn btn-primary btn-sm"
                                                                                             onClick={e => { e.stopPropagation(); editChapter(chapter); }}
                                                                                         >
-                                                                                            <i className="ti ti-pencil"></i> Edit
+                                                                                            <Icon className="ti ti-pencil" /> Edit
                                                                                         </button>
                                                                                     </div>
                                                                                 </div>
@@ -978,7 +979,7 @@ export default function CourseManagementPage() {
                                                                                 {getPartsCount(chapter.partsIncluded) > 0 ? (
                                                                                     <div style={{ padding: 20, background: '#f8f9fa' }}>
                                                                                         <h5 style={{ margin: '0 0 15px 0', color: '#006073', fontWeight: 600 }}>
-                                                                                            <i className="ti ti-layers"></i> Parts Included in This Chapter ({getPartsCount(chapter.partsIncluded)})
+                                                                                            <Icon className="ti ti-layers" /> Parts Included in This Chapter ({getPartsCount(chapter.partsIncluded)})
                                                                                         </h5>
                                                                                         <div className="list-group">
                                                                                             {getPartsArray(chapter.partsIncluded).map((part, idx) => (
@@ -994,7 +995,7 @@ export default function CourseManagementPage() {
                                                                                                         </div>
                                                                                                         <div className="col-md-1">
                                                                                                             <div className="part-type-icon">
-                                                                                                                <i className={`ti ${part.type === 'VIDEO' ? 'ti-video-camera' : part.type === 'MATERIAL' ? 'ti-file' : 'ti-clipboard'}`} style={{ fontSize: 24 }}></i>
+                                                                                                                <Icon className={`ti ${part.type === 'VIDEO' ? 'ti-video-camera' : part.type === 'MATERIAL' ? 'ti-file' : 'ti-clipboard'}`} style={{ fontSize: 24 }} />
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div className="col-md-6">
@@ -1002,15 +1003,15 @@ export default function CourseManagementPage() {
                                                                                                             <div className="text-muted" style={{ fontSize: 12 }}>
                                                                                                                 <span className={`badge badge-${part.type === 'VIDEO' ? 'primary' : part.type === 'MATERIAL' ? 'info' : 'secondary'}`}>{part.type}</span>
                                                                                                                 {part.type === 'VIDEO' && part.duration > 0 && (
-                                                                                                                    <span style={{ marginLeft: 10 }}><i className="ti ti-time"></i> {formatDuration(part.duration)}</span>
+                                                                                                                    <span style={{ marginLeft: 10 }}><Icon className="ti ti-time" /> {formatDuration(part.duration)}</span>
                                                                                                                 )}
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div className="col-md-4 text-right">
                                                                                                             {part.skipToNext ? (
-                                                                                                                <span className="badge badge-success"><i className="ti ti-forward"></i> Skip to Next Enabled</span>
+                                                                                                                <span className="badge badge-success"><Icon className="ti ti-forward" /> Skip to Next Enabled</span>
                                                                                                             ) : (
-                                                                                                                <span className="badge badge-secondary"><i className="ti ti-control-pause"></i> No Auto-Skip</span>
+                                                                                                                <span className="badge badge-secondary"><Icon className="ti ti-control-pause" /> No Auto-Skip</span>
                                                                                                             )}
                                                                                                         </div>
                                                                                                     </div>
@@ -1020,11 +1021,11 @@ export default function CourseManagementPage() {
                                                                                     </div>
                                                                                 ) : (
                                                                                     <div className="empty-parts">
-                                                                                        <i className="ti ti-video-camera-off"></i>
+                                                                                        <Icon className="ti ti-video-camera-off" />
                                                                                         <h6>No Parts Added</h6>
                                                                                         <p>This chapter doesn't have any parts assigned yet.</p>
                                                                                         <button className="btn btn-primary btn-sm" onClick={() => editChapter(chapter)}>
-                                                                                            <i className="ti ti-plus"></i> Add Parts
+                                                                                            <Icon className="ti ti-plus" /> Add Parts
                                                                                         </button>
                                                                                     </div>
                                                                                 )}
@@ -1048,14 +1049,14 @@ export default function CourseManagementPage() {
                                                     <div className="panel panel-default">
                                                         <div className="panel-heading" style={{ backgroundColor: '#006073', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                             <h4 className="panel-title" style={{ margin: 0 }}>
-                                                                <i className="ti ti-layers"></i> Chapter: {editingChapterData.code}. {editingChapterData.title}
+                                                                <Icon className="ti ti-layers" /> Chapter: {editingChapterData.code}. {editingChapterData.title}
                                                             </h4>
                                                             <div>
                                                                 <button className="btn btn-success btn-sm" onClick={saveChapterParts} disabled={!hasChapterChanges()} style={{ marginRight: 8 }}>
-                                                                    <i className="ti ti-save"></i> Save
+                                                                    <Icon className="ti ti-save" /> Save
                                                                 </button>
                                                                 <button className="btn btn-default btn-sm" onClick={cancelChapterPartsEdit}>
-                                                                    <i className="ti ti-close"></i> Cancel
+                                                                    <Icon className="ti ti-close" /> Cancel
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -1063,14 +1064,14 @@ export default function CourseManagementPage() {
                                                             {/* Selected parts list */}
                                                             <div className="form-group">
                                                                 <label style={{ fontSize: 16, fontWeight: 'bold', color: '#006073' }}>
-                                                                    <i className="ti ti-check-box"></i> Parts Included in This Chapter ({getSelectedPartsCount()})
+                                                                    <Icon className="ti ti-check-box" /> Parts Included in This Chapter ({getSelectedPartsCount()})
                                                                     <span style={{ fontSize: 12, color: '#999', fontWeight: 'normal', marginLeft: 10 }}>
-                                                                        <i className="ti ti-hand-drag"></i> Drag to reorder
+                                                                        <Icon className="ti ti-hand-drag" /> Drag to reorder
                                                                     </span>
                                                                 </label>
                                                                 {getSelectedPartsCount() === 0 ? (
                                                                     <div className="alert alert-info">
-                                                                        <i className="ti ti-info-alt"></i> No parts added yet. Select parts from the "Add More Parts" section below.
+                                                                        <Icon className="ti ti-info-alt" /> No parts added yet. Select parts from the "Add More Parts" section below.
                                                                     </div>
                                                                 ) : (
                                                                     <div className="list-group" style={{ position: 'relative' }}>
@@ -1094,7 +1095,7 @@ export default function CourseManagementPage() {
                                                                                     </div>
                                                                                     <div className="col-md-1">
                                                                                         <div className="part-type-icon">
-                                                                                            <i className={`ti ${part.type === 'VIDEO' ? 'ti-video-camera' : part.type === 'MATERIAL' ? 'ti-file' : 'ti-clipboard'}`} style={{ fontSize: 24 }}></i>
+                                                                                            <Icon className={`ti ${part.type === 'VIDEO' ? 'ti-video-camera' : part.type === 'MATERIAL' ? 'ti-file' : 'ti-clipboard'}`} style={{ fontSize: 24 }} />
                                                                                         </div>
                                                                                     </div>
                                                                                     <div className="col-md-5">
@@ -1102,7 +1103,7 @@ export default function CourseManagementPage() {
                                                                                         <div className="text-muted" style={{ fontSize: 12 }}>
                                                                                             <span className={`badge badge-${part.type === 'VIDEO' ? 'primary' : part.type === 'MATERIAL' ? 'info' : 'secondary'}`}>{part.type}</span>
                                                                                             {part.type === 'VIDEO' && part.duration > 0 && (
-                                                                                                <span style={{ marginLeft: 10 }}><i className="ti ti-time"></i> {formatDuration(part.duration)}</span>
+                                                                                                <span style={{ marginLeft: 10 }}><Icon className="ti ti-time" /> {formatDuration(part.duration)}</span>
                                                                                             )}
                                                                                         </div>
                                                                                     </div>
@@ -1120,7 +1121,7 @@ export default function CourseManagementPage() {
                                                                                             className="btn btn-xs btn-danger"
                                                                                             onClick={e => { e.stopPropagation(); removePartFromChapter(part._key); }}
                                                                                         >
-                                                                                            <i className="ti ti-trash"></i> Remove
+                                                                                            <Icon className="ti ti-trash" /> Remove
                                                                                         </button>
                                                                                     </div>
                                                                                 </div>
@@ -1135,7 +1136,7 @@ export default function CourseManagementPage() {
                                                             {/* Add More Parts */}
                                                             <div className="form-group">
                                                                 <label style={{ fontSize: 16, fontWeight: 'bold', color: '#666' }}>
-                                                                    <i className="ti ti-plus"></i> Add More Parts from Library
+                                                                    <Icon className="ti ti-plus" /> Add More Parts from Library
                                                                 </label>
                                                                 <p className="text-muted" style={{ marginBottom: 15 }}>
                                                                     Click on any video below to add it to this chapter, or use the buttons to link quizzes and attach materials.
@@ -1144,10 +1145,10 @@ export default function CourseManagementPage() {
                                                                 <div className="row" style={{ marginBottom: 20 }}>
                                                                     <div className="col-md-12">
                                                                         <button className="btn btn-primary" onClick={openLinkQuizModal} style={{ marginRight: 10 }}>
-                                                                            <i className="ti ti-clipboard"></i> Link Quiz
+                                                                            <Icon className="ti ti-clipboard" /> Link Quiz
                                                                         </button>
                                                                         <button className="btn btn-success" onClick={openAttachMaterialModal}>
-                                                                            <i className="ti ti-file"></i> Attach Material
+                                                                            <Icon className="ti ti-file" /> Attach Material
                                                                         </button>
                                                                     </div>
                                                                 </div>
@@ -1155,7 +1156,7 @@ export default function CourseManagementPage() {
                                                                 <div className="row" style={{ marginBottom: 20 }}>
                                                                     <div className="col-md-6">
                                                                         <div className="input-group">
-                                                                            <span className="input-group-addon"><i className="ti ti-search"></i></span>
+                                                                            <span className="input-group-addon"><Icon className="ti ti-search" /></span>
                                                                             <input
                                                                                 type="text"
                                                                                 className="form-control"
@@ -1166,7 +1167,7 @@ export default function CourseManagementPage() {
                                                                             {contentLibrarySearch && (
                                                                                 <span className="input-group-btn">
                                                                                     <button className="btn btn-default" type="button" onClick={() => setContentLibrarySearch('')}>
-                                                                                        <i className="ti ti-close"></i>
+                                                                                        <Icon className="ti ti-close" />
                                                                                     </button>
                                                                                 </span>
                                                                             )}
@@ -1190,7 +1191,7 @@ export default function CourseManagementPage() {
                                                                                 <div className="part-actions">
                                                                                     {part.type === 'VIDEO' && part.source && (
                                                                                         <button className="btn btn-xs btn-default" onClick={e => showVideoPreview(part, e)} title="Preview Video" style={{ marginRight: 5 }}>
-                                                                                            <i className="ti ti-eye"></i>
+                                                                                            <Icon className="ti ti-eye" />
                                                                                         </button>
                                                                                     )}
                                                                                     <button
@@ -1200,7 +1201,7 @@ export default function CourseManagementPage() {
                                                                                     >
                                                                                         {isPartSelected(part.libraryId)
                                                                                             ? 'Added'
-                                                                                            : <><i className="fa fa-plus"></i> Add</>}
+                                                                                            : <><Icon className="fa fa-plus" /> Add</>}
                                                                                     </button>
                                                                                 </div>
                                                                             </div>
@@ -1210,12 +1211,12 @@ export default function CourseManagementPage() {
                                                                                 style={{ cursor: part.type === 'VIDEO' ? 'pointer' : 'default' }}
                                                                             >
                                                                                 <div className="part-thumbnail">
-                                                                                    <i className="ti ti-video-camera"></i>
+                                                                                    <Icon className="ti ti-video-camera" />
                                                                                 </div>
                                                                                 <div className="part-info">
                                                                                     <h6 className="part-title">{part.title}</h6>
                                                                                     <div className="part-meta">
-                                                                                        <span><i className="ti ti-time"></i> {formatDuration(part.duration)}</span>
+                                                                                        <span><Icon className="ti ti-time" /> {formatDuration(part.duration)}</span>
                                                                                     </div>
                                                                                     {part.brief && (
                                                                                         <div className="part-brief">
@@ -1226,7 +1227,7 @@ export default function CourseManagementPage() {
                                                                             </div>
                                                                             {isPartSelected(part.libraryId) && (
                                                                                 <div className="selection-indicator">
-                                                                                    <i className="ti ti-check-box"></i>
+                                                                                    <Icon className="ti ti-check-box" />
                                                                                 </div>
                                                                             )}
                                                                         </div>
@@ -1235,7 +1236,7 @@ export default function CourseManagementPage() {
 
                                                                 {visibleVideoParts.length === 0 && (
                                                                     <div style={{ textAlign: 'center', padding: 40, background: '#f8f9fa', borderRadius: 8 }}>
-                                                                        <i className="ti ti-video-camera" style={{ fontSize: 48, color: '#dee2e6' }}></i>
+                                                                        <Icon className="ti ti-video-camera" style={{ fontSize: 48, color: '#dee2e6' }} />
                                                                         <p className="text-muted" style={{ marginTop: 15 }}>No videos found matching your search.</p>
                                                                     </div>
                                                                 )}
@@ -1262,13 +1263,13 @@ export default function CourseManagementPage() {
                         <div className="legacy-modal-header">
                             <h3>Create New Course Bundle</h3>
                             <button type="button" className="legacy-modal-close" onClick={() => setShowBundleModal(false)}>
-                                <i className="ti ti-close" />
+                                <Icon className="ti ti-close" />
                             </button>
                         </div>
                         <form className="batch-modal-form form-modal" onSubmit={e => { e.preventDefault(); saveCourseBundle(); }}>
                             <div className="legacy-modal-body">
                                 <div className="asset-form-section">
-                                    <div className="asset-form-section-title"><i className="ti ti-book-open" /> Bundle Details</div>
+                                    <div className="asset-form-section-title"><Icon className="ti ti-book-open" /> Bundle Details</div>
                                     <div className="asset-form-grid">
                                         <label className="field-cell full-span">
                                             <div className="float-field">
@@ -1316,7 +1317,7 @@ export default function CourseManagementPage() {
 
                                     {newBundle.syllabusCode && (
                                         <div className="cmb-info-note">
-                                            <i className="ti ti-info-alt" />
+                                            <Icon className="ti ti-info-alt" />
                                             <div>
                                                 <strong>Syllabus Selected:</strong> {uniqueSyllabi.find(s => s.code === newBundle.syllabusCode)?.name}
                                                 <div className="cmb-info-sub">Modules will be organized by segments for easier classification</div>
@@ -1343,15 +1344,15 @@ export default function CourseManagementPage() {
                         <div className="legacy-modal-header">
                             <h3>Select Course Bundle</h3>
                             <button type="button" className="legacy-modal-close" onClick={() => setShowSelectCourseModal(false)}>
-                                <i className="ti ti-close" />
+                                <Icon className="ti ti-close" />
                             </button>
                         </div>
                         <div className="legacy-modal-body">
                             <div className="asset-form-section">
-                                <div className="asset-form-section-title"><i className="ti ti-layers" /> Available Bundles</div>
+                                <div className="asset-form-section-title"><Icon className="ti ti-layers" /> Available Bundles</div>
                                 <div className="data-table-page" style={{ padding: 0 }}>
                                     <div className="search-wrapper" style={{ marginBottom: 16 }}>
-                                        <i className="ti ti-search" />
+                                        <Icon className="ti ti-search" />
                                         <input
                                             type="text"
                                             className="search-input"
@@ -1365,7 +1366,7 @@ export default function CourseManagementPage() {
                                         <table className="students-table">
                                             <thead>
                                                 <tr>
-                                                    <th style={{ width: 64 }}><i className="ti ti-hash" /></th>
+                                                    <th style={{ width: 64 }}><Icon className="ti ti-hash" /></th>
                                                     <th>Course Bundle</th>
                                                     <th className="cm-center">Modules</th>
                                                     <th className="cm-center">Chapters</th>
@@ -1379,7 +1380,7 @@ export default function CourseManagementPage() {
                                                         className={`cm-bundle-row ${selectedCourseBundle && selectedCourseBundle.id === bundle.id ? 'is-selected' : ''}`}
                                                         onClick={() => selectCourseBundleFromModal(bundle)}
                                                     >
-                                                        <td><div className="cm-avatar"><i className="ti ti-book" /></div></td>
+                                                        <td><div className="cm-avatar"><Icon className="ti ti-book" /></div></td>
                                                         <td>
                                                             <div className="cm-name">{bundle.title}</div>
                                                             <div className="cm-code">Code: {bundle.bundleCode}</div>
@@ -1393,7 +1394,7 @@ export default function CourseManagementPage() {
                                                     <tr>
                                                         <td colSpan={5}>
                                                             <div className="cm-empty">
-                                                                <i className="ti ti-search" />
+                                                                <Icon className="ti ti-search" />
                                                                 <p>No course bundles found matching your search</p>
                                                             </div>
                                                         </td>
@@ -1419,7 +1420,7 @@ export default function CourseManagementPage() {
                                             </div>
                                             <div className="pagination-controls">
                                                 <button type="button" className="pagination-btn" disabled={safeBundlePage === 1} onClick={() => setBundlePage(p => Math.max(1, p - 1))}>
-                                                    <i className="ti ti-angle-left" /> Previous
+                                                    <Icon className="ti ti-angle-left" /> Previous
                                                 </button>
                                                 {bundlePageNumbers.map(page => (
                                                     <button
@@ -1432,7 +1433,7 @@ export default function CourseManagementPage() {
                                                     </button>
                                                 ))}
                                                 <button type="button" className="pagination-btn" disabled={safeBundlePage === bundleTotalPages} onClick={() => setBundlePage(p => Math.min(bundleTotalPages, p + 1))}>
-                                                    Next <i className="ti ti-angle-right" />
+                                                    Next <Icon className="ti ti-angle-right" />
                                                 </button>
                                             </div>
                                         </div>
@@ -1441,7 +1442,7 @@ export default function CourseManagementPage() {
                             </div>
                         </div>
                         <div className="legacy-modal-footer">
-                            <div className="cm-footer-hint"><i className="ti ti-info-alt" /> Click on a row to select and open the course bundle</div>
+                            <div className="cm-footer-hint"><Icon className="ti ti-info-alt" /> Click on a row to select and open the course bundle</div>
                             <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setShowSelectCourseModal(false)}>Close</button>
                         </div>
                     </div>
@@ -1455,7 +1456,7 @@ export default function CourseManagementPage() {
                         <div className="legacy-modal-header">
                             <h3>Instructor Profile</h3>
                             <button type="button" className="legacy-modal-close" onClick={() => setShowTeacherModal(false)}>
-                                <i className="ti ti-close" />
+                                <Icon className="ti ti-close" />
                             </button>
                         </div>
                         <div className="legacy-modal-body">
@@ -1469,7 +1470,7 @@ export default function CourseManagementPage() {
                                     />
                                     <div className="cm-profile-rating">
                                         {[0, 1, 2, 3, 4].map(i => (
-                                            <i key={i} className={`fa ${getStarClass(selectedTeacherProfile.rating, i)}`} />
+                                            <Icon key={i} className={`fa ${getStarClass(selectedTeacherProfile.rating, i)}`} />
                                         ))}
                                     </div>
                                     <div className="cm-profile-score">{selectedTeacherProfile.rating}/5.0</div>
@@ -1479,22 +1480,22 @@ export default function CourseManagementPage() {
                                     <h4 className="cm-profile-name">{selectedTeacherProfile.name}</h4>
                                     <p className="cm-profile-brief">{selectedTeacherProfile.brief || selectedTeacherProfile.about}</p>
                                     <div className="cm-profile-row">
-                                        <strong><i className="ti ti-bookmark" /> Specialization</strong>
+                                        <strong><Icon className="ti ti-bookmark" /> Specialization</strong>
                                         <p>{selectedTeacherProfile.specialization || selectedTeacherProfile.expertSubject}</p>
                                     </div>
                                     <div className="cm-profile-row">
-                                        <strong><i className="ti ti-briefcase" /> Experience</strong>
+                                        <strong><Icon className="ti ti-briefcase" /> Experience</strong>
                                         <p>{selectedTeacherProfile.experience || 'N/A'}</p>
                                     </div>
                                     {(selectedTeacherProfile.education || selectedTeacherProfile.qualifications) && (
                                         <div className="cm-profile-row">
-                                            <strong><i className="ti ti-medall" /> Education</strong>
+                                            <strong><Icon className="ti ti-medall" /> Education</strong>
                                             <p>{selectedTeacherProfile.education || selectedTeacherProfile.qualifications}</p>
                                         </div>
                                     )}
                                     {selectedTeacherProfile.about && (
                                         <div className="cm-profile-row">
-                                            <strong><i className="ti ti-info-alt" /> About</strong>
+                                            <strong><Icon className="ti ti-info-alt" /> About</strong>
                                             <p>{selectedTeacherProfile.about}</p>
                                         </div>
                                     )}
@@ -1516,21 +1517,21 @@ export default function CourseManagementPage() {
                         <div className="legacy-modal-header">
                             <h3>Change Instructor</h3>
                             <button type="button" className="legacy-modal-close" onClick={() => setShowChangeInstructorModal(false)}>
-                                <i className="ti ti-close" />
+                                <Icon className="ti ti-close" />
                             </button>
                         </div>
                         <div className="legacy-modal-body">
                             <div className="asset-form-section">
-                                <div className="asset-form-section-title"><i className="ti ti-user" /> Select Instructor</div>
+                                <div className="asset-form-section-title"><Icon className="ti ti-user" /> Select Instructor</div>
                                 {currentChapterForTeacherChange && (
                                     <div className="cmb-info-note">
-                                        <i className="ti ti-info-alt" />
+                                        <Icon className="ti ti-info-alt" />
                                         <div>Reassigning instructor for <strong>{currentChapterForTeacherChange.title}</strong></div>
                                     </div>
                                 )}
                                 <div className="data-table-page" style={{ padding: 0, marginTop: 16 }}>
                                     <div className="search-wrapper" style={{ marginBottom: 16 }}>
-                                        <i className="ti ti-search" />
+                                        <Icon className="ti ti-search" />
                                         <input
                                             type="text"
                                             className="search-input"
@@ -1556,21 +1557,21 @@ export default function CourseManagementPage() {
                                                     <div className="cm-instructor-name">
                                                         {instructor.name}
                                                         {selectedNewInstructor && selectedNewInstructor.id === instructor.id && (
-                                                            <i className="ti ti-check-box cm-instructor-check" />
+                                                            <Icon className="ti ti-check-box cm-instructor-check" />
                                                         )}
                                                     </div>
                                                     <div className="cm-instructor-brief">{instructor.brief}</div>
                                                     <div className="cm-instructor-meta">
-                                                        <span><i className="ti ti-bookmark-alt" /> <strong>Subject:</strong> {instructor.expertSubject}</span>
-                                                        <span><i className="ti ti-briefcase" /> <strong>Experience:</strong> {instructor.experience} years</span>
-                                                        <span><i className="ti ti-star" /> <strong>Rating:</strong> {instructor.rating}/5</span>
+                                                        <span><Icon className="ti ti-bookmark-alt" /> <strong>Subject:</strong> {instructor.expertSubject}</span>
+                                                        <span><Icon className="ti ti-briefcase" /> <strong>Experience:</strong> {instructor.experience} years</span>
+                                                        <span><Icon className="ti ti-star" /> <strong>Rating:</strong> {instructor.rating}/5</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         ))}
                                         {filteredInstructors.length === 0 && (
                                             <div className="cm-empty">
-                                                <i className="ti ti-search" />
+                                                <Icon className="ti ti-search" />
                                                 <p>No instructors found matching your search.</p>
                                             </div>
                                         )}
@@ -1593,20 +1594,20 @@ export default function CourseManagementPage() {
                         <div className="legacy-modal-header">
                             <h3>{selectedVideo.title}</h3>
                             <button type="button" className="legacy-modal-close" onClick={() => setShowVideoModal(false)}>
-                                <i className="ti ti-close" />
+                                <Icon className="ti ti-close" />
                             </button>
                         </div>
                         <div className="legacy-modal-body">
                             <div className="cm-video-layout">
                                 <div className="cm-video-frame">
                                     <div>
-                                        <i className="ti ti-video-camera" />
+                                        <Icon className="ti ti-video-camera" />
                                         <p>Video Player</p>
                                         <small>Video URL: {selectedVideo.libraryId}</small>
                                     </div>
                                 </div>
                                 <div className="cm-video-side">
-                                    <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Video Details</div>
+                                    <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Video Details</div>
                                     <ul className="cm-detail-list">
                                         <li><strong>Part</strong> <span>{selectedVideo.partNumber}</span></li>
                                         <li><strong>Chapter</strong> <span>{selectedVideo.chapterTitle}</span></li>
@@ -1632,21 +1633,21 @@ export default function CourseManagementPage() {
                         <div className="legacy-modal-header">
                             <h3>{videoPreviewPart.title}</h3>
                             <button type="button" className="legacy-modal-close" onClick={() => setShowVideoPreviewModal(false)}>
-                                <i className="ti ti-close" />
+                                <Icon className="ti ti-close" />
                             </button>
                         </div>
                         <div className="legacy-modal-body">
                             <div className="cm-video-embed">
                                 <div className="cm-video-embed-inner">
                                     <div>
-                                        <i className="ti ti-video-camera" />
+                                        <Icon className="ti ti-video-camera" />
                                         <p>Video preview not available in demo</p>
                                     </div>
                                 </div>
                             </div>
                             <div className="cm-video-meta">
-                                <span><i className="ti ti-time" /> {formatDuration(videoPreviewPart.duration)}</span>
-                                <span><i className="ti ti-bookmark" /> {videoPreviewPart.libraryId}</span>
+                                <span><Icon className="ti ti-time" /> {formatDuration(videoPreviewPart.duration)}</span>
+                                <span><Icon className="ti ti-bookmark" /> {videoPreviewPart.libraryId}</span>
                             </div>
                         </div>
                         <div className="legacy-modal-footer">
@@ -1670,19 +1671,19 @@ export default function CourseManagementPage() {
                         <div className="legacy-modal-header">
                             <h3>Link Quiz to Chapter</h3>
                             <button type="button" className="legacy-modal-close" onClick={() => setShowLinkQuizModal(false)}>
-                                <i className="ti ti-close" />
+                                <Icon className="ti ti-close" />
                             </button>
                         </div>
                         <div className="legacy-modal-body">
                             <div className="asset-form-section">
-                                <div className="asset-form-section-title"><i className="ti ti-clipboard" /> Available Quizzes</div>
+                                <div className="asset-form-section-title"><Icon className="ti ti-clipboard" /> Available Quizzes</div>
                                 <div className="cmb-info-note">
-                                    <i className="ti ti-info-alt" />
+                                    <Icon className="ti ti-info-alt" />
                                     <div>Select a quiz from the list below to add it as a part in this chapter.</div>
                                 </div>
                                 <div className="data-table-page" style={{ padding: 0, marginTop: 16 }}>
                                     <div className="search-wrapper" style={{ marginBottom: 16 }}>
-                                        <i className="ti ti-search" />
+                                        <Icon className="ti ti-search" />
                                         <input
                                             type="text"
                                             className="search-input"
@@ -1706,7 +1707,7 @@ export default function CourseManagementPage() {
                                                 <tr>
                                                     <td colSpan={5}>
                                                         <div className="cm-empty">
-                                                            <i className="ti ti-clipboard" />
+                                                            <Icon className="ti ti-clipboard" />
                                                             <p>No published quizzes available. Create quizzes in the Practice Quizzes section.</p>
                                                         </div>
                                                     </td>
@@ -1732,15 +1733,15 @@ export default function CourseManagementPage() {
                         <div className="legacy-modal-header">
                             <h3>Attach Material (PDF)</h3>
                             <button type="button" className="legacy-modal-close" onClick={() => setShowAttachMaterialModal(false)}>
-                                <i className="ti ti-close" />
+                                <Icon className="ti ti-close" />
                             </button>
                         </div>
                         <form className="batch-modal-form form-modal" onSubmit={e => { e.preventDefault(); attachMaterialToChapter(); }}>
                             <div className="legacy-modal-body">
                                 <div className="asset-form-section">
-                                    <div className="asset-form-section-title"><i className="ti ti-file" /> Material Details</div>
+                                    <div className="asset-form-section-title"><Icon className="ti ti-file" /> Material Details</div>
                                     <div className="cmb-info-note">
-                                        <i className="ti ti-info-alt" />
+                                        <Icon className="ti ti-info-alt" />
                                         <div>Upload a PDF document to add it as a study material in this chapter.</div>
                                     </div>
                                     <div className="asset-form-grid" style={{ marginTop: 16 }}>
@@ -1761,7 +1762,7 @@ export default function CourseManagementPage() {
                                             <div className="float-field float-always cm-upload-field">
                                                 <input type="file" ref={materialFileRef} accept=".pdf,application/pdf" onChange={handleMaterialFileSelect} style={{ display: 'none' }} />
                                                 <button type="button" className="cm-upload-btn" onClick={() => materialFileRef.current && materialFileRef.current.click()}>
-                                                    <i className="ti ti-upload" /> {materialUpload.fileName || 'Choose PDF File'}
+                                                    <Icon className="ti ti-upload" /> {materialUpload.fileName || 'Choose PDF File'}
                                                 </button>
                                                 <span className="float-label">PDF File <span className="req">*</span></span>
                                             </div>
@@ -1782,7 +1783,7 @@ export default function CourseManagementPage() {
 
                                     {materialUpload.fileName && (
                                         <div className="cm-file-preview">
-                                            <i className="ti ti-file-text cm-file-icon" />
+                                            <Icon className="ti ti-file-text cm-file-icon" />
                                             <div>
                                                 <div className="cm-file-name">{materialUpload.fileName}</div>
                                                 <div className="cm-file-type">PDF Document</div>

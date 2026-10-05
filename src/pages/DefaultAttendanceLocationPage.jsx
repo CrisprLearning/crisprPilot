@@ -12,6 +12,7 @@ import { listLocations } from '../lib/locationsApi';
 import { searchInstructors } from '../lib/instructorsApi';
 import { listUsers } from '../lib/userAccountsApi';
 import useDebouncedValue from '../hooks/useDebouncedValue';
+import Icon from '../components/Icon';
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100, 200];
 
@@ -274,7 +275,7 @@ export default function DefaultAttendanceLocationPage() {
       {/* ── Standard Page Header ── */}
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-map-marker" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-map-marker" /></span>
           <div>
             <h2>Attendance Capture Locations</h2>
             <p>Set the default location used to mark each batch or person present, since they may swipe at multiple locations.</p>
@@ -282,11 +283,11 @@ export default function DefaultAttendanceLocationPage() {
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button type="button" className="page-back-button" onClick={() => navigate('/offline-attendance')}>
-            <i className="ti ti-angle-left" /> Back to Attendance
+            <Icon className="ti ti-angle-left" /> Back to Attendance
           </button>
           <Can permission={PERMS.ATTENDANCE_MAPPING_EDIT}>
             <button type="button" className="page-action-button" onClick={() => setShowAddModal(true)}>
-              <i className="ti ti-plus" /> Add Mapping
+              <Icon className="ti ti-plus" /> Add Mapping
             </button>
           </Can>
         </div>
@@ -328,7 +329,7 @@ export default function DefaultAttendanceLocationPage() {
                 tabIndex={searchQuery ? 0 : -1}
                 aria-label={searchQuery ? 'Clear search' : 'Search'}
               >
-                <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} />
+                <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} />
               </button>
             </div>
           )}
@@ -399,15 +400,15 @@ export default function DefaultAttendanceLocationPage() {
                       <Can permission={PERMS.ATTENDANCE_MAPPING_EDIT}>
                         <div className="kebab-menu-container">
                           <button type="button" className="kebab-button" onClick={(event) => toggleKebab(r.id, event)}>
-                            <i className="ti ti-more-alt" />
+                            <Icon className="ti ti-more-alt" />
                           </button>
                           <div className={`kebab-dropdown ${activeKebabId === r.id ? 'active' : ''}`}>
                             <button type="button" className="kebab-dropdown-item edit-action" onClick={() => openEdit(r)}>
-                              <i className="ti ti-pencil" />
+                              <Icon className="ti ti-pencil" />
                               <span className="item-label">Edit</span>
                             </button>
                             <button type="button" className="kebab-dropdown-item delete-action" onClick={() => handleDelete(r)}>
-                              <i className="ti ti-trash" />
+                              <Icon className="ti ti-trash" />
                               <span className="item-label">Remove</span>
                             </button>
                           </div>
@@ -429,7 +430,7 @@ export default function DefaultAttendanceLocationPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={safePage === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {getPageNumbers(safePage, totalPages).map((p, idx) => (
                 p === '...' ? (
@@ -446,23 +447,23 @@ export default function DefaultAttendanceLocationPage() {
                 )
               ))}
               <button type="button" className="pagination-btn" disabled={safePage === totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
         </div>
       ) : loadError ? (
         <div className="qar-empty-state">
-          <i className="ti ti-alert" />
+          <Icon className="ti ti-alert" />
           <h4>Unable to load mappings</h4>
           <p>{loadError}</p>
           <button type="button" className="qar-btn-export" style={{ marginTop: 12 }} onClick={() => loadMappings()}>
-            <i className="ti ti-reload" /> Retry
+            <Icon className="ti ti-reload" /> Retry
           </button>
         </div>
       ) : (
         <div className="qar-empty-state">
-          <i className="ti ti-map-pin" />
+          <Icon className="ti ti-map-pin" />
           <h4>No Default Locations Set</h4>
           {hasActiveFilters
             ? <p>Try adjusting your filters.</p>
@@ -651,21 +652,21 @@ function AddDefaultLocationModal({ submitting, editRecord, onClose, onSubmit }) 
       `}</style>
       <div className="legacy-modal-dialog" style={{ maxWidth: 640 }} role="dialog" aria-modal="true">
         <div className="legacy-modal-header">
-          <h3><i className="ti ti-map-pin" /> Attendance Capture Location</h3>
+          <h3><Icon className="ti ti-map-pin" /> Attendance Capture Location</h3>
           <button type="button" className="legacy-modal-close" onClick={onClose}>
-            <i className="ti ti-close" />
+            <Icon className="ti ti-close" />
           </button>
         </div>
         <form className="batch-modal-form form-modal" onSubmit={(e) => { e.preventDefault(); if (canSubmit) submit(); }}>
           <div className="legacy-modal-body">
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-users" /> Audience &amp; Subject</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-users" /> Audience &amp; Subject</div>
               {isEditing ? (
                 /* Audience + subject are fixed when editing — only locations change. */
                 <div>
-                  <span style={captionStyle}><i className={`ti ${audience.icon}`} /> {audience.label}</span>
+                  <span style={captionStyle}><Icon className={`ti ${audience.icon}`} /> {audience.label}</span>
                   <div className="dal-row" style={{ border: '1px solid #cbd5e1', borderRadius: 8, cursor: 'default' }}>
-                    <i className="ti ti-user" style={{ color: '#64748b' }} />
+                    <Icon className="ti ti-user" style={{ color: '#64748b' }} />
                     <div className="dal-name">{subject?.name}</div>
                   </div>
                 </div>
@@ -680,16 +681,16 @@ function AddDefaultLocationModal({ submitting, editRecord, onClose, onSubmit }) 
                         className={`dal-tab${audienceKey === a.key ? ' active' : ''}`}
                         onClick={() => setAudienceKey(a.key)}
                       >
-                        <i className={`ti ${a.icon}`} /> {a.label}
+                        <Icon className={`ti ${a.icon}`} /> {a.label}
                       </button>
                     ))}
                   </div>
 
                   {/* Subject picker */}
-                  <span style={captionStyle}><i className="ti ti-search" /> {audience.subjectType === 'batch' ? 'Batch' : audience.label.replace(/s$/, '')} <span className="req">*</span></span>
+                  <span style={captionStyle}><Icon className="ti ti-search" /> {audience.subjectType === 'batch' ? 'Batch' : audience.label.replace(/s$/, '')} <span className="req">*</span></span>
                   <div className="dal-typeahead" ref={subjectBoxRef}>
                     <div className="search-wrapper">
-                      <i className="ti ti-search search-icon" />
+                      <Icon className="ti ti-search search-icon" />
                       <input
                         type="text"
                         className="search-input"
@@ -699,12 +700,11 @@ function AddDefaultLocationModal({ submitting, editRecord, onClose, onSubmit }) 
                         placeholder={`Search ${subjectNoun}…`}
                       />
                       {(subject || query) && (
-                        <i
+                        <Icon
                           className="ti ti-close search-icon"
                           style={{ left: 'auto', right: 12, cursor: 'pointer' }}
                           onClick={() => { setSubject(null); setQuery(''); setSubjectOpen(true); }}
-                          aria-label="Clear selection"
-                        />
+                          aria-label="Clear selection" />
                       )}
                     </div>
                     {subjectOpen && (
@@ -717,7 +717,7 @@ function AddDefaultLocationModal({ submitting, editRecord, onClose, onSubmit }) 
                           const checked = subject?.id === p.id;
                           return (
                             <div key={p.id} className="dal-row" onClick={() => { setSubject({ id: p.id, name: p.name }); setQuery(''); setSubjectOpen(false); }}>
-                              <span className={`dal-check dal-radio${checked ? ' on' : ''}`}>{checked && <i className="ti ti-check" />}</span>
+                              <span className={`dal-check dal-radio${checked ? ' on' : ''}`}>{checked && <Icon className="ti ti-check" />}</span>
                               <div>
                                 <div className="dal-name">{p.name}</div>
                                 {p.detail ? <div className="dal-detail">{p.detail} · ID: {p.id}</div> : <div className="dal-detail">ID: {p.id}</div>}
@@ -734,7 +734,7 @@ function AddDefaultLocationModal({ submitting, editRecord, onClose, onSubmit }) 
 
             {/* Locations */}
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-location-pin" /> Locations to Capture Attendance</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-location-pin" /> Locations to Capture Attendance</div>
               <div
                 className="dal-any"
                 onClick={() => setAnyLocation((v) => !v)}
@@ -742,7 +742,7 @@ function AddDefaultLocationModal({ submitting, editRecord, onClose, onSubmit }) 
                 aria-checked={anyLocation}
                 style={{ paddingTop: 0 }}
               >
-                <span className={`dal-check${anyLocation ? ' on' : ''}`}>{anyLocation && <i className="ti ti-check" />}</span>
+                <span className={`dal-check${anyLocation ? ' on' : ''}`}>{anyLocation && <Icon className="ti ti-check" />}</span>
                 At any location
               </div>
               {!anyLocation && (
@@ -752,13 +752,13 @@ function AddDefaultLocationModal({ submitting, editRecord, onClose, onSubmit }) 
                       {selectedLocs.map((l) => (
                         <span key={String(l.id)} className="dal-chip">
                           {l.name}
-                          <i className="ti ti-close" onClick={() => removeLocation(l.id)} />
+                          <Icon className="ti ti-close" onClick={() => removeLocation(l.id)} />
                         </span>
                       ))}
                     </div>
                   )}
                   <div className="search-wrapper" style={{ margin: '8px 0 0' }}>
-                    <i className="ti ti-search search-icon" />
+                    <Icon className="ti ti-search search-icon" />
                     <input
                       type="text"
                       className="search-input"
@@ -778,7 +778,7 @@ function AddDefaultLocationModal({ submitting, editRecord, onClose, onSubmit }) 
                         const id = String(l.id ?? l.code);
                         return (
                           <div key={id} className="dal-row" onClick={() => addLocation(l)}>
-                            <i className="ti ti-location-pin" style={{ color: '#6c757d' }} />
+                            <Icon className="ti ti-location-pin" style={{ color: '#6c757d' }} />
                             <div className="dal-name">{locName(l)}</div>
                           </div>
                         );
@@ -792,7 +792,7 @@ function AddDefaultLocationModal({ submitting, editRecord, onClose, onSubmit }) 
             {/* Auto-notify schedule — students/batches only (set at creation) */}
             {!isEditing && audience.subjectType === 'batch' && (
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-bell" /> Notifications</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-bell" /> Notifications</div>
                 <label className="field-cell">
                   <div className="float-field float-always">
                     <select className="float-control" value={notifySchedule} onChange={(e) => setNotifySchedule(e.target.value)}>
@@ -814,7 +814,7 @@ function AddDefaultLocationModal({ submitting, editRecord, onClose, onSubmit }) 
               disabled={!canSubmit}
               style={!canSubmit ? { opacity: 0.6, cursor: 'not-allowed' } : undefined}
             >
-              <i className="ti ti-check" /> {submitting ? 'Saving…' : (isEditing ? 'Update Mapping' : 'Save Mapping')}
+              <Icon className="ti ti-check" /> {submitting ? 'Saving…' : (isEditing ? 'Update Mapping' : 'Save Mapping')}
             </button>
           </div>
         </form>

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import ToastRegion from '../components/ToastRegion';
+import Icon from '../components/Icon';
 
 /* ── Recipient audience types ─────────────────────────────────────────── */
 const RECIPIENT_TYPES = ['STUDENTS', 'INSTRUCTORS', 'MENTORS', 'USERS'];
@@ -240,14 +241,14 @@ function RecipientMultiSelect({ value, onChange }) {
     <div className="forms-ms" onClick={(e) => e.stopPropagation()}>
       <button type="button" className={`forms-ms-btn ${open ? 'open' : ''}`} onClick={() => setOpen((o) => !o)}>
         <span>{value.length ? `${value.length} audience${value.length > 1 ? 's' : ''} selected` : 'Select recipients…'}</span>
-        <i className={`ti ti-angle-${open ? 'up' : 'down'}`} />
+        <Icon className={`ti ti-angle-${open ? 'up' : 'down'}`} />
       </button>
       {open && (
         <div className="forms-ms-menu">
           {RECIPIENT_TYPES.map((t) => (
             <button key={t} type="button" className={`forms-ms-item ${value.includes(t) ? 'active' : ''}`} onClick={() => toggle(t)}>
-              <span className={`forms-ms-check ${value.includes(t) ? 'on' : ''}`}>{value.includes(t) && <i className="ti ti-check" />}</span>
-              <i className={`ti ${AUDIENCE_META[t].icon}`} />
+              <span className={`forms-ms-check ${value.includes(t) ? 'on' : ''}`}>{value.includes(t) && <Icon className="ti ti-check" />}</span>
+              <Icon className={`ti ${AUDIENCE_META[t].icon}`} />
               <span>{AUDIENCE_META[t].label}</span>
             </button>
           ))}
@@ -268,13 +269,13 @@ function FormsMultiSelect({ options, value, onChange }) {
     <div className="forms-ms" onClick={(e) => e.stopPropagation()}>
       <button type="button" className={`forms-ms-btn ${open ? 'open' : ''}`} onClick={() => setOpen((o) => !o)}>
         <span>{value.length ? `${value.length} form${value.length > 1 ? 's' : ''} selected` : 'Select forms…'}</span>
-        <i className={`ti ti-angle-${open ? 'up' : 'down'}`} />
+        <Icon className={`ti ti-angle-${open ? 'up' : 'down'}`} />
       </button>
       {open && (
         <div className="forms-ms-menu" style={{ maxHeight: 260, overflowY: 'auto' }}>
           {options.map((f) => (
             <button key={f.id} type="button" className={`forms-ms-item ${value.includes(f.id) ? 'active' : ''}`} onClick={() => toggle(f.id)}>
-              <span className={`forms-ms-check ${value.includes(f.id) ? 'on' : ''}`}>{value.includes(f.id) && <i className="ti ti-check" />}</span>
+              <span className={`forms-ms-check ${value.includes(f.id) ? 'on' : ''}`}>{value.includes(f.id) && <Icon className="ti ti-check" />}</span>
               <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <span>{f.title}</span>
                 <span style={{ fontSize: 11, fontWeight: 600, color: '#94a3b8', fontFamily: 'ui-monospace,SFMono-Regular,Menlo,monospace' }}>{f.id}</span>
@@ -695,7 +696,7 @@ export default function FormsPage() {
 
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-wpforms" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-wpforms" /></span>
           <div>
             <h2>Forms</h2>
             <p>Configure fixed forms, dispatch them to your audiences, and review submissions.</p>
@@ -703,17 +704,17 @@ export default function FormsPage() {
         </div>
         <div style={{ display: 'flex', gap: 12 }}>
           <button type="button" className="create-quiz-button" onClick={openNewSet}>
-            <i className="ti ti-plus" /> Create Set
+            <Icon className="ti ti-plus" /> Create Set
           </button>
           <button type="button" className="create-quiz-button" onClick={openNewConfig}>
-            <i className="ti ti-plus" /> Configure New Form
+            <Icon className="ti ti-plus" /> Configure New Form
           </button>
         </div>
       </div>
 
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} aria-hidden="true" />
+          <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} aria-hidden="true" />
           <input
             type="text"
             className="search-input"
@@ -757,7 +758,7 @@ export default function FormsPage() {
                 <td>
                   <div className="forms-chips">
                     {form.recipients.map((r) => (
-                      <span key={r} className="forms-chip"><i className={`ti ${AUDIENCE_META[r].icon}`} /> {AUDIENCE_META[r].label}</span>
+                      <span key={r} className="forms-chip"><Icon className={`ti ${AUDIENCE_META[r].icon}`} /> {AUDIENCE_META[r].label}</span>
                     ))}
                   </div>
                 </td>
@@ -767,15 +768,15 @@ export default function FormsPage() {
                 <td style={{ textAlign: 'center' }}>
                   <div className="kebab-menu-container">
                     <button type="button" className="kebab-button" onClick={(e) => { e.stopPropagation(); setActiveMenu(activeMenu === form.id ? null : form.id); }}>
-                      <i className="ti ti-more-alt" />
+                      <Icon className="ti ti-more-alt" />
                     </button>
                     <div className={`kebab-dropdown ${activeMenu === form.id ? 'active' : ''}`} onClick={(e) => e.stopPropagation()}>
-                      <button type="button" className="kebab-dropdown-item" onClick={() => { previewForm(form); setActiveMenu(null); }}><i className="ti ti-eye" /> Preview Form</button>
-                      <button type="button" className="kebab-dropdown-item" onClick={() => { openSubmissions(form); setActiveMenu(null); }}><i className="ti ti-files" /> Check Submissions</button>
-                      <button type="button" className="kebab-dropdown-item" onClick={() => { openRecipients(form); setActiveMenu(null); }}><i className="fa fa-users" /> View Recipients List</button>
-                      <button type="button" className="kebab-dropdown-item" onClick={() => { openConfig(form); setActiveMenu(null); }}><i className="ti ti-settings" /> Configure</button>
-                      <button type="button" className="kebab-dropdown-item enable-action" onClick={() => { openDispatch(form); setActiveMenu(null); }}><i className="ti ti-share" /> Dispatch Form</button>
-                      <button type="button" className="kebab-dropdown-item" onClick={() => { openWhatsappForForm(form); setActiveMenu(null); }}><i className="fa fa-whatsapp" /> Share via WhatsApp</button>
+                      <button type="button" className="kebab-dropdown-item" onClick={() => { previewForm(form); setActiveMenu(null); }}><Icon className="ti ti-eye" /> Preview Form</button>
+                      <button type="button" className="kebab-dropdown-item" onClick={() => { openSubmissions(form); setActiveMenu(null); }}><Icon className="ti ti-files" /> Check Submissions</button>
+                      <button type="button" className="kebab-dropdown-item" onClick={() => { openRecipients(form); setActiveMenu(null); }}><Icon className="fa fa-users" /> View Recipients List</button>
+                      <button type="button" className="kebab-dropdown-item" onClick={() => { openConfig(form); setActiveMenu(null); }}><Icon className="ti ti-settings" /> Configure</button>
+                      <button type="button" className="kebab-dropdown-item enable-action" onClick={() => { openDispatch(form); setActiveMenu(null); }}><Icon className="ti ti-share" /> Dispatch Form</button>
+                      <button type="button" className="kebab-dropdown-item" onClick={() => { openWhatsappForForm(form); setActiveMenu(null); }}><Icon className="fa fa-whatsapp" /> Share via WhatsApp</button>
                     </div>
                   </div>
                 </td>
@@ -784,7 +785,7 @@ export default function FormsPage() {
               <tr>
                 <td colSpan={5} style={{ textAlign: 'center', padding: '40px' }}>
                   <div className="qar-empty-state" style={{ border: 'none', background: 'transparent' }}>
-                    <i className="ti ti-clipboard" />
+                    <Icon className="ti ti-clipboard" />
                     <h4>No Forms Found</h4>
                     <p>No forms match your search.</p>
                   </div>
@@ -805,7 +806,7 @@ export default function FormsPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={safePage === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {getPageNumbers(safePage, totalPages).map((p, idx) => (
                 p === '...' ? (
@@ -815,7 +816,7 @@ export default function FormsPage() {
                 )
               ))}
               <button type="button" className="pagination-btn" disabled={safePage === totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
@@ -824,7 +825,7 @@ export default function FormsPage() {
 
       {/* ── Forms Set Section ── */}
       <h3 className="asset-form-section-title" style={{ marginTop: 36 }}>
-        <i className="ti ti-layers-alt" /> Forms Set
+        <Icon className="ti ti-layers-alt" /> Forms Set
       </h3>
       <div className="students-table-container">
         <table className={`students-table ${isLoading ? 'thead-loading' : ''}`}>
@@ -856,20 +857,20 @@ export default function FormsPage() {
                 <td>
                   <div className="forms-chips">
                     {set.formIds.map((id) => (
-                      <span key={id} className="forms-chip"><i className="fa fa-wpforms" /> {formsById[id]?.title || id}</span>
+                      <span key={id} className="forms-chip"><Icon className="fa fa-wpforms" /> {formsById[id]?.title || id}</span>
                     ))}
                   </div>
                 </td>
                 <td style={{ textAlign: 'center' }}>
                   <div className="kebab-menu-container">
                     <button type="button" className="kebab-button" onClick={(e) => { e.stopPropagation(); setActiveSetMenu(activeSetMenu === set.id ? null : set.id); }}>
-                      <i className="ti ti-more-alt" />
+                      <Icon className="ti ti-more-alt" />
                     </button>
                     <div className={`kebab-dropdown ${activeSetMenu === set.id ? 'active' : ''}`} onClick={(e) => e.stopPropagation()}>
-                      <button type="button" className="kebab-dropdown-item enable-action" onClick={() => { openSetDispatch(set); setActiveSetMenu(null); }}><i className="ti ti-share" /> Dispatch All Forms</button>
-                      <button type="button" className="kebab-dropdown-item" onClick={() => { openWhatsappForSet(set); setActiveSetMenu(null); }}><i className="fa fa-whatsapp" /> Share via WhatsApp</button>
-                      <button type="button" className="kebab-dropdown-item" onClick={() => { openEditSet(set); setActiveSetMenu(null); }}><i className="ti ti-settings" /> Edit Set</button>
-                      <button type="button" className="kebab-dropdown-item delete-action" onClick={() => { deleteSet(set); setActiveSetMenu(null); }}><i className="ti ti-trash" /> Delete Set</button>
+                      <button type="button" className="kebab-dropdown-item enable-action" onClick={() => { openSetDispatch(set); setActiveSetMenu(null); }}><Icon className="ti ti-share" /> Dispatch All Forms</button>
+                      <button type="button" className="kebab-dropdown-item" onClick={() => { openWhatsappForSet(set); setActiveSetMenu(null); }}><Icon className="fa fa-whatsapp" /> Share via WhatsApp</button>
+                      <button type="button" className="kebab-dropdown-item" onClick={() => { openEditSet(set); setActiveSetMenu(null); }}><Icon className="ti ti-settings" /> Edit Set</button>
+                      <button type="button" className="kebab-dropdown-item delete-action" onClick={() => { deleteSet(set); setActiveSetMenu(null); }}><Icon className="ti ti-trash" /> Delete Set</button>
                     </div>
                   </div>
                 </td>
@@ -878,7 +879,7 @@ export default function FormsPage() {
               <tr>
                 <td colSpan={3} style={{ textAlign: 'center', padding: '40px' }}>
                   <div className="qar-empty-state" style={{ border: 'none', background: 'transparent' }}>
-                    <i className="ti ti-layers-alt" />
+                    <Icon className="ti ti-layers-alt" />
                     <h4>No Form Sets</h4>
                     <p>Create a set to dispatch multiple forms at once.</p>
                   </div>
@@ -895,13 +896,13 @@ export default function FormsPage() {
         {configForm && (
           <div className="legacy-modal-dialog" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <div className="legacy-modal-header">
-              <h3><i className={`ti ${configMode === 'new' ? 'ti-plus' : 'ti-settings'}`} /> {configMode === 'new' ? 'Configure New Form' : 'Configure Form'}</h3>
-              <button type="button" className="legacy-modal-close" onClick={() => setConfigForm(null)}><i className="ti ti-close" /></button>
+              <h3><Icon className={`ti ${configMode === 'new' ? 'ti-plus' : 'ti-settings'}`} /> {configMode === 'new' ? 'Configure New Form' : 'Configure Form'}</h3>
+              <button type="button" className="legacy-modal-close" onClick={() => setConfigForm(null)}><Icon className="ti ti-close" /></button>
             </div>
             <form className="form-modal" onSubmit={saveConfig}>
               <div className="legacy-modal-body">
                 <div className="asset-form-section">
-                  <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Form Details</div>
+                  <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Form Details</div>
                   <div className="asset-form-grid basic-grid">
                     <label className="field-cell full-span">
                       <div className="float-field">
@@ -929,7 +930,7 @@ export default function FormsPage() {
                 </div>
 
                 <div className="asset-form-section">
-                  <div className="asset-form-section-title"><i className="fa fa-users" /> Recipients</div>
+                  <div className="asset-form-section-title"><Icon className="fa fa-users" /> Recipients</div>
                   <div className="asset-form-grid">
                     <div className="field-cell full-span">
                       <span className="field-static-label">Recipients <span className="req">*</span></span>
@@ -937,7 +938,7 @@ export default function FormsPage() {
                       {cfgRecipients.length > 0 && (
                         <div className="forms-chips" style={{ marginTop: '10px' }}>
                           {cfgRecipients.map((r) => (
-                            <span key={r} className="forms-chip"><i className={`ti ${AUDIENCE_META[r].icon}`} /> {AUDIENCE_META[r].label}</span>
+                            <span key={r} className="forms-chip"><Icon className={`ti ${AUDIENCE_META[r].icon}`} /> {AUDIENCE_META[r].label}</span>
                           ))}
                         </div>
                       )}
@@ -947,7 +948,7 @@ export default function FormsPage() {
               </div>
               <div className="legacy-modal-footer">
                 <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setConfigForm(null)}>Cancel</button>
-                <button type="submit" className="legacy-btn legacy-btn-success"><i className={`ti ${configMode === 'new' ? 'ti-plus' : 'ti-check'}`} /> {configMode === 'new' ? 'Create Form' : 'Save Configuration'}</button>
+                <button type="submit" className="legacy-btn legacy-btn-success"><Icon className={`ti ${configMode === 'new' ? 'ti-plus' : 'ti-check'}`} /> {configMode === 'new' ? 'Create Form' : 'Save Configuration'}</button>
               </div>
             </form>
           </div>
@@ -959,15 +960,15 @@ export default function FormsPage() {
         <div className="crispr-modal-backdrop active" onMouseDown={(e) => { if (e.target === e.currentTarget) setSubmissionsForm(null); }}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 720 }}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-files" /> Submissions — {submissionsForm.title}</h3>
-              <button type="button" className="crispr-modal-close" onClick={() => setSubmissionsForm(null)}><i className="ti ti-close" /></button>
+              <h3><Icon className="ti ti-files" /> Submissions — {submissionsForm.title}</h3>
+              <button type="button" className="crispr-modal-close" onClick={() => setSubmissionsForm(null)}><Icon className="ti ti-close" /></button>
             </div>
             <div className="crispr-modal-body">
               {submissionsForm.submissions.length > 0 ? (
                 <>
                   <div className="filter-bar" style={{ marginBottom: 14 }}>
                     <div className="search-wrapper">
-                      <i className={`ti ${subSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setSubSearch('')} aria-hidden="true" />
+                      <Icon className={`ti ${subSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setSubSearch('')} aria-hidden="true" />
                       <input
                         type="text"
                         className="search-input"
@@ -1013,7 +1014,7 @@ export default function FormsPage() {
                           <tr>
                             <td colSpan={4} style={{ textAlign: 'center', padding: '32px' }}>
                               <div className="qar-empty-state" style={{ border: 'none', background: 'transparent' }}>
-                                <i className="ti ti-search" />
+                                <Icon className="ti ti-search" />
                                 <h4>No Matches</h4>
                                 <p>No submissions match your search.</p>
                               </div>
@@ -1033,7 +1034,7 @@ export default function FormsPage() {
                         </div>
                         <div className="pagination-controls">
                           <button type="button" className="pagination-btn" disabled={subSafePage === 1} onClick={() => setSubPage((p) => Math.max(1, p - 1))}>
-                            <i className="ti ti-angle-left" /> Previous
+                            <Icon className="ti ti-angle-left" /> Previous
                           </button>
                           {getPageNumbers(subSafePage, subTotalPages).map((p, idx) => (
                             p === '...' ? (
@@ -1043,7 +1044,7 @@ export default function FormsPage() {
                             )
                           ))}
                           <button type="button" className="pagination-btn" disabled={subSafePage === subTotalPages} onClick={() => setSubPage((p) => Math.min(subTotalPages, p + 1))}>
-                            Next <i className="ti ti-angle-right" />
+                            Next <Icon className="ti ti-angle-right" />
                           </button>
                         </div>
                       </div>
@@ -1052,7 +1053,7 @@ export default function FormsPage() {
                 </>
               ) : (
                 <div className="qar-empty-state" style={{ border: 'none', background: 'transparent' }}>
-                  <i className="ti ti-files" />
+                  <Icon className="ti ti-files" />
                   <h4>No Submissions Yet</h4>
                   <p>No one has submitted this form so far.</p>
                 </div>
@@ -1070,15 +1071,15 @@ export default function FormsPage() {
         <div className="crispr-modal-backdrop active" onMouseDown={(e) => { if (e.target === e.currentTarget) setRecipientsForm(null); }}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 640 }}>
             <div className="crispr-modal-header">
-              <h3><i className="fa fa-users" /> Recipients — {recipientsForm.title}</h3>
-              <button type="button" className="crispr-modal-close" onClick={() => setRecipientsForm(null)}><i className="ti ti-close" /></button>
+              <h3><Icon className="fa fa-users" /> Recipients — {recipientsForm.title}</h3>
+              <button type="button" className="crispr-modal-close" onClick={() => setRecipientsForm(null)}><Icon className="ti ti-close" /></button>
             </div>
             <div className="crispr-modal-body">
               {(recipientsForm.recipientsList || []).length > 0 ? (
                 <>
                   <div className="filter-bar" style={{ marginBottom: 14, flexWrap: 'nowrap' }}>
                     <div className="search-wrapper" style={{ flex: 1, width: 'auto' }}>
-                      <i className={`ti ${recSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setRecSearch('')} aria-hidden="true" />
+                      <Icon className={`ti ${recSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setRecSearch('')} aria-hidden="true" />
                       <input
                         type="text"
                         className="search-input"
@@ -1113,15 +1114,15 @@ export default function FormsPage() {
                             <td>{formatTimestamp(r.sharedAt)}</td>
                             <td style={{ textAlign: 'center' }}>
                               {r.submitted
-                                ? <span className="forms-status done"><i className="ti ti-check" /> Submitted</span>
-                                : <span className="forms-status pending"><i className="ti ti-time" /> Pending</span>}
+                                ? <span className="forms-status done"><Icon className="ti ti-check" /> Submitted</span>
+                                : <span className="forms-status pending"><Icon className="ti ti-time" /> Pending</span>}
                             </td>
                           </tr>
                         )) : (
                           <tr>
                             <td colSpan={3} style={{ textAlign: 'center', padding: '32px' }}>
                               <div className="qar-empty-state" style={{ border: 'none', background: 'transparent' }}>
-                                <i className="ti ti-search" />
+                                <Icon className="ti ti-search" />
                                 <h4>No Matches</h4>
                                 <p>No recipients match your search.</p>
                               </div>
@@ -1141,7 +1142,7 @@ export default function FormsPage() {
                         </div>
                         <div className="pagination-controls">
                           <button type="button" className="pagination-btn" disabled={recSafePage === 1} onClick={() => setRecPage((p) => Math.max(1, p - 1))}>
-                            <i className="ti ti-angle-left" /> Previous
+                            <Icon className="ti ti-angle-left" /> Previous
                           </button>
                           {getPageNumbers(recSafePage, recTotalPages).map((p, idx) => (
                             p === '...' ? (
@@ -1151,7 +1152,7 @@ export default function FormsPage() {
                             )
                           ))}
                           <button type="button" className="pagination-btn" disabled={recSafePage === recTotalPages} onClick={() => setRecPage((p) => Math.min(recTotalPages, p + 1))}>
-                            Next <i className="ti ti-angle-right" />
+                            Next <Icon className="ti ti-angle-right" />
                           </button>
                         </div>
                       </div>
@@ -1160,7 +1161,7 @@ export default function FormsPage() {
                 </>
               ) : (
                 <div className="qar-empty-state" style={{ border: 'none', background: 'transparent' }}>
-                  <i className="fa fa-users" />
+                  <Icon className="fa fa-users" />
                   <h4>Not Shared Yet</h4>
                   <p>This form hasn't been dispatched to anyone.</p>
                 </div>
@@ -1178,20 +1179,20 @@ export default function FormsPage() {
         <div className="crispr-modal-backdrop active" onMouseDown={(e) => { if (e.target === e.currentTarget) setDispatchForm(null); }}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 560 }}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-share" /> Dispatch — {dispatchForm.title}</h3>
-              <button type="button" className="crispr-modal-close" onClick={() => setDispatchForm(null)}><i className="ti ti-close" /></button>
+              <h3><Icon className="ti ti-share" /> Dispatch — {dispatchForm.title}</h3>
+              <button type="button" className="crispr-modal-close" onClick={() => setDispatchForm(null)}><Icon className="ti ti-close" /></button>
             </div>
             <div className="crispr-modal-body">
               <div className="forms-disp-tabs">
                 {dispatchForm.recipients.map((t) => (
                   <button key={t} type="button" className={`forms-disp-tab ${dispatchType === t ? 'active' : ''}`} onClick={() => { setDispatchType(t); setDispatchSearch(''); }}>
-                    <i className={`ti ${AUDIENCE_META[t].icon}`} /> {AUDIENCE_META[t].label}
+                    <Icon className={`ti ${AUDIENCE_META[t].icon}`} /> {AUDIENCE_META[t].label}
                   </button>
                 ))}
               </div>
 
               <div className="search-wrapper" style={{ marginBottom: 12 }}>
-                <i className={`ti ${dispatchSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setDispatchSearch('')} aria-hidden="true" />
+                <Icon className={`ti ${dispatchSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setDispatchSearch('')} aria-hidden="true" />
                 <input
                   type="text"
                   className="search-input"
@@ -1211,7 +1212,7 @@ export default function FormsPage() {
                     const checked = dispatchSelected.includes(p.id);
                     return (
                       <div key={p.id} className="forms-disp-person" onClick={() => toggleDispatchPerson(p.id)}>
-                        <span className={`forms-disp-check ${checked ? 'on' : ''}`}>{checked && <i className="ti ti-check" />}</span>
+                        <span className={`forms-disp-check ${checked ? 'on' : ''}`}>{checked && <Icon className="ti ti-check" />}</span>
                         <div>
                           <div className="forms-disp-name">{p.name}</div>
                           <div className="forms-disp-detail">{p.detail}</div>
@@ -1225,7 +1226,7 @@ export default function FormsPage() {
             <div className="crispr-modal-footer">
               <span style={{ marginRight: 'auto', fontSize: 13, color: '#64748b', fontWeight: 600 }}>{dispatchSelected.length} selected</span>
               <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setDispatchForm(null)}>Cancel</button>
-              <button type="button" className="legacy-btn legacy-btn-success" onClick={confirmDispatch}><i className="ti ti-send" /> Dispatch to {dispatchSelected.length || ''}</button>
+              <button type="button" className="legacy-btn legacy-btn-success" onClick={confirmDispatch}><Icon className="ti ti-send" /> Dispatch to {dispatchSelected.length || ''}</button>
             </div>
           </div>
         </div>
@@ -1236,13 +1237,13 @@ export default function FormsPage() {
         {configSet && (
           <div className="legacy-modal-dialog" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <div className="legacy-modal-header">
-              <h3><i className={`ti ${setMode === 'new' ? 'ti-plus' : 'ti-settings'}`} /> {setMode === 'new' ? 'Create Forms Set' : 'Edit Forms Set'}</h3>
-              <button type="button" className="legacy-modal-close" onClick={() => setConfigSet(null)}><i className="ti ti-close" /></button>
+              <h3><Icon className={`ti ${setMode === 'new' ? 'ti-plus' : 'ti-settings'}`} /> {setMode === 'new' ? 'Create Forms Set' : 'Edit Forms Set'}</h3>
+              <button type="button" className="legacy-modal-close" onClick={() => setConfigSet(null)}><Icon className="ti ti-close" /></button>
             </div>
             <form className="form-modal" onSubmit={saveSet}>
               <div className="legacy-modal-body">
                 <div className="asset-form-section">
-                  <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Set Details</div>
+                  <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Set Details</div>
                   <div className="asset-form-grid">
                     <label className="field-cell full-span">
                       <div className="float-field">
@@ -1254,7 +1255,7 @@ export default function FormsPage() {
                 </div>
 
                 <div className="asset-form-section">
-                  <div className="asset-form-section-title"><i className="fa fa-wpforms" /> Forms</div>
+                  <div className="asset-form-section-title"><Icon className="fa fa-wpforms" /> Forms</div>
                   <div className="asset-form-grid">
                     <div className="field-cell full-span">
                       <span className="field-static-label">Forms <span className="req">*</span></span>
@@ -1262,7 +1263,7 @@ export default function FormsPage() {
                       {setFormIds.length > 0 && (
                         <div className="forms-chips" style={{ marginTop: '10px' }}>
                           {setFormIds.map((id) => (
-                            <span key={id} className="forms-chip"><i className="fa fa-wpforms" /> {formsById[id]?.title || id}</span>
+                            <span key={id} className="forms-chip"><Icon className="fa fa-wpforms" /> {formsById[id]?.title || id}</span>
                           ))}
                         </div>
                       )}
@@ -1272,7 +1273,7 @@ export default function FormsPage() {
               </div>
               <div className="legacy-modal-footer">
                 <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setConfigSet(null)}>Cancel</button>
-                <button type="submit" className="legacy-btn legacy-btn-success"><i className={`ti ${setMode === 'new' ? 'ti-plus' : 'ti-check'}`} /> {setMode === 'new' ? 'Create Set' : 'Save Set'}</button>
+                <button type="submit" className="legacy-btn legacy-btn-success"><Icon className={`ti ${setMode === 'new' ? 'ti-plus' : 'ti-check'}`} /> {setMode === 'new' ? 'Create Set' : 'Save Set'}</button>
               </div>
             </form>
           </div>
@@ -1284,13 +1285,13 @@ export default function FormsPage() {
         <div className="crispr-modal-backdrop active" onMouseDown={(e) => { if (e.target === e.currentTarget) setDispatchSet(null); }}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 560 }}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-share" /> Dispatch All — {dispatchSet.name}</h3>
-              <button type="button" className="crispr-modal-close" onClick={() => setDispatchSet(null)}><i className="ti ti-close" /></button>
+              <h3><Icon className="ti ti-share" /> Dispatch All — {dispatchSet.name}</h3>
+              <button type="button" className="crispr-modal-close" onClick={() => setDispatchSet(null)}><Icon className="ti ti-close" /></button>
             </div>
             <div className="crispr-modal-body">
               <div className="forms-chips" style={{ marginBottom: 14 }}>
                 {dispatchSet.formIds.map((id) => (
-                  <span key={id} className="forms-chip"><i className="fa fa-wpforms" /> {formsById[id]?.title || id}</span>
+                  <span key={id} className="forms-chip"><Icon className="fa fa-wpforms" /> {formsById[id]?.title || id}</span>
                 ))}
               </div>
 
@@ -1299,13 +1300,13 @@ export default function FormsPage() {
                   <div className="forms-disp-tabs">
                     {setAudiences(dispatchSet).map((t) => (
                       <button key={t} type="button" className={`forms-disp-tab ${setDispType === t ? 'active' : ''}`} onClick={() => { setSetDispType(t); setSetDispSearch(''); }}>
-                        <i className={`ti ${AUDIENCE_META[t].icon}`} /> {AUDIENCE_META[t].label}
+                        <Icon className={`ti ${AUDIENCE_META[t].icon}`} /> {AUDIENCE_META[t].label}
                       </button>
                     ))}
                   </div>
 
                   <div className="search-wrapper" style={{ marginBottom: 12 }}>
-                    <i className={`ti ${setDispSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setSetDispSearch('')} aria-hidden="true" />
+                    <Icon className={`ti ${setDispSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setSetDispSearch('')} aria-hidden="true" />
                     <input
                       type="text"
                       className="search-input"
@@ -1325,7 +1326,7 @@ export default function FormsPage() {
                         const checked = setDispSelected.includes(p.id);
                         return (
                           <div key={p.id} className="forms-disp-person" onClick={() => toggleSetDispPerson(p.id)}>
-                            <span className={`forms-disp-check ${checked ? 'on' : ''}`}>{checked && <i className="ti ti-check" />}</span>
+                            <span className={`forms-disp-check ${checked ? 'on' : ''}`}>{checked && <Icon className="ti ti-check" />}</span>
                             <div>
                               <div className="forms-disp-name">{p.name}</div>
                               <div className="forms-disp-detail">{p.detail}</div>
@@ -1343,7 +1344,7 @@ export default function FormsPage() {
             <div className="crispr-modal-footer">
               <span style={{ marginRight: 'auto', fontSize: 13, color: '#64748b', fontWeight: 600 }}>{setDispSelected.length} selected</span>
               <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setDispatchSet(null)}>Cancel</button>
-              <button type="button" className="legacy-btn legacy-btn-success" onClick={confirmSetDispatch}><i className="ti ti-send" /> Dispatch All to {setDispSelected.length || ''}</button>
+              <button type="button" className="legacy-btn legacy-btn-success" onClick={confirmSetDispatch}><Icon className="ti ti-send" /> Dispatch All to {setDispSelected.length || ''}</button>
             </div>
           </div>
         </div>
@@ -1355,12 +1356,12 @@ export default function FormsPage() {
           <div className="crispr-modal-dialog" style={{ maxWidth: 520 }}>
             <div className="crispr-modal-header">
               <h3>
-                <i className="fa fa-whatsapp" /> Share via WhatsApp
+                <Icon className="fa fa-whatsapp" /> Share via WhatsApp
                 <span style={{ marginLeft: 8, fontSize: 12, fontWeight: 600, color: '#94a3b8' }}>
                   Step {whatsappStep === 'recipient' ? '1' : '2'} of 2
                 </span>
               </h3>
-              <button type="button" className="crispr-modal-close" onClick={() => setWhatsappTarget(null)}><i className="ti ti-close" /></button>
+              <button type="button" className="crispr-modal-close" onClick={() => setWhatsappTarget(null)}><Icon className="ti ti-close" /></button>
             </div>
 
             {whatsappStep === 'recipient' ? (
@@ -1375,13 +1376,13 @@ export default function FormsPage() {
                       <div className="forms-disp-tabs">
                         {whatsappTarget.audiences.map((t) => (
                           <button key={t} type="button" className={`forms-disp-tab ${whatsappAudType === t ? 'active' : ''}`} onClick={() => { setWhatsappAudType(t); setWhatsappSearch(''); }}>
-                            <i className={`ti ${AUDIENCE_META[t].icon}`} /> {AUDIENCE_META[t].label}
+                            <Icon className={`ti ${AUDIENCE_META[t].icon}`} /> {AUDIENCE_META[t].label}
                           </button>
                         ))}
                       </div>
 
                       <div className="search-wrapper" style={{ marginBottom: 12 }}>
-                        <i className={`ti ${whatsappSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setWhatsappSearch('')} aria-hidden="true" />
+                        <Icon className={`ti ${whatsappSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setWhatsappSearch('')} aria-hidden="true" />
                         <input
                           type="text"
                           className="search-input"
@@ -1401,7 +1402,7 @@ export default function FormsPage() {
                             const checked = whatsappRecipient && whatsappRecipient.id === p.id && whatsappRecipient.type === AUDIENCE_TO_TYPE[whatsappAudType];
                             return (
                               <div key={p.id} className="forms-disp-person" onClick={() => selectWhatsappRecipient(p, whatsappAudType)}>
-                                <span className={`forms-disp-check ${checked ? 'on' : ''}`} style={{ borderRadius: '50%' }}>{checked && <i className="ti ti-check" />}</span>
+                                <span className={`forms-disp-check ${checked ? 'on' : ''}`} style={{ borderRadius: '50%' }}>{checked && <Icon className="ti ti-check" />}</span>
                                 <div>
                                   <div className="forms-disp-name">{p.name}</div>
                                   <div className="forms-disp-detail">{p.detail}</div>
@@ -1421,7 +1422,7 @@ export default function FormsPage() {
                     {whatsappRecipient ? `Selected: ${whatsappRecipient.name}` : 'No recipient selected'}
                   </span>
                   <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setWhatsappTarget(null)}>Cancel</button>
-                  <button type="button" className="legacy-btn legacy-btn-success" disabled={!whatsappRecipient} onClick={goToWhatsappNumber}>Next <i className="ti ti-angle-right" /></button>
+                  <button type="button" className="legacy-btn legacy-btn-success" disabled={!whatsappRecipient} onClick={goToWhatsappNumber}>Next <Icon className="ti ti-angle-right" /></button>
                 </div>
               </>
             ) : (
@@ -1445,8 +1446,8 @@ export default function FormsPage() {
                   </div>
                 </div>
                 <div className="crispr-modal-footer">
-                  <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setWhatsappStep('recipient')}><i className="ti ti-angle-left" /> Back</button>
-                  <button type="submit" className="legacy-btn legacy-btn-success"><i className="ti ti-send" /> Send</button>
+                  <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setWhatsappStep('recipient')}><Icon className="ti ti-angle-left" /> Back</button>
+                  <button type="submit" className="legacy-btn legacy-btn-success"><Icon className="ti ti-send" /> Send</button>
                 </div>
               </form>
             )}

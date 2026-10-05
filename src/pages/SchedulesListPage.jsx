@@ -15,6 +15,7 @@ import {
   copyEventsBetweenSchedules as storeCopyEvents,
   asApiError,
 } from '../lib/schedulesStore';
+import Icon from '../components/Icon';
 
 const FILTER_OPTIONS = [
   { id: 'today',    label: 'Today' },
@@ -149,14 +150,14 @@ export default function SchedulesListPage() {
       {/* Page header */}
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-calendar" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-calendar" /></span>
           <div>
             <h2>Schedules</h2>
             <p>All planned day-schedules across batches. Pick a row to view it on the calendar.</p>
           </div>
         </div>
         <button type="button" className="page-action-button" onClick={createNew}>
-          <i className="ti ti-plus" /> New schedule
+          <Icon className="ti ti-plus" /> New schedule
         </button>
       </div>
 
@@ -176,7 +177,7 @@ export default function SchedulesListPage() {
           .fb-date-opt-custom { border-top:1px solid #f1f5f9; }
         `}</style>
         <div className="search-wrapper" style={{ flex: '1 1 50%', minWidth: 240 }}>
-          <i className="ti ti-search" />
+          <Icon className="ti ti-search" />
           <input
             type="text" className="search-input"
             value={search} onChange={(e) => setSearch(e.target.value)}
@@ -189,8 +190,8 @@ export default function SchedulesListPage() {
             className={`fb-date-btn${filter !== 'today' ? ' active' : ''}`}
             onClick={() => setDateMenuOpen((o) => !o)}
           >
-            <span className="fb-date-lbl"><i className="ti ti-calendar" /> {dateLabel}</span>
-            <i className={`ti ti-chevron-${dateMenuOpen ? 'up' : 'down'}`} style={{ fontSize: 12 }} />
+            <span className="fb-date-lbl"><Icon className="ti ti-calendar" /> {dateLabel}</span>
+            <Icon className={`ti ti-chevron-${dateMenuOpen ? 'up' : 'down'}`} style={{ fontSize: 12 }} />
           </button>
           {dateMenuOpen && (
             <div className="fb-date-pop">
@@ -199,13 +200,13 @@ export default function SchedulesListPage() {
                 return (
                   <button key={o.id} type="button" className={`fb-date-opt${isOn ? ' on' : ''}`} onClick={() => setDatePreset(o.id)}>
                     {o.label}
-                    {isOn && <i className="ti ti-check" />}
+                    {isOn && <Icon className="ti ti-check" />}
                   </button>
                 );
               })}
               <button type="button" className={`fb-date-opt fb-date-opt-custom${filter === 'range' ? ' on' : ''}`} onClick={() => setDatePreset('range')}>
                 Date range
-                {filter === 'range' && <i className="ti ti-check" />}
+                {filter === 'range' && <Icon className="ti ti-check" />}
               </button>
               {filter === 'range' && (
                 <div style={{ padding: '10px 14px', borderTop: '1px solid #f1f5f9', display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -240,7 +241,7 @@ export default function SchedulesListPage() {
 
         {!loading && totalCount === 0 && (
           <div style={{ padding: 48, textAlign: 'center', color: 'var(--muted)' }}>
-            <i className="ti ti-calendar-x" style={{ fontSize: 28, color: 'var(--muted)', display: 'block', marginBottom: 8 }} />
+            <Icon className="ti ti-calendar-x" style={{ fontSize: 28, color: 'var(--muted)', display: 'block', marginBottom: 8 }} />
             <div style={{ fontWeight: 600, color: 'var(--ink)', marginBottom: 4 }}>No schedules in this range</div>
             <div style={{ fontSize: 13 }}>Try a different date filter, or create a new schedule.</div>
           </div>
@@ -359,14 +360,14 @@ function DayGroup({ dateKey: dk, schedules, isFirst, onView, onViewCalendar, onE
     <div style={{ borderTop: isFirst ? 'none' : '1px solid var(--line)' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', background: '#fbfcfd', borderBottom: '1px solid var(--line)', borderTopLeftRadius: isFirst ? 13 : 0, borderTopRightRadius: isFirst ? 13 : 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <i className="ti ti-calendar" style={{ color: 'var(--brand)' }} />
+          <Icon className="ti ti-calendar" style={{ color: 'var(--brand)' }} />
           <div style={{ fontWeight: 700, color: 'var(--ink)', fontSize: 15 }}>{prettyDate(dk)}</div>
           <span style={{ background: '#fff', border: '1px solid var(--line)', color: 'var(--muted)', borderRadius: 999, padding: '2px 10px', fontSize: 11, fontWeight: 700 }}>
             {schedules.length} schedule{schedules.length === 1 ? '' : 's'} · {totalEvents} event{totalEvents === 1 ? '' : 's'}
           </span>
         </div>
         <button type="button" onClick={() => onViewCalendar(dk)} style={{ ...btnGhost, background: '#005d6e', color: '#fff', borderColor: '#005d6e' }}>
-          <i className="ti ti-layout-grid2" /> View day on calendar
+          <Icon className="ti ti-layout-grid2" /> View day on calendar
         </button>
       </div>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
@@ -397,7 +398,7 @@ function ScheduleRow({ schedule: s, onView, onEdit, onCancel }) {
     <tr style={{ borderTop: '1px solid var(--line)' }}>
       <td style={tdStyle}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <i className="ti ti-layers" style={{ color: 'var(--brand)' }} />
+          <Icon className="ti ti-layers" style={{ color: 'var(--brand)' }} />
           <div>
             <button type="button" onClick={() => onView(s)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontSize: 14, fontWeight: 700, color: 'var(--ink)', textAlign: 'left' }}>
               {s.name}
@@ -437,11 +438,11 @@ function ScheduleRow({ schedule: s, onView, onEdit, onCancel }) {
       <td style={tdStyle}>
         {s.published ? (
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#d1fae5', color: '#047857', borderRadius: 999, padding: '3px 9px', fontSize: 11, fontWeight: 700 }}>
-            <i className="ti ti-check" /> PUBLISHED
+            <Icon className="ti ti-check" /> PUBLISHED
           </span>
         ) : (
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#eaf3f5', color: 'var(--brand)', borderRadius: 999, padding: '3px 9px', fontSize: 11, fontWeight: 700 }}>
-            <i className="ti ti-pencil" /> DRAFT
+            <Icon className="ti ti-pencil" /> DRAFT
           </span>
         )}
       </td>
@@ -475,7 +476,7 @@ function ScheduleKebab({ schedule: s, onView, onEdit, onCancel }) {
         className="kebab-button"
         onClick={(event) => { event.stopPropagation(); setOpen((v) => !v); }}
       >
-        <i className="ti ti-more-alt" />
+        <Icon className="ti ti-more-alt" />
       </button>
       <div className={`kebab-dropdown${open ? ' active' : ''}`}>
         <button
@@ -483,7 +484,7 @@ function ScheduleKebab({ schedule: s, onView, onEdit, onCancel }) {
           className="kebab-dropdown-item"
           onClick={() => { setOpen(false); onView(s); }}
         >
-          <i className="ti ti-eye" /> View
+          <Icon className="ti ti-eye" /> View
         </button>
         <button
           type="button"
@@ -492,14 +493,14 @@ function ScheduleKebab({ schedule: s, onView, onEdit, onCancel }) {
           title={s.published ? 'Published schedules cannot be edited' : 'Edit details'}
           onClick={() => { setOpen(false); onEdit(s); }}
         >
-          <i className="ti ti-pencil" /> Edit
+          <Icon className="ti ti-pencil" /> Edit
         </button>
         <button
           type="button"
           className="kebab-dropdown-item danger-action"
           onClick={() => { setOpen(false); onCancel(s); }}
         >
-          <i className="ti ti-trash" /> Cancel
+          <Icon className="ti ti-trash" /> Cancel
         </button>
       </div>
     </div>
@@ -555,7 +556,7 @@ function EditModal({ schedule, allSchedules, batchPool, onClose, onSave }) {
     return (
       <Modal title="Copy shared content?" onClose={() => setPendingCopy(null)} maxWidth={520}>
         <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 10, padding: 14, marginBottom: 14, display: 'flex', gap: 12 }}>
-          <i className="ti ti-alert" style={{ color: '#c2410c', fontSize: 22, lineHeight: 1, marginTop: 2 }} />
+          <Icon className="ti ti-alert" style={{ color: '#c2410c', fontSize: 22, lineHeight: 1, marginTop: 2 }} />
           <div style={{ color: '#7c2d12', fontSize: 13, lineHeight: 1.5 }}>
             You're copying events from <strong>{source.name}</strong> ({source.date}). Some of them reference shared content — the new schedule will point to the <strong>same exam/quiz/recording</strong>, so students would see identical material.
           </div>
@@ -567,7 +568,7 @@ function EditModal({ schedule, allSchedules, batchPool, onClose, onSave }) {
             const ref = describeContent(e);
             return (
               <li key={e.id} style={{ padding: '4px 0' }}>
-                <span style={{ color: meta.color, fontWeight: 700 }}><i className={`ti ${meta.icon}`} style={{ marginRight: 4 }} />{meta.label}</span>
+                <span style={{ color: meta.color, fontWeight: 700 }}><Icon className={`ti ${meta.icon}`} style={{ marginRight: 4 }} />{meta.label}</span>
                 {' — '}{e.title}
                 {ref && <span style={{ color: 'var(--muted)' }}> · {ref}</span>}
               </li>
@@ -576,7 +577,7 @@ function EditModal({ schedule, allSchedules, batchPool, onClose, onSave }) {
         </ul>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
           <button type="button" onClick={() => setPendingCopy(null)} style={btnGhost}>Back</button>
-          <button type="button" onClick={() => onSave(pendingCopy)} style={btnPrimary}><i className="ti ti-files" /> Yes, copy anyway</button>
+          <button type="button" onClick={() => onSave(pendingCopy)} style={btnPrimary}><Icon className="ti ti-files" /> Yes, copy anyway</button>
         </div>
       </Modal>
     );
@@ -625,7 +626,7 @@ function EditModal({ schedule, allSchedules, batchPool, onClose, onSave }) {
         {!published && (
           <div style={{ border: '1px solid var(--line)', borderRadius: 10, padding: 12, background: '#fbfcfd' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-              <i className="ti ti-files" style={{ color: 'var(--brand)' }} />
+              <Icon className="ti ti-files" style={{ color: 'var(--brand)' }} />
               <span style={{ fontWeight: 700, color: 'var(--ink)' }}>Copy events from</span>
               <span style={{ color: 'var(--muted)', fontSize: 12 }}>(optional)</span>
             </div>
@@ -643,7 +644,7 @@ function EditModal({ schedule, allSchedules, batchPool, onClose, onSave }) {
                 Will append {source.events.length} event{source.events.length === 1 ? '' : 's'} to this schedule.
                 {sourceBound.length > 0 && (
                   <span style={{ display: 'block', marginTop: 6, color: '#7c2d12', background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 8, padding: '6px 10px' }}>
-                    <i className="ti ti-alert" /> {sourceBound.length} event(s) reference shared content — you'll be asked to confirm before copying.
+                    <Icon className="ti ti-alert" /> {sourceBound.length} event(s) reference shared content — you'll be asked to confirm before copying.
                   </span>
                 )}
               </div>
@@ -652,7 +653,7 @@ function EditModal({ schedule, allSchedules, batchPool, onClose, onSave }) {
         )}
         {published && (
           <div style={{ fontSize: 12, color: 'var(--muted)' }}>
-            <i className="ti ti-check" /> Published schedules can't accept copied events — unpublish first.
+            <Icon className="ti ti-check" /> Published schedules can't accept copied events — unpublish first.
           </div>
         )}
 
@@ -688,7 +689,7 @@ function ConfirmModal({ title, message, confirmLabel, confirmStyle, onCancel, on
       <p style={{ margin: '0 0 16px', color: 'var(--ink)', fontSize: 14, lineHeight: 1.5 }}>{message}</p>
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
         <button type="button" onClick={onCancel} style={btnGhost}>Keep</button>
-        <button type="button" onClick={onConfirm} style={confirmStyle}><i className="ti ti-trash" /> {confirmLabel}</button>
+        <button type="button" onClick={onConfirm} style={confirmStyle}><Icon className="ti ti-trash" /> {confirmLabel}</button>
       </div>
     </Modal>
   );
@@ -705,9 +706,9 @@ function Modal({ title, children, onClose, maxWidth = 520, icon = 'ti-calendar' 
       onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="crispr-modal-dialog" style={{ maxWidth }} role="dialog" aria-modal="true">
         <div className="crispr-modal-header">
-          <h3>{icon && <i className={`ti ${icon}`} />} {title}</h3>
+          <h3>{icon && <Icon className={`ti ${icon}`} />} {title}</h3>
           <button type="button" className="crispr-modal-close" onClick={onClose}>
-            <i className="ti ti-close" />
+            <Icon className="ti ti-close" />
           </button>
         </div>
         <div className="crispr-modal-body">{children}</div>

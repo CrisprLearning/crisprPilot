@@ -7,6 +7,7 @@ import FilterDropdown from '../components/FilterDropdown';
 import Avatar from '../components/Avatar';
 import { Can, usePermission } from '../lib/userStore';
 import { PERMS } from '../lib/permissions';
+import Icon from '../components/Icon';
 
 // Map the API status to a badge key. Numeric: 1 = active, 0 = inactive,
 // 2 = blocked. Falls back to a lowercased string for legacy/demo data.
@@ -368,7 +369,7 @@ export default function StudentManagementPage() {
 
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-users" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-users" /></span>
           <div>
             <h2>Student Management</h2>
             <p>Manage students, track enrollments, and review candidate access.</p>
@@ -378,28 +379,28 @@ export default function StudentManagementPage() {
 
       <div className="stats-row">
         <div className="stat-card">
-          <div className="stat-icon teal"><i className="ti ti-user" /></div>
+          <div className="stat-icon teal"><Icon className="ti ti-user" /></div>
           <div className="stat-info">
             <h3>{totalStudents}</h3>
             <p>Total Students</p>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon green"><i className="ti ti-check-box" /></div>
+          <div className="stat-icon green"><Icon className="ti ti-check-box" /></div>
           <div className="stat-info">
             <h3>{activeStudents}</h3>
             <p>Active Students</p>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon orange"><i className="ti ti-book" /></div>
+          <div className="stat-icon orange"><Icon className="ti ti-book" /></div>
           <div className="stat-info">
             <h3>{totalEnrollments}</h3>
             <p>Total Enrollments</p>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon purple"><i className="ti ti-na" /></div>
+          <div className="stat-icon purple"><Icon className="ti ti-na" /></div>
           <div className="stat-info">
             <h3>{blockedStudents}</h3>
             <p>Blocked Students</p>
@@ -415,13 +416,12 @@ export default function StudentManagementPage() {
 
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i
+          <Icon
             className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`}
             onClick={() => {
               setSearchQuery('');
               setCurrentPage(1);
-            }}
-          />
+            }} />
           <input
             type="text"
             className="search-input"
@@ -453,27 +453,27 @@ export default function StudentManagementPage() {
             <tr>
               <th className={`sortable ${sortColumn === 'name' ? 'active' : ''}`} onClick={() => handleSort('name')}>
                 Student
-                <i className={`sort-icon ti ${sortIcon('name', sortColumn, sortReverse)}`} />
+                <Icon className={`sort-icon ti ${sortIcon('name', sortColumn, sortReverse)}`} />
               </th>
               <th className={`sortable ${sortColumn === 'email' ? 'active' : ''}`} onClick={() => handleSort('email')}>
                 Email
-                <i className={`sort-icon ti ${sortIcon('email', sortColumn, sortReverse)}`} />
+                <Icon className={`sort-icon ti ${sortIcon('email', sortColumn, sortReverse)}`} />
               </th>
               <th className={`sortable ${sortColumn === 'mobile' ? 'active' : ''}`} onClick={() => handleSort('mobile')}>
                 Mobile
-                <i className={`sort-icon ti ${sortIcon('mobile', sortColumn, sortReverse)}`} />
+                <Icon className={`sort-icon ti ${sortIcon('mobile', sortColumn, sortReverse)}`} />
               </th>
               <th className={`sortable ${sortColumn === 'totalCourseEnrollments' ? 'active' : ''}`} onClick={() => handleSort('coursesCount')}>
                 Enrolled Courses
-                <i className={`sort-icon ti ${sortIcon('coursesCount', sortColumn, sortReverse)}`} />
+                <Icon className={`sort-icon ti ${sortIcon('coursesCount', sortColumn, sortReverse)}`} />
               </th>
               <th className={`sortable ${sortColumn === 'joinedDate' ? 'active' : ''}`} onClick={() => handleSort('enrollmentDate')}>
                 Prep Journey
-                <i className={`sort-icon ti ${sortIcon('enrollmentDate', sortColumn, sortReverse)}`} />
+                <Icon className={`sort-icon ti ${sortIcon('enrollmentDate', sortColumn, sortReverse)}`} />
               </th>
               <th className={`sortable ${sortColumn === 'status' ? 'active' : ''}`} onClick={() => handleSort('status')}>
                 Status
-                <i className={`sort-icon ti ${sortIcon('status', sortColumn, sortReverse)}`} />
+                <Icon className={`sort-icon ti ${sortIcon('status', sortColumn, sortReverse)}`} />
               </th>
               <th style={{ width: '50px' }} />
             </tr>
@@ -525,13 +525,13 @@ export default function StudentManagementPage() {
                   </td>
                   <td>
                     <div className="contact-info">
-                      <i className="ti ti-email" />
+                      <Icon className="ti ti-email" />
                       {student.email}
                     </div>
                   </td>
                   <td>
                     <div className="contact-info">
-                      <i className="ti ti-mobile" />
+                      <Icon className="ti ti-mobile" />
                       {student.mobile}
                     </div>
                   </td>
@@ -569,16 +569,16 @@ export default function StudentManagementPage() {
                           setActiveKebabId((current) => current === student.id ? null : student.id);
                         }}
                       >
-                        <i className="ti ti-more-alt" />
+                        <Icon className="ti ti-more-alt" />
                       </button>
                       <div className={`kebab-dropdown ${activeKebabId === student.id ? 'active' : ''}`}>
                         <div className="kebab-dropdown-item view-profile" onClick={() => openStudentDetail(student)}>
-                          <i className="ti ti-user" />
+                          <Icon className="ti ti-user" />
                           <span className="item-label">View Profile</span>
                         </div>
                         {can(PERMS.STUDENTS_BLACKLIST) && (
                           <div className="kebab-dropdown-item blacklist-profile" onClick={() => toggleBlacklist(student)}>
-                            <i className="ti ti-na" />
+                            <Icon className="ti ti-na" />
                             <span className="item-label">Blacklist Profile</span>
                           </div>
                         )}
@@ -591,7 +591,7 @@ export default function StudentManagementPage() {
               <tr>
                 <td colSpan="7">
                   <div className="empty-state">
-                    <i className="ti ti-user" />
+                    <Icon className="ti ti-user" />
                     <h3>No Students Found</h3>
                     <p>{searchQuery || filterStatus ? 'No students match your search criteria.' : 'Get started by adding your first student.'}</p>
                   </div>
@@ -620,7 +620,7 @@ export default function StudentManagementPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={currentPage === 1} onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {paginationPages.map((page) => (
                 <button key={page} type="button" className={`pagination-btn ${page === currentPage ? 'active' : ''}`} onClick={() => setCurrentPage(page)}>
@@ -628,7 +628,7 @@ export default function StudentManagementPage() {
                 </button>
               ))}
               <button type="button" className="pagination-btn" disabled={currentPage === totalPages} onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
@@ -638,9 +638,9 @@ export default function StudentManagementPage() {
       <div className={`legacy-modal-backdrop ${coursesModalOpen ? 'active' : ''}`}>
         <div className="legacy-modal-dialog legacy-large" onClick={(event) => event.stopPropagation()}>
           <div className="legacy-modal-header">
-            <h3><i className="ti ti-book" /> Enrolled Courses - {selectedStudentForCourses?.name}</h3>
+            <h3><Icon className="ti ti-book" /> Enrolled Courses - {selectedStudentForCourses?.name}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => { setCoursesModalOpen(false); setSelectedStudentForCourses(null); }}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
@@ -699,18 +699,18 @@ export default function StudentManagementPage() {
               </table>
             ) : (
               <div className="legacy-empty-modal">
-                <i className="ti ti-book" />
+                <Icon className="ti ti-book" />
                 <p>No courses enrolled</p>
               </div>
             )}
           </div>
           <div className="legacy-modal-footer">
             <button type="button" className="legacy-btn legacy-btn-default" onClick={() => { setCoursesModalOpen(false); setSelectedStudentForCourses(null); }}>
-              <i className="ti ti-close" /> Close
+              <Icon className="ti ti-close" /> Close
             </button>
             <Can permission={PERMS.STUDENTS_ENROLL}>
               <button type="button" className="legacy-btn legacy-btn-success" onClick={() => setEnrollCourseModalOpen(true)}>
-                <i className="ti ti-plus" /> Enroll Course
+                <Icon className="ti ti-plus" /> Enroll Course
               </button>
             </Can>
           </div>
@@ -720,14 +720,14 @@ export default function StudentManagementPage() {
       <div className={`legacy-modal-backdrop ${enrollCourseModalOpen ? 'active' : ''}`}>
         <div className="legacy-modal-dialog legacy-xl" onClick={(event) => event.stopPropagation()}>
           <div className="legacy-modal-header">
-            <h3><i className="ti ti-book" /> Enroll Course - {selectedStudentForCourses?.name}</h3>
+            <h3><Icon className="ti ti-book" /> Enroll Course - {selectedStudentForCourses?.name}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setEnrollCourseModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
             <div className="legacy-search-group">
-              <span className="legacy-input-addon"><i className="ti ti-search" /></span>
+              <span className="legacy-input-addon"><Icon className="ti ti-search" /></span>
               <input
                 type="text"
                 className="legacy-form-control"
@@ -737,7 +737,7 @@ export default function StudentManagementPage() {
               />
               {courseSearchQuery ? (
                 <button type="button" className="legacy-input-clear" onClick={() => setCourseSearchQuery('')}>
-                  <i className="ti ti-close" />
+                  <Icon className="ti ti-close" />
                 </button>
               ) : null}
             </div>
@@ -766,7 +766,7 @@ export default function StudentManagementPage() {
                           </td>
                           <td>{course.courseCode}</td>
                           <td style={{ textAlign: 'center' }}>
-                            <i className="ti ti-calendar" style={{ marginRight: 5, color: '#6c757d' }} />
+                            <Icon className="ti ti-calendar" style={{ marginRight: 5, color: '#6c757d' }} />
                             {course.duration || 'N/A'}
                           </td>
                           <td style={{ textAlign: 'center' }}>
@@ -777,7 +777,7 @@ export default function StudentManagementPage() {
                           </td>
                           <td style={{ textAlign: 'center' }}>
                             <button type="button" className="legacy-btn legacy-btn-success legacy-btn-small" onClick={() => enrollStudentToCourse(course)}>
-                              <i className="ti ti-plus" /> Enroll
+                              <Icon className="ti ti-plus" /> Enroll
                             </button>
                           </td>
                         </tr>
@@ -788,14 +788,14 @@ export default function StudentManagementPage() {
               </>
             ) : (
               <div className="legacy-empty-modal">
-                <i className="ti ti-book" />
+                <Icon className="ti ti-book" />
                 <p>{courseSearchQuery ? `No courses found matching "${courseSearchQuery}"` : 'No courses available for enrollment'}</p>
               </div>
             )}
           </div>
           <div className="legacy-modal-footer">
             <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setEnrollCourseModalOpen(false)}>
-              <i className="ti ti-close" /> Close
+              <Icon className="ti ti-close" /> Close
             </button>
           </div>
         </div>
@@ -804,9 +804,9 @@ export default function StudentManagementPage() {
       <div className={`legacy-modal-backdrop ${blacklistModalOpen ? 'active' : ''}`}>
         <div className="legacy-modal-dialog legacy-confirm" onClick={(event) => event.stopPropagation()}>
           <div className="legacy-modal-header legacy-danger-header">
-            <h3><i className="ti ti-alert" /> Confirm Blacklist</h3>
+            <h3><Icon className="ti ti-alert" /> Confirm Blacklist</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setBlacklistModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
@@ -815,7 +815,7 @@ export default function StudentManagementPage() {
           <div className="legacy-modal-footer">
             <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setBlacklistModalOpen(false)}>Cancel</button>
             <button type="button" className="legacy-btn legacy-btn-danger" onClick={confirmBlacklist}>
-              <i className="ti ti-na" /> Blacklist Profile
+              <Icon className="ti ti-na" /> Blacklist Profile
             </button>
           </div>
         </div>

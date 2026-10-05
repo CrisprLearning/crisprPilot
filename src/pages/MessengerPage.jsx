@@ -16,6 +16,7 @@ import {
 } from '../lib/notificationsApi';
 import { api } from '../lib/api';
 import { useUser } from '../lib/userStore';
+import Icon from '../components/Icon';
 
 const PLACEHOLDER_RE = /\{\{\s*([a-zA-Z0-9_]+)\s*\}\}/g;
 
@@ -99,7 +100,7 @@ function ChannelIcons({ channels }) {
               color: cfg.color,
             }}
           >
-            <i className={`ti ${cfg.icon}`} style={{ fontSize: '9px', lineHeight: 1 }} />
+            <Icon className={`ti ${cfg.icon}`} style={{ fontSize: '9px', lineHeight: 1 }} />
           </span>
         );
       })}
@@ -188,7 +189,7 @@ function PersonalizationModal({ open, onClose, placeholders, mappings, onSave, f
             </div>
           </div>
           <button type="button" onClick={onClose} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#6B7280', fontSize: '20px' }}>
-            <i className="ti ti-close" />
+            <Icon className="ti ti-close" />
           </button>
         </div>
 
@@ -272,7 +273,7 @@ function RetryConfirmModal({ open, onClose, loading, recipients, onConfirm, conf
             </div>
           </div>
           <button type="button" onClick={onClose} disabled={confirming} style={{ background: 'transparent', border: 'none', cursor: confirming ? 'not-allowed' : 'pointer', color: '#6B7280', fontSize: '20px' }}>
-            <i className="ti ti-close" />
+            <Icon className="ti ti-close" />
           </button>
         </div>
 
@@ -319,7 +320,7 @@ function RetryConfirmModal({ open, onClose, loading, recipients, onConfirm, conf
             onClick={onConfirm}
             style={{ background: (loading || confirming || count === 0) ? '#93C5FD' : '#2563EB', color: 'white', border: 'none', padding: '10px 18px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: (loading || confirming || count === 0) ? 'not-allowed' : 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
           >
-            <i className="ti ti-reload" />
+            <Icon className="ti ti-reload" />
             {confirming ? 'Retrying…' : count > 0 ? `Confirm Retry (${count})` : 'Confirm Retry'}
           </button>
         </div>
@@ -351,7 +352,7 @@ function KebabMenu({ items }) {
         onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
         title="More actions"
       >
-        <i className="ti ti-more-alt" />
+        <Icon className="ti ti-more-alt" />
       </button>
       <div className={`kebab-dropdown ${open ? 'active' : ''}`}>
         {visible.map((it, idx) => (
@@ -361,7 +362,7 @@ function KebabMenu({ items }) {
             className={`kebab-dropdown-item${it.danger ? ' delete-action' : ''}`}
             onClick={() => { setOpen(false); it.onClick?.(); }}
           >
-            {it.icon && <i className={`ti ${it.icon}`} />}
+            {it.icon && <Icon className={`ti ${it.icon}`} />}
             <span>{it.label}</span>
           </button>
         ))}
@@ -397,7 +398,7 @@ function MultiSelectDropdown({ options, selected, onChange, placeholder }) {
     <div className="msg-multiselect" ref={ref}>
       <div className="msg-multiselect-trigger" onClick={() => setOpen(!open)}>
         <span>{getLabel()}</span>
-        <i className="ti ti-angle-down" />
+        <Icon className="ti ti-angle-down" />
       </div>
       {open && (
         <div className="msg-multiselect-dropdown">
@@ -791,7 +792,7 @@ export default function MessengerPage() {
               className="compose-btn"
               style={{ background: isComposing ? '#006073' : '#E5E7EB', color: isComposing ? 'white' : '#4B5563' }}
             >
-              <i className="ti ti-pencil-alt" />
+              <Icon className="ti ti-pencil-alt" />
             </button>
             <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
               <select
@@ -821,10 +822,9 @@ export default function MessengerPage() {
                 <option value="2">Transactional</option>
                 <option value="1">Broadcast</option>
               </select>
-              <i
+              <Icon
                 className="ti ti-angle-down"
-                style={{ position: 'absolute', right: '12px', fontSize: '12px', color: '#6B7280', pointerEvents: 'none' }}
-              />
+                style={{ position: 'absolute', right: '12px', fontSize: '12px', color: '#6B7280', pointerEvents: 'none' }} />
             </div>
           </div>
         </div>
@@ -863,7 +863,7 @@ export default function MessengerPage() {
                     <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#374151', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, minWidth: 0 }}>{m.subject}</span>
                     {m.status === 'scheduled' && (
                       <span style={{ flexShrink: 0, background: '#FEF3C7', color: '#B45309', padding: '2px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.4px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                        <i className="ti ti-time" style={{ fontSize: '10px' }} /> Scheduled
+                        <Icon className="ti ti-time" style={{ fontSize: '10px' }} /> Scheduled
                       </span>
                     )}
                     {m.status === 'cancelled' && (
@@ -925,7 +925,7 @@ export default function MessengerPage() {
                     onClick={openMapModal}
                     style={{ background: 'transparent', border: 'none', padding: 0, color: unmappedPlaceholders.length > 0 ? '#B45309' : '#2563EB', fontSize: '13px', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
                   >
-                    <i className={`ti ${unmappedPlaceholders.length > 0 ? 'ti-alert' : 'ti-link'}`} />
+                    <Icon className={`ti ${unmappedPlaceholders.length > 0 ? 'ti-alert' : 'ti-link'}`} />
                     Map Personalisation
                     {unmappedPlaceholders.length > 0 && (
                       <span style={{ background: '#FEF3C7', color: '#B45309', padding: '1px 7px', borderRadius: '10px', fontSize: '11px' }}>
@@ -951,28 +951,28 @@ export default function MessengerPage() {
                 <label className="msg-checkbox-label">
                   <input type="checkbox" checked={chEmail} onChange={e => setChEmail(e.target.checked)} />
                   <div className="msg-check-card">
-                    <i className="ti ti-email" style={{ fontSize: '20px', color: '#3B82F6' }} />
+                    <Icon className="ti ti-email" style={{ fontSize: '20px', color: '#3B82F6' }} />
                     <span style={{ fontWeight: 600 }}>Email Broadcast</span>
                   </div>
                 </label>
                 <label className="msg-checkbox-label">
                   <input type="checkbox" checked={chPush} onChange={e => setChPush(e.target.checked)} />
                   <div className="msg-check-card">
-                    <i className="ti ti-bell" style={{ fontSize: '20px', color: '#8B5CF6' }} />
+                    <Icon className="ti ti-bell" style={{ fontSize: '20px', color: '#8B5CF6' }} />
                     <span style={{ fontWeight: 600 }}>App Push Notification</span>
                   </div>
                 </label>
                 <label className="msg-checkbox-label">
                   <input type="checkbox" checked={chSms} onChange={e => setChSms(e.target.checked)} />
                   <div className="msg-check-card">
-                    <i className="ti ti-mobile" style={{ fontSize: '20px', color: '#10B981' }} />
+                    <Icon className="ti ti-mobile" style={{ fontSize: '20px', color: '#10B981' }} />
                     <span style={{ fontWeight: 600 }}>Standard SMS</span>
                   </div>
                 </label>
                 <label className="msg-checkbox-label">
                   <input type="checkbox" checked={chWhatsapp} onChange={e => setChWhatsapp(e.target.checked)} />
                   <div className="msg-check-card">
-                    <i className="ti ti-comments" style={{ fontSize: '20px', color: '#22C55E' }} />
+                    <Icon className="ti ti-comments" style={{ fontSize: '20px', color: '#22C55E' }} />
                     <span style={{ fontWeight: 600 }}>WhatsApp Message</span>
                   </div>
                 </label>
@@ -989,7 +989,7 @@ export default function MessengerPage() {
             <div style={{ background: '#F9FAFB', padding: '20px', borderRadius: '12px', marginBottom: '30px' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', marginBottom: cmpScheduleEnabled ? '14px' : 0 }}>
                 <input type="checkbox" style={{ width: '18px', height: '18px' }} checked={cmpScheduleEnabled} onChange={e => setCmpScheduleEnabled(e.target.checked)} />
-                <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#111827' }}><i className="ti ti-time" style={{ marginRight: '6px', color: '#B45309' }} />Schedule for later</span>
+                <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#111827' }}><Icon className="ti ti-time" style={{ marginRight: '6px', color: '#B45309' }} />Schedule for later</span>
                 <span style={{ fontSize: '12px', color: '#6B7280', marginLeft: '4px' }}>Leave off to send immediately.</span>
               </label>
               {cmpScheduleEnabled && (
@@ -1030,8 +1030,8 @@ export default function MessengerPage() {
                 {sending
                   ? (cmpScheduleEnabled ? 'Scheduling…' : 'Sending…')
                   : (cmpScheduleEnabled
-                      ? <>Schedule Broadcast <i className="ti ti-time" /></>
-                      : <>Send Broadcast <i className="ti ti-location-arrow" /></>)}
+                      ? <>Schedule Broadcast <Icon className="ti ti-time" /></>
+                      : <>Send Broadcast <Icon className="ti ti-location-arrow" /></>)}
               </button>
             </div>
 
@@ -1081,7 +1081,7 @@ export default function MessengerPage() {
               const timeStr = d.toLocaleTimeString('en-GB', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
               return (
                 <div style={{ background: '#FEF3C7', border: '1px solid #FDE68A', color: '#92400E', borderRadius: '12px', padding: '12px 18px', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px' }}>
-                  <i className="ti ti-time" style={{ fontSize: '16px' }} />
+                  <Icon className="ti ti-time" style={{ fontSize: '16px' }} />
                   <span>Scheduled for <strong>{dateStr}</strong> at <strong>{timeStr}</strong></span>
                 </div>
               );

@@ -8,6 +8,7 @@ import { searchInstructors } from '../lib/instructorsApi';
 import { listUsers } from '../lib/userAccountsApi';
 import { listDefaultLocations } from '../lib/attendanceDefaultLocationApi';
 import useDebouncedValue from '../hooks/useDebouncedValue';
+import Icon from '../components/Icon';
 
 // Audience tabs for the calendar-view people picker (mirrors the Forms dispatch modal).
 const AUDIENCES = [
@@ -270,10 +271,10 @@ function BatchMultiSelect({ batches, selectedIds, onChange, placeholder = 'All b
         <span className={`bms-label${isPlaceholder ? ' placeholder' : ''}`}>{summary}</span>
         {selectedIds.length > 0 && (
           <button type="button" className="bms-clear" aria-label="Clear" onClick={(e) => { e.stopPropagation(); onChange([]); }}>
-            <i className="ti ti-x" />
+            <Icon className="ti ti-x" />
           </button>
         )}
-        <i className="ti ti-angle-down bms-caret" />
+        <Icon className="ti ti-angle-down bms-caret" />
       </div>
       {open && (
         <div className="bms-menu">
@@ -293,7 +294,7 @@ function BatchMultiSelect({ batches, selectedIds, onChange, placeholder = 'All b
               const sel = selectedIds.includes(String(b.id));
               return (
                 <div key={b.id} className={`bms-opt${sel ? ' sel' : ''}`} onClick={() => toggle(b.id)}>
-                  <span className="bms-check">{sel && <i className="ti ti-check" />}</span>
+                  <span className="bms-check">{sel && <Icon className="ti ti-check" />}</span>
                   {b.name || `Batch ${b.id}`}
                 </div>
               );
@@ -697,7 +698,7 @@ export default function OfflineAttendancePage() {
       {/* ── Standard Page Header ── */}
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-check-square-o" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-check-square-o" /></span>
           <div>
             <h2>Offline Attendance</h2>
             <p>Biometric attendance records captured from devices across locations.</p>
@@ -705,7 +706,7 @@ export default function OfflineAttendancePage() {
         </div>
         <div ref={toolsRef} style={{ position: 'relative' }}>
           <button type="button" className="page-action-button" onClick={() => setShowToolsMenu((o) => !o)}>
-            <i className="fa fa-cog" style={{ marginRight: 6 }} /> Tools
+            <Icon className="fa fa-cog" style={{ marginRight: 6 }} /> Tools
           </button>
           {showToolsMenu && (
             <div style={{
@@ -714,19 +715,19 @@ export default function OfflineAttendancePage() {
               boxShadow: '0 14px 38px rgba(0,0,0,0.12)', zIndex: 50, overflow: 'hidden',
             }}>
               <button type="button" className="att-export-item" onClick={() => { setShowToolsMenu(false); setShowNotifyParents(true); }}>
-                <i className="fa fa-paper-plane" /> Notify Parents
+                <Icon className="fa fa-paper-plane" /> Notify Parents
               </button>
               <button type="button" className="att-export-item" onClick={() => { setShowToolsMenu(false); setShowMonthlyReport(true); }}>
-                <i className="ti ti-download" /> Download Monthly Report
+                <Icon className="ti ti-download" /> Download Monthly Report
               </button>
               <button type="button" className="att-export-item" onClick={() => { setShowToolsMenu(false); setShowCalendar(true); }}>
-                <i className="ti ti-calendar" /> Calendar View
+                <Icon className="ti ti-calendar" /> Calendar View
               </button>
               <button type="button" className="att-export-item" onClick={() => { setShowToolsMenu(false); navigate('/attendance-mapping'); }}>
-                <i className="ti ti-settings" /> Update Attendance Mapping
+                <Icon className="ti ti-settings" /> Update Attendance Mapping
               </button>
               <button type="button" className="att-export-item" onClick={() => { setShowToolsMenu(false); navigate('/attendance-capture-location'); }}>
-                <i className="ti ti-location-pin" /> Attendance Capture Locations
+                <Icon className="ti ti-location-pin" /> Attendance Capture Locations
               </button>
             </div>
           )}
@@ -793,7 +794,7 @@ export default function OfflineAttendancePage() {
                 tabIndex={searchUserId ? 0 : -1}
                 aria-label={searchUserId ? 'Clear search' : 'Search'}
               >
-                <i className={`ti ${searchUserId ? 'ti-close' : 'ti-search'}`} />
+                <Icon className={`ti ${searchUserId ? 'ti-close' : 'ti-search'}`} />
               </button>
             </div>
           )}
@@ -804,8 +805,8 @@ export default function OfflineAttendancePage() {
             className={`fb-date-btn${(dateFrom || dateTo) ? ' active' : ''}`}
             onClick={() => setDateMenuOpen((o) => !o)}
           >
-            <span className="fb-date-lbl"><i className="ti ti-calendar" /> {dateLabel}</span>
-            <i className={`ti ti-chevron-${dateMenuOpen ? 'up' : 'down'}`} style={{ fontSize: 12 }} />
+            <span className="fb-date-lbl"><Icon className="ti ti-calendar" /> {dateLabel}</span>
+            <Icon className={`ti ti-chevron-${dateMenuOpen ? 'up' : 'down'}`} style={{ fontSize: 12 }} />
           </button>
           {dateMenuOpen && (
             <div className="fb-date-pop">
@@ -820,13 +821,13 @@ export default function OfflineAttendancePage() {
                 return (
                   <button key={o.key || 'all'} type="button" className={`fb-date-opt${isOn ? ' on' : ''}`} onClick={() => setDatePreset(o.key)}>
                     {o.label}
-                    {isOn && <i className="ti ti-check" />}
+                    {isOn && <Icon className="ti ti-check" />}
                   </button>
                 );
               })}
               <button type="button" className={`fb-date-opt fb-date-opt-custom${isCustomRange ? ' on' : ''}`} onClick={() => setPickingDate(true)}>
                 Select date range
-                {isCustomRange && <i className="ti ti-check" />}
+                {isCustomRange && <Icon className="ti ti-check" />}
               </button>
               {(pickingDate || isCustomRange) && (
                 <div style={{ padding: '10px 14px', borderTop: '1px solid #f1f5f9', display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -874,7 +875,7 @@ export default function OfflineAttendancePage() {
         )}
         {hasActiveFilters && (
           <button type="button" className="filter-clear-btn" onClick={clearFilters}>
-            <i className="ti ti-reload" /> Clear
+            <Icon className="ti ti-reload" /> Clear
           </button>
         )}
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -885,7 +886,7 @@ export default function OfflineAttendancePage() {
               disabled={exporting || isLoading || records.length === 0}
               onClick={() => setShowExportMenu((o) => !o)}
             >
-              <i className={`ti ${exporting ? 'ti-reload' : 'ti-download'}`} /> Export List
+              <Icon className={`ti ${exporting ? 'ti-reload' : 'ti-download'}`} /> Export List
             </button>
             {showExportMenu && (
               <div style={{
@@ -894,10 +895,10 @@ export default function OfflineAttendancePage() {
                 boxShadow: '0 14px 38px rgba(0,0,0,0.12)', zIndex: 50, overflow: 'hidden',
               }}>
                 <button type="button" className="att-export-item" onClick={handleExportPDF}>
-                  <i className="ti ti-file-text" /> Export as PDF
+                  <Icon className="ti ti-file-text" /> Export as PDF
                 </button>
                 <button type="button" className="att-export-item" onClick={handleExportCSV}>
-                  <i className="ti ti-file-spreadsheet" /> Export as CSV
+                  <Icon className="ti ti-file-spreadsheet" /> Export as CSV
                 </button>
               </div>
             )}
@@ -941,13 +942,13 @@ export default function OfflineAttendancePage() {
                 <th>User Type</th>
                 <th>Batch</th>
                 <th className={`sortable${sortBy === 'date' ? ' active' : ''}`} onClick={() => toggleSort('date')}>
-                  Date <i className={`ti ${getSortIcon('date')} sort-icon`} />
+                  Date <Icon className={`ti ${getSortIcon('date')} sort-icon`} />
                 </th>
                 <th className={`sortable${sortBy === 'firstIn' ? ' active' : ''}`} onClick={() => toggleSort('firstIn')}>
-                  First In <i className={`ti ${getSortIcon('firstIn')} sort-icon`} />
+                  First In <Icon className={`ti ${getSortIcon('firstIn')} sort-icon`} />
                 </th>
                 <th className={`sortable${sortBy === 'lastOut' ? ' active' : ''}`} onClick={() => toggleSort('lastOut')}>
-                  Last Out <i className={`ti ${getSortIcon('lastOut')} sort-icon`} />
+                  Last Out <Icon className={`ti ${getSortIcon('lastOut')} sort-icon`} />
                 </th>
                 <th>Captured At</th>
                 <th>Status</th>
@@ -990,7 +991,7 @@ export default function OfflineAttendancePage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={safePage === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {getPageNumbers(safePage, totalPages).map((p, idx) => (
                 p === '...' ? (
@@ -1007,23 +1008,23 @@ export default function OfflineAttendancePage() {
                 )
               ))}
               <button type="button" className="pagination-btn" disabled={safePage === totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
         </div>
       ) : loadError ? (
         <div className="qar-empty-state">
-          <i className="ti ti-alert" />
+          <Icon className="ti ti-alert" />
           <h4>Unable to load attendance</h4>
           <p>{loadError}</p>
           <button type="button" className="qar-btn-export" style={{ marginTop: 12 }} onClick={() => loadRecords()}>
-            <i className="ti ti-reload" /> Retry
+            <Icon className="ti ti-reload" /> Retry
           </button>
         </div>
       ) : (
         <div className="qar-empty-state">
-          <i className="ti ti-search" />
+          <Icon className="ti ti-search" />
           <h4>No Attendance Records</h4>
           {hasActiveFilters
             ? <p>Try adjusting your filters.</p>
@@ -1210,17 +1211,17 @@ function CalendarViewModal({ onClose, showToast, locationName }) {
       <div className="legacy-modal-dialog" style={{ maxWidth: view === 'calendar' ? 920 : 560 }} role="dialog" aria-modal="true">
         <div className="legacy-modal-header">
           <h3>
-            <i className="ti ti-calendar" /> Calendar View
+            <Icon className="ti ti-calendar" /> Calendar View
             {view === 'calendar' ? ` — ${monthLabel}` : ''}
           </h3>
-          <button type="button" className="legacy-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <button type="button" className="legacy-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
 
         {view === 'select' ? (
           <div className="cv-modal-form form-modal">
             <div className="legacy-modal-body">
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-calendar" /> Month &amp; Year</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-calendar" /> Month &amp; Year</div>
                 <div className="asset-form-grid">
                   <label className="field-cell full-span">
                     <div className="float-field float-always">
@@ -1238,7 +1239,7 @@ function CalendarViewModal({ onClose, showToast, locationName }) {
               </div>
 
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-user" /> Select People</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-user" /> Select People</div>
                 <div className="att-cal-tabs">
                   {AUDIENCES.map((a) => (
                     <button
@@ -1247,13 +1248,13 @@ function CalendarViewModal({ onClose, showToast, locationName }) {
                       className={`att-cal-tab${audience === a.key ? ' active' : ''}`}
                       onClick={() => { setAudience(a.key); setSearch(''); setSelected([]); }}
                     >
-                      <i className={`ti ${a.icon}`} /> {a.label}
+                      <Icon className={`ti ${a.icon}`} /> {a.label}
                     </button>
                   ))}
                 </div>
 
                 <div className="search-wrapper" style={{ marginBottom: 12 }}>
-                  <i className="ti ti-search search-icon" />
+                  <Icon className="ti ti-search search-icon" />
                   <input
                     type="text"
                     className="search-input"
@@ -1273,7 +1274,7 @@ function CalendarViewModal({ onClose, showToast, locationName }) {
                     const checked = selectedUids.has(uid);
                     return (
                       <div key={uid} className="att-cal-person" onClick={() => togglePerson(p)}>
-                        <span className={`att-cal-check${checked ? ' on' : ''}`}>{checked && <i className="ti ti-check" />}</span>
+                        <span className={`att-cal-check${checked ? ' on' : ''}`}>{checked && <Icon className="ti ti-check" />}</span>
                         <div>
                           <div className="att-cal-name">{p.name}</div>
                           {p.detail ? <div className="att-cal-detail">{p.detail} · ID: {p.id}</div> : <div className="att-cal-detail">ID: {p.id}</div>}
@@ -1288,7 +1289,7 @@ function CalendarViewModal({ onClose, showToast, locationName }) {
                     {selected.map((s) => (
                       <span key={s.uid} className="att-cal-chip">
                         {s.name}
-                        <i className="ti ti-close" onClick={() => setSelected((cur) => cur.filter((x) => x.uid !== s.uid))} />
+                        <Icon className="ti ti-close" onClick={() => setSelected((cur) => cur.filter((x) => x.uid !== s.uid))} />
                       </span>
                     ))}
                   </div>
@@ -1306,7 +1307,7 @@ function CalendarViewModal({ onClose, showToast, locationName }) {
                 disabled={selected.length === 0 || loadingCal}
                 onClick={showCalendar}
               >
-                <i className="ti ti-calendar" /> {loadingCal ? 'Loading…' : 'Show Calendar'}
+                <Icon className="ti ti-calendar" /> {loadingCal ? 'Loading…' : 'Show Calendar'}
               </button>
             </div>
           </div>
@@ -1342,11 +1343,11 @@ function CalendarViewModal({ onClose, showToast, locationName }) {
             </div>
             <div className="legacy-modal-footer">
               <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setView('select')}>
-                <i className="ti ti-angle-left" /> Back
+                <Icon className="ti ti-angle-left" /> Back
               </button>
               <div style={{ display: 'flex', gap: 10 }}>
                 <button type="button" className="legacy-btn legacy-btn-default" onClick={downloadCalendarPDF}>
-                  <i className="ti ti-download" /> Download PDF
+                  <Icon className="ti ti-download" /> Download PDF
                 </button>
                 <button type="button" className="legacy-btn legacy-btn-success" onClick={onClose}>Done</button>
               </div>
@@ -1655,14 +1656,14 @@ function MonthlyReportModal({ onClose, showToast }) {
       `}</style>
       <div className="legacy-modal-dialog" style={{ maxWidth: 560 }} role="dialog" aria-modal="true">
         <div className="legacy-modal-header">
-          <h3><i className="ti ti-calendar-stats" /> Monthly Report</h3>
-          <button type="button" className="legacy-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <h3><Icon className="ti ti-calendar-stats" /> Monthly Report</h3>
+          <button type="button" className="legacy-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <div className="mr-modal-form form-modal">
           <div className="legacy-modal-body">
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-calendar" /> Report Period</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-calendar" /> Report Period</div>
               <div className="asset-form-grid">
                 <label className="field-cell full-span">
                   <div className="float-field float-always">
@@ -1681,7 +1682,7 @@ function MonthlyReportModal({ onClose, showToast }) {
 
             <div className="asset-form-section">
               <div className="asset-form-section-title" style={{ justifyContent: 'space-between' }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}><i className="ti ti-filter" /> Report Criteria</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}><Icon className="ti ti-filter" /> Report Criteria</span>
                 {needBatches && filteredBatches.length > 0 && (
                   <button type="button" className="att-selectall-link" onClick={toggleSelectAllBatches}>
                     {allBatchesSelected ? 'Clear all' : 'Select all'}
@@ -1704,7 +1705,7 @@ function MonthlyReportModal({ onClose, showToast }) {
               {needBatches && (
                 <>
                   <div className="search-wrapper" style={{ margin: '12px 0' }}>
-                    <i className="ti ti-search search-icon" />
+                    <Icon className="ti ti-search search-icon" />
                     <input
                       type="text"
                       className="search-input"
@@ -1722,7 +1723,7 @@ function MonthlyReportModal({ onClose, showToast }) {
                       const checked = batchIds.includes(b.id);
                       return (
                         <div key={b.id} className="att-cal-person" onClick={() => toggleBatch(b.id)}>
-                          <span className={`att-cal-check${checked ? ' on' : ''}`}>{checked && <i className="ti ti-check" />}</span>
+                          <span className={`att-cal-check${checked ? ' on' : ''}`}>{checked && <Icon className="ti ti-check" />}</span>
                           <div>
                             <div className="att-cal-name">{b.name || 'Unnamed batch'}</div>
                             {b.description ? <div className="att-cal-detail">{b.description}</div> : null}
@@ -1749,7 +1750,7 @@ function MonthlyReportModal({ onClose, showToast }) {
               disabled={building || (needBatches && batchIds.length === 0)}
               onClick={downloadReport}
             >
-              <i className="ti ti-download" /> {building ? 'Building…' : 'Download PDF'}
+              <Icon className="ti ti-download" /> {building ? 'Building…' : 'Download PDF'}
             </button>
           </div>
         </div>
@@ -1953,14 +1954,14 @@ function NotifyParentsModal({ onClose, showToast }) {
       `}</style>
       <div className="legacy-modal-dialog" style={{ maxWidth: 560 }} role="dialog" aria-modal="true">
         <div className="legacy-modal-header">
-          <h3><i className="ti ti-send" /> Notify Parents</h3>
-          <button type="button" className="legacy-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <h3><Icon className="ti ti-send" /> Notify Parents</h3>
+          <button type="button" className="legacy-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <div className="np-modal-form form-modal">
           <div className="legacy-modal-body">
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-calendar" /> Attendance Date</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-calendar" /> Attendance Date</div>
               <div className="asset-form-grid">
                 <label className="field-cell full-span">
                   <div className="float-field float-always date-custom">
@@ -1983,7 +1984,7 @@ function NotifyParentsModal({ onClose, showToast }) {
 
             <div className="asset-form-section">
               <div className="asset-form-section-title" style={{ justifyContent: 'space-between' }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}><i className="ti ti-user" /> Batches</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}><Icon className="ti ti-user" /> Batches</span>
                 <button
                   type="button"
                   className="np-selectall"
@@ -1994,7 +1995,7 @@ function NotifyParentsModal({ onClose, showToast }) {
                 </button>
               </div>
               <div className="search-wrapper np-bsearch">
-                <i className="ti ti-search search-icon" />
+                <Icon className="ti ti-search search-icon" />
                 <input
                   type="text"
                   className="search-input"
@@ -2012,7 +2013,7 @@ function NotifyParentsModal({ onClose, showToast }) {
                   const checked = selectedBatchIds.includes(String(b.id));
                   return (
                     <div key={b.id} className="np-bcheck" onClick={() => toggleBatch(b.id)}>
-                      <span className={`np-check${checked ? ' on' : ''}`}>{checked && <i className="ti ti-check" />}</span>
+                      <span className={`np-check${checked ? ' on' : ''}`}>{checked && <Icon className="ti ti-check" />}</span>
                       <div>
                         <div className="np-bname">{b.name}</div>
                         {b.description ? <div className="np-bdesc">{b.description}</div> : null}
@@ -2028,7 +2029,7 @@ function NotifyParentsModal({ onClose, showToast }) {
                     Absentees <span className="np-count">{preview.total}</span>
                   </div>
                   {preview.total === 0 ? (
-                    <div className="np-empty"><i className="ti ti-circle-check" /> No absentees for the selected batches.</div>
+                    <div className="np-empty"><Icon className="ti ti-circle-check" /> No absentees for the selected batches.</div>
                   ) : (
                     preview.groups.map((g) => (
                       <div key={g.batchId} className="np-grp">
@@ -2060,7 +2061,7 @@ function NotifyParentsModal({ onClose, showToast }) {
                 disabled={selectedBatchIds.length === 0 || building}
                 onClick={runPreview}
               >
-                <i className="ti ti-eye" /> {building ? 'Loading…' : 'Preview'}
+                <Icon className="ti ti-eye" /> {building ? 'Loading…' : 'Preview'}
               </button>
             ) : (
               <button
@@ -2069,7 +2070,7 @@ function NotifyParentsModal({ onClose, showToast }) {
                 disabled={sending}
                 onClick={notifyParents}
               >
-                <i className="ti ti-brand-whatsapp" /> {sending ? 'Sending…' : `Notify Parents (${preview.total})`}
+                <Icon className="ti ti-brand-whatsapp" /> {sending ? 'Sending…' : `Notify Parents (${preview.total})`}
               </button>
             )}
           </div>

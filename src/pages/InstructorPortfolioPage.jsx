@@ -8,6 +8,7 @@ import { Can, usePermission } from '../lib/userStore';
 import { PERMS } from '../lib/permissions';
 import { instructorsDemo } from '../data/adminRemainingDemo';
 import useDebouncedValue from '../hooks/useDebouncedValue';
+import Icon from '../components/Icon';
 
 
 function getPageNumbers(currentPage, totalPages) {
@@ -462,7 +463,7 @@ export default function InstructorPortfolioPage() {
 
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-male" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-male" /></span>
           <div>
             <h2>Instructor Management</h2>
             <p>Manage instructor portfolios, subject ownership, and lesson contributions without changing the legacy workflow.</p>
@@ -470,14 +471,14 @@ export default function InstructorPortfolioPage() {
         </div>
         <Can permission={PERMS.INSTRUCTORS_EDIT}>
           <button type="button" className="create-instructor-button" onClick={openCreateModal}>
-            <i className="ti ti-plus" /> New Portfolio
+            <Icon className="ti ti-plus" /> New Portfolio
           </button>
         </Can>
       </div>
 
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} />
+          <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} />
           <input
             type="text"
             className="search-input"
@@ -507,21 +508,21 @@ export default function InstructorPortfolioPage() {
               <tr>
                 <th className={`sortable ${sortColumn === 'name' ? 'active' : ''}`} onClick={() => handleSort('name')}>
                   Instructor
-                  <i className={`sort-icon ti ${sortIcon('name')}`} />
+                  <Icon className={`sort-icon ti ${sortIcon('name')}`} />
                 </th>
                 <th>Brief</th>
                 <th className={`sortable ${sortColumn === 'expertSubject' ? 'active' : ''}`} onClick={() => handleSort('expertSubject')}>
                   Expert Subject
-                  <i className={`sort-icon ti ${sortIcon('expertSubject')}`} />
+                  <Icon className={`sort-icon ti ${sortIcon('expertSubject')}`} />
                 </th>
                 <th>Qualifications</th>
                 <th className={`sortable ${sortColumn === 'experience' ? 'active' : ''}`} onClick={() => handleSort('experience')}>
                   Experience
-                  <i className={`sort-icon ti ${sortIcon('experience')}`} />
+                  <Icon className={`sort-icon ti ${sortIcon('experience')}`} />
                 </th>
                 <th className={`sortable ${sortColumn === 'lessonCount' ? 'active' : ''}`} onClick={() => handleSort('lessonCount')}>
                   Contribution
-                  <i className={`sort-icon ti ${sortIcon('lessonCount')}`} />
+                  <Icon className={`sort-icon ti ${sortIcon('lessonCount')}`} />
                 </th>
                 <th className="actions-column" />
               </tr>
@@ -581,22 +582,22 @@ export default function InstructorPortfolioPage() {
                     <td className="instructor-actions-cell" onClick={(event) => event.stopPropagation()}>
                       <div className="kebab-menu-container">
                         <button type="button" className="kebab-button" onClick={(event) => { event.stopPropagation(); setActiveKebabId((current) => (current === instructor.id ? null : instructor.id)); }}>
-                          <i className="ti ti-more-alt" />
+                          <Icon className="ti ti-more-alt" />
                         </button>
                         <div className={`kebab-dropdown ${activeKebabId === instructor.id ? 'active' : ''}`}>
                           <button type="button" className="kebab-dropdown-item" onClick={() => viewInstructor(instructor)}>
-                            <i className="ti ti-user" />
+                            <Icon className="ti ti-user" />
                             <span>View Profile</span>
                           </button>
                           {can(PERMS.INSTRUCTORS_EDIT) && (
                             <button type="button" className="kebab-dropdown-item edit-action" onClick={() => openEditModal(instructor)}>
-                              <i className="ti ti-pencil" />
+                              <Icon className="ti ti-pencil" />
                               <span>Edit Instructor</span>
                             </button>
                           )}
                           {can(PERMS.INSTRUCTORS_DELETE) && (
                             <button type="button" className="kebab-dropdown-item delete-action" onClick={() => confirmDelete(instructor)}>
-                              <i className="ti ti-trash" />
+                              <Icon className="ti ti-trash" />
                               <span>Delete Instructor</span>
                             </button>
                           )}
@@ -627,7 +628,7 @@ export default function InstructorPortfolioPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} disabled={safeCurrentPage === 1}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {pageNumbers.map((page) => (
                 <button key={page} type="button" className={`pagination-btn ${page === safeCurrentPage ? 'active' : ''}`} onClick={() => setCurrentPage(page)}>
@@ -635,7 +636,7 @@ export default function InstructorPortfolioPage() {
                 </button>
               ))}
               <button type="button" className="pagination-btn" onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} disabled={safeCurrentPage === totalPages}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
@@ -656,13 +657,13 @@ export default function InstructorPortfolioPage() {
           <div className="legacy-modal-header">
             <h3>{editMode ? 'Edit Instructor' : 'Add New Instructor'}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setEditModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <form className="batch-modal-form form-modal" onSubmit={(event) => { event.preventDefault(); saveInstructor(); }}>
           <div className="legacy-modal-body">
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Basic Information</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Basic Information</div>
               <div className="asset-form-grid basic-grid">
                 <label className="field-cell full-span">
                   <div className="float-field">
@@ -682,10 +683,10 @@ export default function InstructorPortfolioPage() {
                     {currentInstructor?.photo || currentInstructor?.photoPreview ? (
                       <img src={currentInstructor.photoPreview || currentInstructor.photo} alt="Preview" className="mentor-photo-preview" />
                     ) : (
-                      <div className="mentor-photo-placeholder"><i className="ti ti-camera" /></div>
+                      <div className="mentor-photo-placeholder"><Icon className="ti ti-camera" /></div>
                     )}
                     <div className="mentor-photo-meta">
-                      <span className="file-name"><i className="ti ti-info-alt" /> JPG, PNG (Max 2MB)</span>
+                      <span className="file-name"><Icon className="ti ti-info-alt" /> JPG, PNG (Max 2MB)</span>
                     </div>
                   </div>
                 </div>
@@ -693,7 +694,7 @@ export default function InstructorPortfolioPage() {
             </div>
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-school" /> Professional Details</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-school" /> Professional Details</div>
               <div className="asset-form-grid">
                 <label className="field-cell">
                   <div className="float-field">
@@ -717,7 +718,7 @@ export default function InstructorPortfolioPage() {
             </div>
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-address-book" /> Additional Information <span className="field-hint-inline">(Optional)</span></div>
+              <div className="asset-form-section-title"><Icon className="ti ti-address-book" /> Additional Information <span className="field-hint-inline">(Optional)</span></div>
               <div className="asset-form-grid">
                 <label className="field-cell">
                   <div className="float-field">
@@ -751,9 +752,9 @@ export default function InstructorPortfolioPage() {
       <div className={`legacy-modal-backdrop ${deleteModalOpen ? 'active' : ''}`} onClick={() => setDeleteModalOpen(false)}>
         <div className="legacy-modal-dialog legacy-confirm" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
           <div className="legacy-modal-header legacy-danger-header">
-            <h3><i className="ti ti-alert" /> Confirm Delete</h3>
+            <h3><Icon className="ti ti-alert" /> Confirm Delete</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setDeleteModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
@@ -763,7 +764,7 @@ export default function InstructorPortfolioPage() {
           <div className="legacy-modal-footer">
             <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setDeleteModalOpen(false)}>Cancel</button>
             <button type="button" className="legacy-btn legacy-btn-danger" onClick={deleteInstructor}>
-              <i className="ti ti-trash" /> Delete Instructor
+              <Icon className="ti ti-trash" /> Delete Instructor
             </button>
           </div>
         </div>
@@ -772,15 +773,15 @@ export default function InstructorPortfolioPage() {
       <div className={`legacy-modal-backdrop ${viewModalOpen ? 'active' : ''}`} onClick={() => setViewModalOpen(false)}>
         <div className="legacy-modal-dialog legacy-large" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
           <div className="legacy-modal-header">
-            <h3><i className="ti ti-user" /> Instructor Profile</h3>
+            <h3><Icon className="ti ti-user" /> Instructor Profile</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setViewModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className={`instructor-view-body ${isInstructorProfileLoading ? 'is-loading' : ''}`}>
             {isInstructorProfileLoading && (
               <div className="mentor-view-loading">
-                <i className="ti ti-reload rotate" /> Loading detailed profile...
+                <Icon className="ti ti-reload rotate" /> Loading detailed profile...
               </div>
             )}
             {selectedInstructor ? (
@@ -800,48 +801,48 @@ export default function InstructorPortfolioPage() {
                     <p>{selectedInstructor.brief}</p>
                     <div className="mentor-profile-rating">
                       <div className="mentor-rating-group">
-                        <i className="fa fa-star" />
+                        <Icon className="fa fa-star" />
                         <span className="mentor-rating-value">{selectedInstructor.rating}</span>
                         <span className="mentor-rating-max">/5.0</span>
                       </div>
                       <div className="mentor-rating-divider" />
                       <div className="mentor-rating-students">
-                        <i className="ti ti-users" /> {selectedInstructor.totalStudents} Students
+                        <Icon className="ti ti-users" /> {selectedInstructor.totalStudents} Students
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="mentor-profile-grid">
                   <div className="profile-info-card">
-                    <div className="profile-info-icon blue"><i className="ti ti-bookmark" /></div>
+                    <div className="profile-info-icon blue"><Icon className="ti ti-bookmark" /></div>
                     <div><div className="profile-info-label">Expert Subject</div><div className="profile-info-value">{selectedInstructor.expertSubject}</div></div>
                   </div>
                   <div className="profile-info-card">
-                    <div className="profile-info-icon amber"><i className="ti ti-briefcase" /></div>
+                    <div className="profile-info-icon amber"><Icon className="ti ti-briefcase" /></div>
                     <div><div className="profile-info-label">Experience</div><div className="profile-info-value">{selectedInstructor.experience} years</div></div>
                   </div>
                   {selectedInstructor.qualifications ? (
                     <div className="profile-info-card wide">
-                      <div className="profile-info-icon amber"><i className="ti ti-medal" /></div>
+                      <div className="profile-info-icon amber"><Icon className="ti ti-medal" /></div>
                       <div><div className="profile-info-label">Qualifications</div><div className="profile-info-value multiline">{selectedInstructor.qualifications}</div></div>
                     </div>
                   ) : null}
                   {selectedInstructor.email ? (
                     <div className="profile-info-card">
-                      <div className="profile-info-icon indigo"><i className="ti ti-email" /></div>
+                      <div className="profile-info-icon indigo"><Icon className="ti ti-email" /></div>
                       <div><div className="profile-info-label">Email Address</div><div className="profile-info-value truncatable">{selectedInstructor.email}</div></div>
                     </div>
                   ) : null}
                   {selectedInstructor.mobile ? (
                     <div className="profile-info-card">
-                      <div className="profile-info-icon green"><i className="ti ti-mobile" /></div>
+                      <div className="profile-info-icon green"><Icon className="ti ti-mobile" /></div>
                       <div><div className="profile-info-label">Mobile Number</div><div className="profile-info-value">{selectedInstructor.mobile}</div></div>
                     </div>
                   ) : null}
                 </div>
                 {selectedInstructor.bio ? (
                   <div className="instructor-about-panel">
-                    <div className="instructor-about-title"><i className="ti ti-info-alt" /> <strong>About</strong></div>
+                    <div className="instructor-about-title"><Icon className="ti ti-info-alt" /> <strong>About</strong></div>
                     <p>{selectedInstructor.bio}</p>
                   </div>
                 ) : null}
@@ -850,10 +851,10 @@ export default function InstructorPortfolioPage() {
           </div>
           <div className="legacy-modal-footer">
             <button type="button" className="legacy-btn legacy-btn-success" onClick={editFromView}>
-              <i className="ti ti-pencil" /> Edit Instructor
+              <Icon className="ti ti-pencil" /> Edit Instructor
             </button>
             <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setViewModalOpen(false)}>
-              <i className="ti ti-close" /> Close
+              <Icon className="ti ti-close" /> Close
             </button>
           </div>
         </div>
@@ -862,9 +863,9 @@ export default function InstructorPortfolioPage() {
       <div className={`legacy-modal-backdrop ${lessonsModalOpen ? 'active' : ''}`} onClick={() => setLessonsModalOpen(false)}>
         <div className="legacy-modal-dialog legacy-large" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
           <div className="legacy-modal-header">
-            <h3><i className="ti ti-book" /> Lessons Taught by {selectedInstructorForLessons?.name}</h3>
+            <h3><Icon className="ti ti-book" /> Lessons Taught by {selectedInstructorForLessons?.name}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setLessonsModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
@@ -901,7 +902,7 @@ export default function InstructorPortfolioPage() {
               </>
             ) : (
               <div className="empty-state compact">
-                <i className="ti ti-book" />
+                <Icon className="ti ti-book" />
                 <h4>No Lessons Assigned</h4>
                 <p>This instructor hasn't been assigned to any lessons yet.</p>
               </div>

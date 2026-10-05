@@ -14,6 +14,7 @@ import {
   isStreamError,
   MENTOR_SESSIONS_DEMO,
 } from '../lib/mentorSessionsApi';
+import Icon from '../components/Icon';
 
 const STATUS_LABEL = {
   scheduled: 'Scheduled',
@@ -127,7 +128,7 @@ function MultiSelect({ label, required, placeholder, options, selectedIds, onCha
           {selectedOptions.map((o) => (
             <span key={o.id} className="ms-chip">
               {o.name}
-              <i className="ti ti-close" onClick={(e) => { e.stopPropagation(); toggle(o.id); }} />
+              <Icon className="ti ti-close" onClick={(e) => { e.stopPropagation(); toggle(o.id); }} />
             </span>
           ))}
           <input
@@ -179,46 +180,46 @@ function KebabMenu({ session, onAction }) {
   return (
     <div className="kebab-menu-container" ref={ref}>
       <button type="button" className="kebab-button" onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}>
-        <i className="ti ti-more-alt" />
+        <Icon className="ti ti-more-alt" />
       </button>
       <div className={`kebab-dropdown${open ? ' active' : ''}`}>
         {(session.status === 'scheduled' || session.status === 'live') && (
           <button type="button" className="kebab-dropdown-item" onClick={() => { setOpen(false); onAction(session, 'join'); }}>
-            <i className="ti ti-headphone" /> {session.status === 'live' ? 'Join Room' : 'Enter Room as Host'}
+            <Icon className="ti ti-headphone" /> {session.status === 'live' ? 'Join Room' : 'Enter Room as Host'}
           </button>
         )}
 
         <button type="button" className="kebab-dropdown-item" onClick={() => { setOpen(false); onAction(session, 'participants'); }}>
-          <i className="ti ti-users" /> View Participants
+          <Icon className="ti ti-users" /> View Participants
         </button>
 
         {session.status === 'scheduled' && (
           <button type="button" className="kebab-dropdown-item" onClick={() => { setOpen(false); onAction(session, 'go-live'); }}>
-            <i className="ti ti-microphone" /> Open Room Now
+            <Icon className="ti ti-microphone" /> Open Room Now
           </button>
         )}
 
         {(session.status === 'live' || (session.stream && session.stream.join_url)) && (
           <button type="button" className="kebab-dropdown-item" onClick={() => { setOpen(false); onAction(session, 'copy-link'); }}>
-            <i className="ti ti-link" /> Copy Join Link
+            <Icon className="ti ti-link" /> Copy Join Link
           </button>
         )}
 
         {session.status === 'live' && (
           <button type="button" className="kebab-dropdown-item" onClick={() => { setOpen(false); onAction(session, 'end'); }}>
-            <i className="ti ti-player-stop" /> End Room
+            <Icon className="ti ti-player-stop" /> End Room
           </button>
         )}
 
         {session.status === 'ended' && session.stream?.recording_url && (
           <button type="button" className="kebab-dropdown-item" onClick={() => { setOpen(false); onAction(session, 'recording'); }}>
-            <i className="ti ti-volume" /> Listen to Recording
+            <Icon className="ti ti-volume" /> Listen to Recording
           </button>
         )}
 
         {session.status === 'scheduled' && (
           <button type="button" className="kebab-dropdown-item danger-action" onClick={() => { setOpen(false); onAction(session, 'cancel'); }}>
-            <i className="ti ti-close" /> Cancel Session
+            <Icon className="ti ti-close" /> Cancel Session
           </button>
         )}
       </div>
@@ -518,20 +519,20 @@ export default function MentorSessionsPage() {
       {/* ── Header ── */}
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-microphone" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-microphone" /></span>
           <div>
             <h2>Mentor Sessions</h2>
             <p>Schedule and track Audio Rooms where mentors connect with their student mentees.</p>
           </div>
         </div>
         <button type="button" className="page-action-button" onClick={() => { resetForm(); setShowCreateModal(true); }}>
-          <i className="ti ti-microphone" /> Schedule Audio Room
+          <Icon className="ti ti-microphone" /> Schedule Audio Room
         </button>
       </div>
 
       {isDemo && (
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#92400e', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '8px', padding: '8px 12px', marginBottom: '4px' }}>
-          <i className="ti ti-info-circle" />
+          <Icon className="ti ti-info-circle" />
           Showing sample data — the <code>audio_streams</code> backend module isn’t connected yet. Scheduling works locally for preview.
         </div>
       )}
@@ -539,7 +540,7 @@ export default function MentorSessionsPage() {
       {/* ── Filters ── */}
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'} search-icon`} onClick={() => setSearchQuery('')} aria-hidden="true" />
+          <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'} search-icon`} onClick={() => setSearchQuery('')} aria-hidden="true" />
           <input
             type="text"
             className="search-input"
@@ -563,7 +564,7 @@ export default function MentorSessionsPage() {
         />
         {hasActiveFilters && (
           <button type="button" className="filter-clear-btn" onClick={clearFilters}>
-            <i className="ti ti-reload" /> Clear
+            <Icon className="ti ti-reload" /> Clear
           </button>
         )}
       </div>
@@ -571,11 +572,11 @@ export default function MentorSessionsPage() {
       {/* ── Table ── */}
       {loadError ? (
         <div className="ear-empty-state" style={{ background: 'white', border: '1px solid var(--line)', marginTop: '24px' }}>
-          <i className="ti ti-alert-triangle" style={{ color: '#dc2626' }} />
+          <Icon className="ti ti-alert-triangle" style={{ color: '#dc2626' }} />
           <h4>Couldn't load mentor sessions</h4>
           <p>{loadError}</p>
           <button type="button" onClick={loadSessions} style={{ marginTop: '8px', background: '#006073', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-            <i className="ti ti-reload" /> Retry
+            <Icon className="ti ti-reload" /> Retry
           </button>
         </div>
       ) : (loading || filteredSessions.length > 0) ? (
@@ -611,7 +612,7 @@ export default function MentorSessionsPage() {
                       <strong>{s.title}</strong>
                       {s.request_to_join && (
                         <span title="Listeners must request to join the stage" style={{ marginLeft: 6, fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase', color: '#7c3aed', background: '#f3e8ff', padding: '2px 6px', borderRadius: '4px' }}>
-                          <i className="ti ti-hand-stop" /> Request to Join
+                          <Icon className="ti ti-hand-stop" /> Request to Join
                         </span>
                       )}
                       {s.brief && <div className="ear-td-muted" style={{ fontSize: '12px', marginTop: 2, maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.brief}</div>}
@@ -644,7 +645,7 @@ export default function MentorSessionsPage() {
                     <td>{s.duration_label || '—'}</td>
                     <td>
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '13px' }} title="Joined / peak listeners">
-                        <i className="ti ti-headphones" style={{ color: '#006073' }} />
+                        <Icon className="ti ti-headphones" style={{ color: '#006073' }} />
                         <strong>{s.stats?.joined_count ?? 0}</strong>
                         <span className="ear-td-muted">/ {s.stats?.peak_listeners ?? 0} peak</span>
                       </span>
@@ -658,7 +659,7 @@ export default function MentorSessionsPage() {
                             title="Join this live audio room"
                             style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', background: '#006073', color: 'white', border: 'none', borderRadius: '6px', padding: '5px 11px', fontSize: '12px', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}
                           >
-                            <i className="ti ti-microphone" /> Join
+                            <Icon className="ti ti-microphone" /> Join
                           </button>
                         )}
                         <KebabMenu session={s} onAction={handleAction} />
@@ -679,7 +680,7 @@ export default function MentorSessionsPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={safePage === 1} onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {getPageNumbers(safePage, totalPages).map((page, index) => (
                 page === '...'
@@ -687,14 +688,14 @@ export default function MentorSessionsPage() {
                   : <button key={page} type="button" className={`pagination-btn${safePage === page ? ' active' : ''}`} onClick={() => setCurrentPage(page)}>{page}</button>
               ))}
               <button type="button" className="pagination-btn" disabled={safePage === totalPages} onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
         </div>
       ) : (
         <div className="ear-empty-state" style={{ background: 'white', border: '1px solid var(--line)', marginTop: '24px' }}>
-          <i className="ti ti-microphone" />
+          <Icon className="ti ti-microphone" />
           <h4>No Mentor Sessions Found</h4>
           <p>No audio rooms match your current filters. Schedule one to get started!</p>
         </div>
@@ -704,16 +705,16 @@ export default function MentorSessionsPage() {
       <div className={`legacy-modal-backdrop ${showCreateModal ? 'active' : ''}`} onClick={() => setShowCreateModal(false)}>
         <div className="legacy-modal-dialog legacy-large" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
           <div className="legacy-modal-header">
-            <h3><i className="ti ti-microphone" /> Schedule Audio Room</h3>
+            <h3><Icon className="ti ti-microphone" /> Schedule Audio Room</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setShowCreateModal(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <form className="audio-room-modal-form form-modal" onSubmit={handleCreateSubmit}>
             <div className="legacy-modal-body">
 
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Session Details</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Session Details</div>
                 <div className="asset-form-grid">
                   <label className="field-cell full-span">
                     <div className="float-field">
@@ -732,7 +733,7 @@ export default function MentorSessionsPage() {
               </div>
 
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-microphone" /> Hosts &amp; Audience</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-microphone" /> Hosts &amp; Audience</div>
                 <div className="asset-form-grid">
                   <label className="field-cell">
                     <div className="float-field float-always">
@@ -774,7 +775,7 @@ export default function MentorSessionsPage() {
               </div>
 
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-calendar" /> Schedule &amp; Access</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-calendar" /> Schedule &amp; Access</div>
                 <div className="asset-form-grid">
                   <label className="field-cell">
                     <div className="float-field float-always" style={{ opacity: formIsInstant ? 0.5 : 1 }}>
@@ -831,8 +832,8 @@ export default function MentorSessionsPage() {
         {participantsSession && (
           <div className="legacy-modal-dialog form-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <div className="legacy-modal-header">
-              <h3><i className="ti ti-users" /> {participantsSession.title}</h3>
-              <button type="button" className="legacy-modal-close" onClick={() => setParticipantsSession(null)}><i className="ti ti-close" /></button>
+              <h3><Icon className="ti ti-users" /> {participantsSession.title}</h3>
+              <button type="button" className="legacy-modal-close" onClick={() => setParticipantsSession(null)}><Icon className="ti ti-close" /></button>
             </div>
             <div className="legacy-modal-body">
 
@@ -843,7 +844,7 @@ export default function MentorSessionsPage() {
                   { label: 'Peak', value: participantsSession.stats?.peak_listeners ?? 0, icon: 'ti-stats-up' },
                 ].map((m) => (
                   <div key={m.label} className="ar-stat">
-                    <i className={`ti ${m.icon}`} />
+                    <Icon className={`ti ${m.icon}`} />
                     <div className="ar-stat-value">{m.value}</div>
                     <div className="ar-stat-label">{m.label}</div>
                   </div>
@@ -851,7 +852,7 @@ export default function MentorSessionsPage() {
               </div>
 
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-microphone" /> On the stage</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-microphone" /> On the stage</div>
                 <div className="ar-people-row">
                   <span className="ms-avatar">{(participantsSession.host?.name || '??').slice(0, 2).toUpperCase()}</span>
                   <span className="ar-people-name">{participantsSession.host?.name}</span>
@@ -867,7 +868,7 @@ export default function MentorSessionsPage() {
               </div>
 
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-users" /> Audience</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-users" /> Audience</div>
                 <div className="ar-batch-wrap">
                   {(participantsSession.audience_batches || []).length === 0
                     ? <span className="ms-empty" style={{ padding: 0 }}>No batches assigned</span>
@@ -878,7 +879,7 @@ export default function MentorSessionsPage() {
 
                 {participantsSession.request_to_join && (
                   <div className="ar-note">
-                    <i className="ti ti-hand-stop" />
+                    <Icon className="ti ti-hand-stop" />
                     <span>Request-to-join is on — listeners raise a hand and the host admits them to speak.</span>
                   </div>
                 )}
@@ -888,7 +889,7 @@ export default function MentorSessionsPage() {
             <div className="legacy-modal-footer">
               {participantsSession.stream?.join_url && (
                 <button type="button" className="legacy-btn legacy-btn-default" onClick={() => copyToClipboard(participantsSession.stream.join_url, 'Join link')}>
-                  <i className="ti ti-link" /> Copy Join Link
+                  <Icon className="ti ti-link" /> Copy Join Link
                 </button>
               )}
               <button type="button" className="legacy-btn legacy-btn-primary" onClick={() => setParticipantsSession(null)}>Done</button>

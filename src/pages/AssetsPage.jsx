@@ -14,6 +14,7 @@ import {
   uploadInvoice,
   validateInvoiceFile,
 } from '../lib/assetsApi';
+import Icon from '../components/Icon';
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100, 200];
 
@@ -587,7 +588,7 @@ export default function AssetsPage() {
       {/* ── Page Header ── */}
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="ti ti-package" /></span>
+          <span className="page-header-icon-box"><Icon className="ti ti-package" /></span>
           <div>
             <h2>Assets</h2>
             <p>Track asset inventory, valuation, depreciation and location assignment.</p>
@@ -595,7 +596,7 @@ export default function AssetsPage() {
         </div>
         <Can permission={PERMS.ASSETS_EDIT}>
           <button type="button" className="create-quiz-button" onClick={openCreateModal}>
-            <i className="ti ti-plus" /> Add Asset
+            <Icon className="ti ti-plus" /> Add Asset
           </button>
         </Can>
       </div>
@@ -605,28 +606,28 @@ export default function AssetsPage() {
         <div className="qar-header-body" style={{ padding: 0, marginTop: 0 }}>
           <div className="qar-stats-row">
             <div className="qar-stat-card">
-              <div className="qar-stat-icon indigo"><i className="ti ti-package" /></div>
+              <div className="qar-stat-icon indigo"><Icon className="ti ti-package" /></div>
               <div className="qar-stat-info">
                 <h3>{total}</h3>
                 <p>Total Assets</p>
               </div>
             </div>
             <div className="qar-stat-card">
-              <div className="qar-stat-icon green"><i className="ti ti-wallet" /></div>
+              <div className="qar-stat-icon green"><Icon className="ti ti-wallet" /></div>
               <div className="qar-stat-info">
                 <h3>{formatINR(summary.totalOriginal)}</h3>
                 <p>Total Original Value</p>
               </div>
             </div>
             <div className="qar-stat-card">
-              <div className="qar-stat-icon orange"><i className="ti ti-stats-down" /></div>
+              <div className="qar-stat-icon orange"><Icon className="ti ti-stats-down" /></div>
               <div className="qar-stat-info">
                 <h3>{formatINR(summary.totalCurrent)}</h3>
                 <p>Total Current Value</p>
               </div>
             </div>
             <div className="qar-stat-card">
-              <div className="qar-stat-icon teal"><i className="ti ti-check" /></div>
+              <div className="qar-stat-icon teal"><Icon className="ti ti-check" /></div>
               <div className="qar-stat-info">
                 <h3>{summary.activeCount}</h3>
                 <p>Active (this page)</p>
@@ -640,7 +641,7 @@ export default function AssetsPage() {
       {/* ── Toolbar: search + modal filter trigger ── */}
       <div className="filter-bar" style={{ marginTop: 20 }}>
         <div className="search-wrapper">
-          <i className="ti ti-search search-icon" />
+          <Icon className="ti ti-search search-icon" />
           <input
             type="text"
             className="search-input"
@@ -649,13 +650,12 @@ export default function AssetsPage() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           {searchQuery && (
-            <i
+            <Icon
               className="ti ti-close search-clear"
               role="button"
               tabIndex={0}
               onClick={() => setSearchQuery('')}
-              onKeyDown={(e) => { if (e.key === 'Enter') setSearchQuery(''); }}
-            />
+              onKeyDown={(e) => { if (e.key === 'Enter') setSearchQuery(''); }} />
           )}
         </div>
 
@@ -664,19 +664,19 @@ export default function AssetsPage() {
           className={`filter-toggle-btn${hasModalFilters ? ' active' : ''}`}
           onClick={() => setShowFilterModal(true)}
         >
-          <i className="ti ti-filter" /> Filters
+          <Icon className="ti ti-filter" /> Filters
           {hasModalFilters && <span className="filter-count">{modalFilterCount}</span>}
         </button>
 
         {hasActiveFilters && (
           <button type="button" className="filter-clear-btn" onClick={clearFilters}>
-            <i className="ti ti-close" /> Clear
+            <Icon className="ti ti-close" /> Clear
           </button>
         )}
 
         <Can permission={PERMS.ASSETS_EXPORT}>
           <button type="button" className="assets-export-btn" style={{ marginLeft: 'auto' }} disabled={visibleAssets.length === 0} onClick={() => setExportOpen(true)}>
-            <i className="ti ti-download" /> Export
+            <Icon className="ti ti-download" /> Export
           </button>
         </Can>
       </div>
@@ -711,28 +711,28 @@ export default function AssetsPage() {
             <thead>
               <tr>
                 <th className={`sortable ${sortBy === 'id' ? ' active' : ''}`} onClick={() => toggleSort('id')}>
-                  ID <i className={`sort-icon ti ${getSortIcon('id')}`} />
+                  ID <Icon className={`sort-icon ti ${getSortIcon('id')}`} />
                 </th>
                 <th className={`sortable ${sortBy === 'name' ? ' active' : ''}`} onClick={() => toggleSort('name')}>
-                  Asset Name <i className={`sort-icon ti ${getSortIcon('name')}`} />
+                  Asset Name <Icon className={`sort-icon ti ${getSortIcon('name')}`} />
                 </th>
                 <th>Type</th>
                 <th>Code / Serial</th>
                 <th className={`sortable ${sortBy === 'purchasedDate' ? ' active' : ''}`} onClick={() => toggleSort('purchasedDate')}>
-                  Purchase Date <i className={`sort-icon ti ${getSortIcon('purchasedDate')}`} />
+                  Purchase Date <Icon className={`sort-icon ti ${getSortIcon('purchasedDate')}`} />
                 </th>
                 <th className={`sortable center-align${sortBy === 'valueOriginal' ? ' active' : ''}`} onClick={() => toggleSort('valueOriginal')}>
-                  Original <i className={`sort-icon ti ${getSortIcon('valueOriginal')}`} />
+                  Original <Icon className={`sort-icon ti ${getSortIcon('valueOriginal')}`} />
                 </th>
                 <th className={`sortable center-align${sortBy === 'valueAtPurchase' ? ' active' : ''}`} onClick={() => toggleSort('valueAtPurchase')}>
-                  Current <i className={`sort-icon ti ${getSortIcon('valueAtPurchase')}`} />
+                  Current <Icon className={`sort-icon ti ${getSortIcon('valueAtPurchase')}`} />
                 </th>
                 <th className="center-align">Depr %</th>
                 <th>Location</th>
                 <th className="center-align">Status</th>
                 <th className="center-align">Invoice</th>
                 <th className={`sortable ${sortBy === 'createdAt' ? ' active' : ''}`} onClick={() => toggleSort('createdAt')}>
-                  Created <i className={`sort-icon ti ${getSortIcon('createdAt')}`} />
+                  Created <Icon className={`sort-icon ti ${getSortIcon('createdAt')}`} />
                 </th>
                 <th className="center-align actions-column">Actions</th>
               </tr>
@@ -751,12 +751,12 @@ export default function AssetsPage() {
                     </td>
                     <td>
                       <span className="batch-course-badge">
-                        <i className={`ti ${TYPE_ICONS[asset.type] || 'ti-layout-grid2'}`} /> {ASSET_TYPES[asset.type] || 'Unknown'}
+                        <Icon className={`ti ${TYPE_ICONS[asset.type] || 'ti-layout-grid2'}`} /> {ASSET_TYPES[asset.type] || 'Unknown'}
                       </span>
                     </td>
                     <td>{asset.code || asset.serialNumber || asset.serial || '—'}</td>
                     <td>
-                      <div className="course-info"><i className="ti ti-calendar" /> {formatDate(asset.purchasedDate)}</div>
+                      <div className="course-info"><Icon className="ti ti-calendar" /> {formatDate(asset.purchasedDate)}</div>
                     </td>
                     <td className="center-align">{formatINR(asset.valueOriginal)}</td>
                     <td className="center-align"><strong>{formatINR(asset.valueAtPurchase ?? asset.currentValue)}</strong></td>
@@ -778,14 +778,14 @@ export default function AssetsPage() {
                           className="attempts-link"
                           title="Open invoice"
                         >
-                          <i className="ti ti-link" /> Invoice
+                          <Icon className="ti ti-link" /> Invoice
                         </a>
                       ) : (
                         <span className="muted-table-text">—</span>
                       )}
                     </td>
                     <td>
-                      <div className="course-info"><i className="ti ti-time" /> {formatDate(asset.createdAt)}</div>
+                      <div className="course-info"><Icon className="ti ti-time" /> {formatDate(asset.createdAt)}</div>
                     </td>
                     <td className={`center-align ${activeKebabId === asset.id ? 'cell-active-menu' : ''}`}>
                       <div className="kebab-menu-container">
@@ -794,12 +794,12 @@ export default function AssetsPage() {
                           className="kebab-button"
                           onClick={(event) => { event.stopPropagation(); setActiveKebabId((cur) => (cur === asset.id ? null : asset.id)); }}
                         >
-                          <i className="ti ti-more-alt" />
+                          <Icon className="ti ti-more-alt" />
                         </button>
                         <div className={`kebab-dropdown ${activeKebabId === asset.id ? 'active' : ''}`}>
                           {can(PERMS.ASSETS_EDIT) && (
                             <button type="button" className="kebab-dropdown-item edit-action" onClick={() => { setActiveKebabId(null); openEditModal(asset); }}>
-                              <i className="ti ti-pencil" />
+                              <Icon className="ti ti-pencil" />
                               <span className="item-label">Edit Asset</span>
                             </button>
                           )}
@@ -809,7 +809,7 @@ export default function AssetsPage() {
                               className={`kebab-dropdown-item ${status === 'Active' ? 'draft-action' : 'enable-action'}`}
                               onClick={() => { setActiveKebabId(null); quickToggleStatus(asset); }}
                             >
-                              <i className={`ti ${status === 'Active' ? 'ti-na' : 'ti-check'}`} />
+                              <Icon className={`ti ${status === 'Active' ? 'ti-na' : 'ti-check'}`} />
                               <span className="item-label">{status === 'Active' ? 'Mark Inactive' : 'Mark Active'}</span>
                             </button>
                           )}
@@ -820,7 +820,7 @@ export default function AssetsPage() {
                                 className="kebab-dropdown-item delete-action"
                                 onClick={() => askRemoveInvoice(asset)}
                               >
-                                <i className="ti ti-trash" />
+                                <Icon className="ti ti-trash" />
                                 <span className="item-label">Remove Invoice</span>
                               </button>
                             ) : (
@@ -829,7 +829,7 @@ export default function AssetsPage() {
                                 className="kebab-dropdown-item view-action"
                                 onClick={() => triggerInvoiceUpload(asset)}
                               >
-                                <i className="ti ti-upload" />
+                                <Icon className="ti ti-upload" />
                                 <span className="item-label">Upload Invoice</span>
                               </button>
                             )
@@ -857,7 +857,7 @@ export default function AssetsPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={safePage === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {getPageNumbers(safePage, totalPages).map((p, idx) => (
                 p === '...' ? (
@@ -867,30 +867,30 @@ export default function AssetsPage() {
                 )
               ))}
               <button type="button" className="pagination-btn" disabled={safePage === totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
         </div>
       ) : loadError ? (
         <div className="empty-state">
-          <i className="ti ti-alert" />
+          <Icon className="ti ti-alert" />
           <h4>Unable to load assets</h4>
           <p>{loadError}</p>
           <button type="button" className="btn btn-primary" style={{ marginTop: 12 }} onClick={() => loadAssetsList()}>
-            <i className="ti ti-reload" /> Retry
+            <Icon className="ti ti-reload" /> Retry
           </button>
         </div>
       ) : (
         <div className="empty-state">
-          <i className="ti ti-package" />
+          <Icon className="ti ti-package" />
           <h4>No Assets Found</h4>
           {hasActiveFilters
             ? <p>Try adjusting filters or clearing them.</p>
             : <p>Add your first asset to start tracking inventory.</p>}
           {!hasActiveFilters && (
             <button type="button" className="btn btn-primary" style={{ marginTop: 12 }} onClick={openCreateModal}>
-              <i className="ti ti-plus" /> Add Asset
+              <Icon className="ti ti-plus" /> Add Asset
             </button>
           )}
         </div>
@@ -901,9 +901,9 @@ export default function AssetsPage() {
         <div className="crispr-modal-backdrop active" onClick={() => setShowFilterModal(false)}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 560 }} onClick={(e) => e.stopPropagation()}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-filter" /> Filter Assets</h3>
+              <h3><Icon className="ti ti-filter" /> Filter Assets</h3>
               <button className="crispr-modal-close" onClick={() => setShowFilterModal(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="crispr-modal-body af-filter-body form-modal">
@@ -947,7 +947,7 @@ export default function AssetsPage() {
               </div>
 
               <label className="field-cell">
-                <span className="af-field-label"><i className="ti ti-location-pin" /> Location</span>
+                <span className="af-field-label"><Icon className="ti ti-location-pin" /> Location</span>
                 <LocationPicker
                   value={locationId || null}
                   initialLabel={locationLabel}
@@ -1016,37 +1016,37 @@ export default function AssetsPage() {
                   <span className="qar-active-label">Active:</span>
                   {typeFilter && (
                     <span className="qar-filter-badge">Type: {ASSET_TYPES[typeFilter]}
-                      <i className="ti ti-close" onClick={() => setTypeFilter('')} />
+                      <Icon className="ti ti-close" onClick={() => setTypeFilter('')} />
                     </span>
                   )}
                   {statusFilter !== 'all' && (
                     <span className="qar-filter-badge">Status: {statusFilter}
-                      <i className="ti ti-close" onClick={() => setStatusFilter('all')} />
+                      <Icon className="ti ti-close" onClick={() => setStatusFilter('all')} />
                     </span>
                   )}
                   {dateFrom && (
                     <span className="qar-filter-badge">From: {dateFrom}
-                      <i className="ti ti-close" onClick={() => setDateFrom('')} />
+                      <Icon className="ti ti-close" onClick={() => setDateFrom('')} />
                     </span>
                   )}
                   {dateTo && (
                     <span className="qar-filter-badge">To: {dateTo}
-                      <i className="ti ti-close" onClick={() => setDateTo('')} />
+                      <Icon className="ti ti-close" onClick={() => setDateTo('')} />
                     </span>
                   )}
                   {valueMin && (
                     <span className="qar-filter-badge">Min: ₹{valueMin}
-                      <i className="ti ti-close" onClick={() => setValueMin('')} />
+                      <Icon className="ti ti-close" onClick={() => setValueMin('')} />
                     </span>
                   )}
                   {valueMax && (
                     <span className="qar-filter-badge">Max: ₹{valueMax}
-                      <i className="ti ti-close" onClick={() => setValueMax('')} />
+                      <Icon className="ti ti-close" onClick={() => setValueMax('')} />
                     </span>
                   )}
                   {locationId && (
                     <span className="qar-filter-badge">Location: {locationLabel || `#${locationId}`}
-                      <i className="ti ti-close" onClick={() => { setLocationId(''); setLocationLabel(''); }} />
+                      <Icon className="ti ti-close" onClick={() => { setLocationId(''); setLocationLabel(''); }} />
                     </span>
                   )}
                 </div>
@@ -1054,10 +1054,10 @@ export default function AssetsPage() {
             </div>
             <div className="crispr-modal-footer">
               <button type="button" className="btn btn-default" onClick={clearFilters}>
-                <i className="ti ti-reload" /> Clear Filters
+                <Icon className="ti ti-reload" /> Clear Filters
               </button>
               <button type="button" className="btn btn-success" onClick={() => setShowFilterModal(false)}>
-                <i className="ti ti-check" /> Apply Filters
+                <Icon className="ti ti-check" /> Apply Filters
               </button>
             </div>
           </div>
@@ -1068,15 +1068,15 @@ export default function AssetsPage() {
       <div className={`legacy-modal-backdrop ${formOpen ? 'active' : ''}`} onClick={() => !isSaving && setFormOpen(false)}>
         <div className="legacy-modal-dialog legacy-large" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
           <div className="legacy-modal-header">
-            <h3><i className={`ti ${isEditing ? 'ti-pencil' : 'ti-plus'}`} /> {isEditing ? 'Edit Asset' : 'Add Asset'}</h3>
+            <h3><Icon className={`ti ${isEditing ? 'ti-pencil' : 'ti-plus'}`} /> {isEditing ? 'Edit Asset' : 'Add Asset'}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => !isSaving && setFormOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <form className="asset-modal-form form-modal" onSubmit={(e) => { e.preventDefault(); saveAsset(); }}>
             <div className="legacy-modal-body">
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-package" /> Asset Details</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-package" /> Asset Details</div>
                 <div className="asset-form-grid basic-grid">
                   <label className="field-cell full-span">
                     <div className={`float-field ${formErrors.name ? 'has-error' : ''}`}>
@@ -1134,7 +1134,7 @@ export default function AssetsPage() {
               </div>
 
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-coin" /> Valuation</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-coin" /> Valuation</div>
                 <div className="asset-form-grid">
                   <label className="field-cell">
                     <div className={`float-field ${formErrors.valueOriginal ? 'has-error' : ''}`}>
@@ -1204,7 +1204,7 @@ export default function AssetsPage() {
 
               {isEditing && (
                 <div className="asset-form-section">
-                  <div className="asset-form-section-title"><i className="ti ti-toggle-right" /> Status</div>
+                  <div className="asset-form-section-title"><Icon className="ti ti-toggle-right" /> Status</div>
                   <div className="asset-form-grid">
                     <label className="field-cell">
                       <div className="float-field float-always">
@@ -1222,7 +1222,7 @@ export default function AssetsPage() {
             <div className="legacy-modal-footer">
               <button type="button" className="legacy-btn legacy-btn-default" disabled={isSaving} onClick={() => setFormOpen(false)}>Cancel</button>
               <button type="submit" className="legacy-btn legacy-btn-success" disabled={isSaving}>
-                {isSaving ? (<><i className="ti ti-reload" /> Saving...</>) : (<><i className="ti ti-check" /> {isEditing ? 'Save Changes' : 'Create Asset'}</>)}
+                {isSaving ? (<><Icon className="ti ti-reload" /> Saving...</>) : (<><Icon className="ti ti-check" /> {isEditing ? 'Save Changes' : 'Create Asset'}</>)}
               </button>
             </div>
           </form>
@@ -1234,22 +1234,22 @@ export default function AssetsPage() {
         <div className="crispr-modal-backdrop active" onClick={() => !isExporting && setExportOpen(false)}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 480 }} onClick={(e) => e.stopPropagation()}>
             <div className="crispr-modal-header" style={{ background: 'linear-gradient(135deg, #006073 0%, #005a6b 100%)' }}>
-              <h3><i className="ti ti-download" /> Export Assets Report</h3>
+              <h3><Icon className="ti ti-download" /> Export Assets Report</h3>
               <button className="crispr-modal-close" onClick={() => !isExporting && setExportOpen(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="crispr-modal-body">
               <p>Choose the scope for the CSV export. Active filters will be applied to both options.</p>
               <div style={{ display: 'grid', gap: 10, marginTop: 12 }}>
                 <button type="button" className="assets-export-btn" style={{ width: '100%', justifyContent: 'center' }} disabled={isExporting} onClick={() => exportCSV('page')}>
-                  <i className="ti ti-file-text" /> Current Page ({visibleAssets.length})
+                  <Icon className="ti ti-file-text" /> Current Page ({visibleAssets.length})
                 </button>
                 <button type="button" className="assets-export-btn" style={{ width: '100%', justifyContent: 'center' }} disabled={isExporting} onClick={() => exportCSV('all')}>
-                  <i className="ti ti-files" /> All Matching ({total})
+                  <Icon className="ti ti-files" /> All Matching ({total})
                 </button>
               </div>
-              {isExporting && <p style={{ marginTop: 12 }}><i className="ti ti-reload" /> Preparing export...</p>}
+              {isExporting && <p style={{ marginTop: 12 }}><Icon className="ti ti-reload" /> Preparing export...</p>}
             </div>
           </div>
         </div>
@@ -1269,9 +1269,9 @@ export default function AssetsPage() {
         <div className="crispr-modal-backdrop active" onClick={() => !isInvoiceBusy && setRemoveInvoiceTarget(null)}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 480 }} onClick={(e) => e.stopPropagation()}>
             <div className="crispr-modal-header" style={{ background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)' }}>
-              <h3><i className="ti ti-trash" /> Remove Invoice</h3>
+              <h3><Icon className="ti ti-trash" /> Remove Invoice</h3>
               <button className="crispr-modal-close" onClick={() => !isInvoiceBusy && setRemoveInvoiceTarget(null)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="crispr-modal-body">
@@ -1292,7 +1292,7 @@ export default function AssetsPage() {
                 disabled={isInvoiceBusy}
                 onClick={confirmRemoveInvoice}
               >
-                {isInvoiceBusy ? (<><i className="ti ti-reload" /> Removing...</>) : (<><i className="ti ti-trash" /> Remove Invoice</>)}
+                {isInvoiceBusy ? (<><Icon className="ti ti-reload" /> Removing...</>) : (<><Icon className="ti ti-trash" /> Remove Invoice</>)}
               </button>
             </div>
           </div>

@@ -16,6 +16,7 @@ import {
   updateResidence,
 } from '../lib/residencesApi';
 import useDebouncedValue from '../hooks/useDebouncedValue';
+import Icon from '../components/Icon';
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
@@ -617,7 +618,7 @@ export default function ResidenceManagementPage() {
 
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-home" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-home" /></span>
           <div>
             <h2>Residences</h2>
             <p>Manage student residences, houses, occupancy, and student allotments.</p>
@@ -625,18 +626,17 @@ export default function ResidenceManagementPage() {
         </div>
         <Can permission={PERMS.RESIDENCES_EDIT}>
           <button type="button" className="create-batch-button" onClick={openCreateModal}>
-            <i className="ti ti-plus" /> Add Residence
+            <Icon className="ti ti-plus" /> Add Residence
           </button>
         </Can>
       </div>
 
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i
+          <Icon
             className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`}
             onClick={() => { setSearchQuery(''); setCurrentPage(1); }}
-            aria-hidden="true"
-          />
+            aria-hidden="true" />
           <input
             type="text"
             className="search-input"
@@ -658,7 +658,7 @@ export default function ResidenceManagementPage() {
 
       {(!isLoading && total === 0) ? (
         <div className="empty-state">
-          <i className="ti ti-home" />
+          <Icon className="ti ti-home" />
           <h3>No Residences Found</h3>
           <p>Add your first residence to start managing student housing.</p>
         </div>
@@ -720,14 +720,14 @@ export default function ResidenceManagementPage() {
                           ) : null}
                         </div>
                         {residence.location ? (
-                          <div className="batch-description"><i className="ti ti-location-pin" /> {residence.location}</div>
+                          <div className="batch-description"><Icon className="ti ti-location-pin" /> {residence.location}</div>
                         ) : null}
                       </td>
                       <td>
                         <div className="course-info">{residence.address || '—'}</div>
                         {residence.wardenName ? (
                           <div className="course-info muted">
-                            <i className="ti ti-user" /> {residence.wardenName}
+                            <Icon className="ti ti-user" /> {residence.wardenName}
                             {residence.wardenContact ? ` · ${residence.wardenContact}` : ''}
                           </div>
                         ) : null}
@@ -738,34 +738,34 @@ export default function ResidenceManagementPage() {
                       <td className={`center-align ${activeKebabId === residence.id ? 'cell-active-menu' : ''}`}>
                         <div className="kebab-menu-container">
                           <button type="button" className="kebab-button" onClick={(e) => toggleKebab(residence.id, e)}>
-                            <i className="ti ti-more-alt" />
+                            <Icon className="ti ti-more-alt" />
                           </button>
                           <div className={`kebab-dropdown ${activeKebabId === residence.id ? 'active' : ''}`}>
                             <button type="button" className="kebab-dropdown-item view-profile" onClick={() => openDetails(residence)}>
-                              <i className="ti ti-eye" />
+                              <Icon className="ti ti-eye" />
                               <span className="item-label">View Details</span>
                             </button>
                             {can(PERMS.RESIDENCES_STUDENTS_EDIT) && (
                               <button type="button" className="kebab-dropdown-item manage-students" onClick={() => openStudentsModal(residence)}>
-                                <i className="ti ti-users" />
+                                <Icon className="ti ti-users" />
                                 <span className="item-label">View Residents</span>
                               </button>
                             )}
                             {can(PERMS.RESIDENCES_STUDENTS_EDIT) && (
                               <button type="button" className="kebab-dropdown-item allot-student" onClick={() => openAllotForResidence(residence)}>
-                                <i className="ti ti-plus" />
+                                <Icon className="ti ti-plus" />
                                 <span className="item-label">Allot New Student</span>
                               </button>
                             )}
                             {can(PERMS.RESIDENCES_EDIT) && (
                               <button type="button" className="kebab-dropdown-item edit-action" onClick={() => openEditModal(residence)}>
-                                <i className="ti ti-pencil" />
+                                <Icon className="ti ti-pencil" />
                                 <span className="item-label">Edit Residence</span>
                               </button>
                             )}
                             {status !== 'Disabled' && can(PERMS.RESIDENCES_DISABLE) && (
                               <button type="button" className="kebab-dropdown-item draft-action" onClick={() => askDisable(residence)}>
-                                <i className="ti ti-na" />
+                                <Icon className="ti ti-na" />
                                 <span className="item-label">Disable</span>
                               </button>
                             )}
@@ -794,7 +794,7 @@ export default function ResidenceManagementPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={safePage === 1} onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {paginationPages.map((p) => (
                 <button
@@ -812,7 +812,7 @@ export default function ResidenceManagementPage() {
                 disabled={safePage === totalPages}
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               >
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
@@ -825,13 +825,13 @@ export default function ResidenceManagementPage() {
           <div className="legacy-modal-header">
             <h3>{isEditing ? 'Edit Residence' : 'Add Residence'}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => !isSaving && setFormModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <form className="residence-modal-form form-modal" onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
           <div className="legacy-modal-body">
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Basic Details</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Basic Details</div>
               <div className="asset-form-grid basic-grid">
                 <label className="field-cell">
                   <div className={`float-field ${formErrors.name ? 'has-error' : ''}`}>
@@ -903,7 +903,7 @@ export default function ResidenceManagementPage() {
             </div>
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-user" /> Contact</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-user" /> Contact</div>
               <div className="asset-form-grid">
                 <label className="field-cell">
                   <div className={`float-field ${formErrors.wardenName ? 'has-error' : ''}`}>
@@ -960,9 +960,9 @@ export default function ResidenceManagementPage() {
 
             <div className="asset-form-section">
               <div className="asset-form-section-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span><i className="ti ti-building-community" /> Houses</span>
+                <span><Icon className="ti ti-building-community" /> Houses</span>
                 <button type="button" className="legacy-btn legacy-btn-success" onClick={addHouseRow}>
-                  <i className="ti ti-plus" /> Add House
+                  <Icon className="ti ti-plus" /> Add House
                 </button>
               </div>
               <p className="field-hint" style={{ margin: '0 0 8px' }}>Define the houses/rooms inside this residence.</p>
@@ -1032,7 +1032,7 @@ export default function ResidenceManagementPage() {
                                     gap: 4,
                                   }}
                                 >
-                                  <i className={`ti ${selected ? 'ti-check' : 'ti-plus'}`} />
+                                  <Icon className={`ti ${selected ? 'ti-check' : 'ti-plus'}`} />
                                   {amenity}
                                 </button>
                               );
@@ -1041,7 +1041,7 @@ export default function ResidenceManagementPage() {
                         </td>
                         <td className="center-align">
                           <button type="button" className="kebab-button" title="Remove" onClick={() => removeHouseRow(index)}>
-                            <i className="ti ti-trash" />
+                            <Icon className="ti ti-trash" />
                           </button>
                         </td>
                       </tr>
@@ -1056,7 +1056,7 @@ export default function ResidenceManagementPage() {
               Cancel
             </button>
             <button type="submit" className="legacy-btn legacy-btn-success" disabled={isSaving}>
-              {isSaving ? (<><i className="ti ti-reload" /> Saving...</>) : (<><i className="ti ti-check" /> {isEditing ? 'Save Changes' : 'Create Residence'}</>)}
+              {isSaving ? (<><Icon className="ti ti-reload" /> Saving...</>) : (<><Icon className="ti ti-check" /> {isEditing ? 'Save Changes' : 'Create Residence'}</>)}
             </button>
           </div>
           </form>
@@ -1068,7 +1068,7 @@ export default function ResidenceManagementPage() {
         <div className="legacy-modal-dialog legacy-large" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
           <div className="legacy-modal-header">
             <div className="rd-header-titles">
-              <h3><i className="ti ti-building-community" />{selectedResidence?.name || 'Residence Details'}</h3>
+              <h3><Icon className="ti ti-building-community" />{selectedResidence?.name || 'Residence Details'}</h3>
               {selectedResidence && (selectedResidence.code || selectedResidence.location) ? (
                 <div className="rd-header-sub">
                   {[selectedResidence.code, selectedResidence.location].filter(Boolean).join(' · ')}
@@ -1076,7 +1076,7 @@ export default function ResidenceManagementPage() {
               ) : null}
             </div>
             <button type="button" className="legacy-modal-close" onClick={() => setDetailsModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
@@ -1194,10 +1194,10 @@ export default function ResidenceManagementPage() {
             <button type="button" className="legacy-btn" onClick={() => setDetailsModalOpen(false)}>Close</button>
             <div style={{ display: 'flex', gap: 8 }}>
               <button type="button" className="legacy-btn" onClick={() => selectedResidence && openStudentsModal(selectedResidence)}>
-                <i className="ti ti-users" /> View Residents
+                <Icon className="ti ti-users" /> View Residents
               </button>
               <button type="button" className="legacy-btn legacy-btn-success" onClick={() => selectedResidence && openEditModal(selectedResidence)}>
-                <i className="ti ti-pencil" /> Edit
+                <Icon className="ti ti-pencil" /> Edit
               </button>
             </div>
           </div>
@@ -1215,17 +1215,16 @@ export default function ResidenceManagementPage() {
               ) : null}
             </div>
             <button type="button" className="legacy-modal-close" onClick={() => setStudentsModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
             <div className="filter-bar" style={{ marginTop: 0 }}>
               <div className="search-wrapper">
-                <i
+                <Icon
                   className={`ti ${studentSearch ? 'ti-close' : 'ti-search'}`}
                   onClick={() => { setStudentSearch(''); setStudentPage(1); }}
-                  aria-hidden="true"
-                />
+                  aria-hidden="true" />
                 <input
                   type="text"
                   className="search-input"
@@ -1275,7 +1274,7 @@ export default function ResidenceManagementPage() {
                       <td>{formatDate(s.mappedDate || s.mappedAt || s.createdAt)}</td>
                       <td className="center-align">
                         <button type="button" className="legacy-btn" onClick={() => askUnmap(s)}>
-                          <i className="ti ti-trash" /> Remove
+                          <Icon className="ti ti-trash" /> Remove
                         </button>
                       </td>
                     </tr>
@@ -1291,7 +1290,7 @@ export default function ResidenceManagementPage() {
                   {studentTotalPages > 1 && (
                     <div className="pagination-controls">
                       <button type="button" className="pagination-btn" disabled={studentSafePage === 1} onClick={() => setStudentPage((p) => Math.max(1, p - 1))}>
-                        <i className="ti ti-angle-left" /> Previous
+                        <Icon className="ti ti-angle-left" /> Previous
                       </button>
                       {studentPaginationPages.map((p) => (
                         <button
@@ -1309,7 +1308,7 @@ export default function ResidenceManagementPage() {
                         disabled={studentSafePage === studentTotalPages}
                         onClick={() => setStudentPage((p) => Math.min(studentTotalPages, p + 1))}
                       >
-                        Next <i className="ti ti-angle-right" />
+                        Next <Icon className="ti ti-angle-right" />
                       </button>
                     </div>
                   )}
@@ -1329,12 +1328,12 @@ export default function ResidenceManagementPage() {
           <div className="legacy-modal-header">
             <h3>Allot Student to {selectedResidence?.name || ''}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => !isMapping && setMapDrawerOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-user-search" /> Select Student</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-user-search" /> Select Student</div>
               <div className="residence-typeahead" ref={candidateBoxRef} style={{ position: 'relative' }}>
                 <div className="float-field">
                   <input
@@ -1363,7 +1362,7 @@ export default function ResidenceManagementPage() {
                       background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--muted)', padding: 4,
                     }}
                   >
-                    <i className={`ti ${candidateQuery ? 'ti-close' : 'ti-search'}`} />
+                    <Icon className={`ti ${candidateQuery ? 'ti-close' : 'ti-search'}`} />
                   </button>
                 </div>
 
@@ -1379,7 +1378,7 @@ export default function ResidenceManagementPage() {
                   >
                     {candidatesLoading ? (
                       <div style={{ padding: '10px 12px', fontSize: 12, color: 'var(--muted)' }}>
-                        <i className="ti ti-reload" style={{ marginRight: 6 }} />Searching…
+                        <Icon className="ti ti-reload" style={{ marginRight: 6 }} />Searching…
                       </div>
                     ) : candidates.length === 0 ? (
                       <div style={{ padding: '10px 12px', fontSize: 12, color: 'var(--muted)' }}>
@@ -1406,7 +1405,7 @@ export default function ResidenceManagementPage() {
             </div>
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-building-community" /> Assign House</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-building-community" /> Assign House</div>
               <label className="field-cell">
                 <div className="float-field float-always">
                   <select
@@ -1435,7 +1434,7 @@ export default function ResidenceManagementPage() {
           <div className="legacy-modal-footer" style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', padding: 16 }}>
             <button type="button" className="legacy-btn" disabled={isMapping} onClick={() => setMapDrawerOpen(false)}>Cancel</button>
             <button type="button" className="legacy-btn legacy-btn-success" disabled={isMapping || !selectedCandidate || !selectedHouse} onClick={submitMapping}>
-              {isMapping ? (<><i className="ti ti-reload" /> Mapping...</>) : (<><i className="ti ti-check" /> Confirm Mapping</>)}
+              {isMapping ? (<><Icon className="ti ti-reload" /> Mapping...</>) : (<><Icon className="ti ti-check" /> Confirm Mapping</>)}
             </button>
           </div>
         </div>
@@ -1445,9 +1444,9 @@ export default function ResidenceManagementPage() {
       <div className={`legacy-modal-backdrop ${confirmAction ? 'active' : ''}`} onClick={() => !isConfirming && setConfirmAction(null)}>
         <div className="legacy-modal-dialog legacy-confirm" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
           <div className={`legacy-modal-header ${confirmAction?.danger ? 'legacy-danger-header' : ''}`}>
-            <h3>{confirmAction?.danger && <i className="ti ti-alert" />} {confirmAction?.title || 'Confirm'}</h3>
+            <h3>{confirmAction?.danger && <Icon className="ti ti-alert" />} {confirmAction?.title || 'Confirm'}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => !isConfirming && setConfirmAction(null)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
@@ -1473,7 +1472,7 @@ export default function ResidenceManagementPage() {
 function InfoItem({ icon, label, value, full }) {
   return (
     <div className={`rd-info-item ${full ? 'rd-info-full' : ''}`}>
-      <span className="rd-info-icon"><i className={`ti ${icon}`} /></span>
+      <span className="rd-info-icon"><Icon className={`ti ${icon}`} /></span>
       <div className="rd-info-text">
         <small>{label}</small>
         <div className="rd-info-value">{value || '—'}</div>

@@ -13,6 +13,7 @@ import {
   extractApiError,
   validateUser,
 } from '../../lib/userAccountsApi';
+import Icon from '../../components/Icon';
 
 function getInitials(name) {
   if (!name) return '??';
@@ -336,20 +337,20 @@ export default function UsersTab({ roles, showToast }) {
     <section className="user-accounts-page mentor-profiles-page">
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-users" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-users" /></span>
           <div>
             <h2>User accounts</h2>
             <p>Create admin users, assign roles, and enable or disable access.</p>
           </div>
         </div>
         <button type="button" className="page-action-button" onClick={openCreateModal}>
-          <i className="ti ti-plus" /> New User
+          <Icon className="ti ti-plus" /> New User
         </button>
       </div>
 
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i className={`ti ${searchInput ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchInput('')} />
+          <Icon className={`ti ${searchInput ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchInput('')} />
           <input
             type="text"
             className="search-input"
@@ -375,17 +376,17 @@ export default function UsersTab({ roles, showToast }) {
             <thead>
               <tr>
                 <th className={`sortable ${sortColumn === 'name' ? 'active' : ''}`} onClick={() => handleSort('name')}>
-                  Name <i className={`sort-icon ti ${sortIcon('name')}`} />
+                  Name <Icon className={`sort-icon ti ${sortIcon('name')}`} />
                 </th>
                 <th>Mobile</th>
                 <th className={`sortable ${sortColumn === 'email' ? 'active' : ''}`} onClick={() => handleSort('email')}>
-                  Email <i className={`sort-icon ti ${sortIcon('email')}`} />
+                  Email <Icon className={`sort-icon ti ${sortIcon('email')}`} />
                 </th>
                 <th className={`sortable ${sortColumn === 'roleLabel' ? 'active' : ''}`} onClick={() => handleSort('roleLabel')}>
-                  Roles <i className={`sort-icon ti ${sortIcon('roleLabel')}`} />
+                  Roles <Icon className={`sort-icon ti ${sortIcon('roleLabel')}`} />
                 </th>
                 <th className={`sortable ${sortColumn === 'lastLogin' ? 'active' : ''}`} onClick={() => handleSort('lastLogin')}>
-                  Last Login <i className={`sort-icon ti ${sortIcon('lastLogin')}`} />
+                  Last Login <Icon className={`sort-icon ti ${sortIcon('lastLogin')}`} />
                 </th>
                 <th className="centered-cell">Status</th>
                 <th className="actions-column" />
@@ -433,20 +434,20 @@ export default function UsersTab({ roles, showToast }) {
                     <td className="mentor-actions-cell">
                       <div className="kebab-menu-container">
                         <button type="button" className="kebab-button" onClick={(event) => { event.stopPropagation(); setActiveKebabId((c) => (c === user.id ? null : user.id)); }}>
-                          <i className="ti ti-more-alt" />
+                          <Icon className="ti ti-more-alt" />
                         </button>
                         <div className={`kebab-dropdown ${activeKebabId === user.id ? 'active' : ''}`}>
                           <button type="button" className="kebab-dropdown-item edit-action" onClick={() => openEditModal(user)}>
-                            <i className="ti ti-pencil" /><span>Edit User</span>
+                            <Icon className="ti ti-pencil" /><span>Edit User</span>
                           </button>
                           {user.active && !isSelf(user) && (
                             <button type="button" className="kebab-dropdown-item" onClick={() => resetPassword(user)}>
-                              <i className="ti ti-key" /><span>Reset Password</span>
+                              <Icon className="ti ti-key" /><span>Reset Password</span>
                             </button>
                           )}
                           {!isSelf(user) && (
                             <button type="button" className="kebab-dropdown-item" onClick={() => toggleUserActive(user)}>
-                              <i className={`ti ${user.active ? 'ti-na' : 'ti-check'}`} /><span>{user.active ? 'Disable' : 'Enable'}</span>
+                              <Icon className={`ti ${user.active ? 'ti-na' : 'ti-check'}`} /><span>{user.active ? 'Disable' : 'Enable'}</span>
                             </button>
                           )}
                         </div>
@@ -467,7 +468,7 @@ export default function UsersTab({ roles, showToast }) {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={safeCurrentPage === 1}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {pageNumbers.map((page) => (
                 <button key={page} type="button" className={`pagination-btn ${page === safeCurrentPage ? 'active' : ''}`} onClick={() => setCurrentPage(page)}>
@@ -475,7 +476,7 @@ export default function UsersTab({ roles, showToast }) {
                 </button>
               ))}
               <button type="button" className="pagination-btn" onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={safeCurrentPage === totalPages}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
@@ -485,7 +486,7 @@ export default function UsersTab({ roles, showToast }) {
       {!isLoading && totalUsers === 0 ? (
         <div className="mentors-table-container">
           <div className="empty-state">
-            <i className="ti ti-user" />
+            <Icon className="ti ti-user" />
             <h3>No Users Found</h3>
             <p>{searchQuery || filterRoleId ? 'No users match your search criteria.' : 'Get started by adding your first user.'}</p>
           </div>
@@ -496,15 +497,15 @@ export default function UsersTab({ roles, showToast }) {
       <div className={`legacy-modal-backdrop ${modalOpen ? 'active' : ''}`} onClick={() => !saving && setModalOpen(false)}>
         <div className="legacy-modal-dialog legacy-large" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
           <div className="legacy-modal-header">
-            <h3><i className="ti ti-user" /> {editMode ? 'Edit User' : 'Add New User'}</h3>
+            <h3><Icon className="ti ti-user" /> {editMode ? 'Edit User' : 'Add New User'}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setModalOpen(false)} disabled={saving}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <form className="form-modal" onSubmit={(e) => { e.preventDefault(); if (!saving) saveUser(); }}>
           <div className="legacy-modal-body">
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-user" /> Profile</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-user" /> Profile</div>
               <div className="asset-form-grid basic-grid">
                 <label className="field-cell full-span">
                   <div className={`float-field ${formErrors.name ? 'has-error' : ''}`}>
@@ -549,7 +550,7 @@ export default function UsersTab({ roles, showToast }) {
             </div>
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-shield-lock" /> Access</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-shield-lock" /> Access</div>
               <div className="asset-form-grid">
                 <label className="field-cell full-span">
                   <span className="field-static-label">Roles <span className="req">*</span></span>
@@ -582,7 +583,7 @@ export default function UsersTab({ roles, showToast }) {
             </div>
             <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setModalOpen(false)} disabled={saving}>Cancel</button>
             <button type="submit" className="legacy-btn legacy-btn-success" disabled={saving}>
-              <i className="ti ti-check" /> {saving ? 'Saving…' : (editMode ? 'Update' : 'Create')} User
+              <Icon className="ti ti-check" /> {saving ? 'Saving…' : (editMode ? 'Update' : 'Create')} User
             </button>
           </div>
           </form>

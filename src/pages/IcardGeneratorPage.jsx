@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import MultiSelectDropdown from '../components/MultiSelectDropdown';
 import ToastRegion from '../components/ToastRegion';
 import { Can, usePermission } from '../lib/userStore';
 import { PERMS } from '../lib/permissions';
@@ -22,6 +23,7 @@ import {
   renderTemplate,
   wrapForFrame,
 } from '../lib/icardTemplate';
+import Icon from '../components/Icon';
 
 const TEMPLATE_ROOT = '/templates/id-card-student';
 
@@ -121,6 +123,36 @@ function getByPath(obj, path) {
   return path.split('.').reduce((acc, key) => (acc == null ? undefined : acc[key]), obj);
 }
 
+// Treat any placeholder whose name mentions PHOTO/AVATAR/IMAGE as an image URL
+// field (thumbnail in the edit modal; never joined from several fields).
+function isPhotoField(p) {
+  return /(PHOTO|AVATAR|IMAGE|PIC)/i.test(p);
+}
+
+// A placeholder maps to an ordered list of field paths. Older single-path
+// entries are read as a one-item list.
+function mappedPaths(entry) {
+  if (Array.isArray(entry)) return entry;
+  return entry ? [entry] : [];
+}
+
+function fieldText(v) {
+  if (v == null) return '';
+  if (Array.isArray(v)) return v.filter((x) => x != null && x !== '').join(', ');
+  return String(v).trim();
+}
+
+// Resolve one placeholder for a student: the picked fields' values, in pick
+// order, joined with ", " (e.g. "Last Institution, Place"). Empty fields are
+// skipped. Photo placeholders take the first field that has a value.
+function resolveMapped(student, entry, placeholder) {
+  const parts = mappedPaths(entry)
+    .map((path) => fieldText(getByPath(student, path)))
+    .filter(Boolean);
+  if (parts.length === 0) return '';
+  return isPhotoField(placeholder) ? parts[0] : parts.join(', ');
+}
+
 function formatTimestamp(value) {
   if (!value) return '—';
   const num = Number(value);
@@ -137,9 +169,9 @@ function formatTimestamp(value) {
 function valuesForStudent(student, mapping, defaults, metadata) {
   const out = {};
   Object.keys(defaults).forEach((k) => { out[k] = defaults[k] || ''; });
-  Object.entries(mapping).forEach(([placeholder, fieldPath]) => {
-    const v = getByPath(student, fieldPath);
-    if (v !== undefined && v !== null && v !== '') out[placeholder] = v;
+  Object.entries(mapping).forEach(([placeholder, entry]) => {
+    const v = resolveMapped(student, entry, placeholder);
+    if (v !== '') out[placeholder] = v;
     else if (out[placeholder] == null) out[placeholder] = '';
   });
   // If `printQR=true`, derive {{PRINT_QR}} from the value of the placeholder
@@ -213,6 +245,7 @@ export default function IcardGeneratorPage() {
   const [singleEditOpen, setSingleEditOpen] = useState(false);
   const [singleEditStudent, setSingleEditStudent] = useState(null);
   const [singleEditValues, setSingleEditValues] = useState({}); // placeholder → string
+  const [singleEditMapping, setSingleEditMapping] = useState({}); // placeholder → field paths
 
   // "Preview for a Student" preview picker (drives the live preview pane)
   const [previewPickerOpen, setPreviewPickerOpen] = useState(false);
@@ -273,7 +306,8 @@ export default function IcardGeneratorPage() {
         tpl.placeholders.forEach((p) => {
           // Forced bindings (photo→idPhoto, address, guardian→parentMobile,
           // dob→studentDOB) win; otherwise fall back to the name heuristic.
-          seed[p] = boundFieldPath(p, fieldPaths) || autoMatch(p, fieldPaths);
+          const path = boundFieldPath(p, fieldPaths) || autoMatch(p, fieldPaths);
+          seed[p] = path ? [path] : [];
         });
         setMapping(seed);
       })
@@ -311,6 +345,13 @@ export default function IcardGeneratorPage() {
   useEffect(() => { loadAudit(); }, [loadAudit]);
 
   useEffect(() => { setPage(1); }, [debouncedAuditSearch]);
+
+  const fieldPaths = useMemo(() => studentFields.map((f) => f.path), [studentFields]);
+  const fieldLabels = useMemo(
+    () => Object.fromEntries(studentFields.map((f) => [f.path, f.label])),
+    [studentFields]
+  );
+  const fieldLabel = useCallback((path) => fieldLabels[path] || prettyLabel(path), [fieldLabels]);
 
   // Live preview using the sample profile from the API so the dropdown and
   // preview agree on the shape of the data.
@@ -458,6 +499,7 @@ export default function IcardGeneratorPage() {
         });
         setSingleEditStudent(student);
         setSingleEditValues(seed);
+        setSingleEditMapping(mapping);
         setStudentsModalOpen(false);
         setSingleEditOpen(true);
         return;
@@ -505,11 +547,15 @@ export default function IcardGeneratorPage() {
     return template.placeholders.filter((p) => p !== lockedId && p !== 'PRINT_QR');
   }, [template]);
 
-  // Heuristic: treat any placeholder whose name mentions PHOTO/AVATAR/IMAGE as
-  // an image URL field (renders a thumbnail next to the input).
-  function isPhotoField(p) {
-    return /(PHOTO|AVATAR|IMAGE|PIC)/i.test(p);
-  }
+  // Review & Edit: re-pick the source fields for one placeholder and refill its
+  // text from this student's data (falling back to the template default).
+  // The text stays editable afterwards.
+  const changeSingleEditFields = useCallback((p, paths) => {
+    setSingleEditMapping((cur) => ({ ...cur, [p]: paths }));
+    const resolved = resolveMapped(singleEditStudent || {}, paths, p);
+    const fallback = template?.metadata.placeholders[p] || '';
+    setSingleEditValues((cur) => ({ ...cur, [p]: resolved || String(fallback) }));
+  }, [singleEditStudent, template]);
 
   // Final values used by the single-student preview + PDF: text fields from
   // singleEditValues, plus a freshly-built PRINT_QR sourced from the (locked)
@@ -686,7 +732,7 @@ export default function IcardGeneratorPage() {
 
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-id-card-o" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-id-card-o" /></span>
           <div>
             <h2>ID Card Generator</h2>
             <p>Generate and print student ID cards from your saved templates.</p>
@@ -700,7 +746,7 @@ export default function IcardGeneratorPage() {
               disabled={!template}
               style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: '1px solid rgba(255,255,255,0.6)', borderRadius: 6, padding: '10px 18px', background: 'rgba(255,255,255,0.12)', color: '#fff', fontSize: 14, fontWeight: 600, cursor: template ? 'pointer' : 'not-allowed', opacity: template ? 1 : 0.6, whiteSpace: 'nowrap' }}
             >
-              <i className="fa fa-user" />
+              <Icon className="fa fa-user" />
               Generate for Individual
             </button>
             <button
@@ -710,7 +756,7 @@ export default function IcardGeneratorPage() {
               disabled={!template}
               style={{ opacity: template ? 1 : 0.6, cursor: template ? 'pointer' : 'not-allowed' }}
             >
-              <i className="fa fa-id-card-o" />
+              <Icon className="fa fa-id-card-o" />
               Generate for Batches
             </button>
           </div>
@@ -777,7 +823,7 @@ export default function IcardGeneratorPage() {
                 onClick={openPreviewPicker}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: '1px solid #006073', borderRadius: 6, padding: '6px 14px', background: '#fff', color: '#006073', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
               >
-                <i className="fa fa-user" />
+                <Icon className="fa fa-user" />
                 Preview for a Student
               </button>
             </div>
@@ -785,24 +831,26 @@ export default function IcardGeneratorPage() {
               {/* Mapping table */}
               <div>
                 <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>
-                  Map each placeholder to a data field. Defaults from pre-configured metadata are used when a student value is empty.
+                  Map each placeholder to one or more data fields. Several fields are joined with a comma in the order you pick them. Defaults from pre-configured metadata are used when a student value is empty.
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {template.placeholders.map((p) => (
-                    <div key={p} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, alignItems: 'center' }}>
-                      <code style={{ fontSize: 12, background: '#f3f4f6', padding: '4px 8px', borderRadius: 4 }}>
+                    <div key={p} className="icard-map-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, alignItems: 'center' }}>
+                      <code style={{ fontSize: 12, background: '#f3f4f6', padding: '4px 8px', borderRadius: 4, overflowWrap: 'anywhere' }}>
                         {p}
                       </code>
-                      <select
-                        value={mapping[p] || ''}
-                        onChange={(e) => setMapping((cur) => ({ ...cur, [p]: e.target.value }))}
-                        style={{ padding: '6px 8px', border: '1px solid #d1d5db', borderRadius: 4, fontSize: 12 }}
-                      >
-                        <option value="">— Use default —</option>
-                        {studentFields.map((f) => (
-                          <option key={f.path} value={f.path}>{f.label}</option>
-                        ))}
-                      </select>
+                      <MultiSelectDropdown
+                        value={mappedPaths(mapping[p])}
+                        onChange={(paths) => setMapping((cur) => ({ ...cur, [p]: paths }))}
+                        options={fieldPaths}
+                        getLabel={fieldLabel}
+                        allLabel="— Use default —"
+                        searchPlaceholder="Search fields…"
+                        buttonClassName="icard-map-trigger"
+                        disabled={fieldPaths.length === 0}
+                        joinSelected
+                        panelMinWidth={260}
+                      />
                     </div>
                   ))}
                   {studentFields.length === 0 && (
@@ -827,17 +875,16 @@ export default function IcardGeneratorPage() {
                   <div style={{ fontSize: 12, color: '#6b7280' }}>LIVE PREVIEW</div>
                   {previewStudent ? (
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#006073', background: '#e6f6f9', border: '1px solid #bfe9f2', borderRadius: 20, padding: '3px 10px', fontWeight: 600 }}>
-                      <i className="fa fa-user" />
+                      <Icon className="fa fa-user" />
                       {previewStudentLabel}
-                      <i
+                      <Icon
                         className="ti ti-close"
                         role="button"
                         tabIndex={0}
                         title="Show sample profile"
                         onClick={clearPreviewStudent}
                         onKeyDown={(e) => { if (e.key === 'Enter') clearPreviewStudent(); }}
-                        style={{ cursor: 'pointer', marginLeft: 2 }}
-                      />
+                        style={{ cursor: 'pointer', marginLeft: 2 }} />
                     </span>
                   ) : (
                     <span style={{ fontSize: 12, color: '#9ca3af' }}>Sample profile</span>
@@ -865,7 +912,7 @@ export default function IcardGeneratorPage() {
       <div style={{ marginTop: 24 }}>
         <div className="filter-bar">
           <div className="search-wrapper">
-            <i className={`ti ${auditSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setAuditSearch('')} aria-hidden="true" />
+            <Icon className={`ti ${auditSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setAuditSearch('')} aria-hidden="true" />
             <input
               type="text"
               className="search-input"
@@ -875,7 +922,7 @@ export default function IcardGeneratorPage() {
             />
           </div>
           <h3 style={{ margin: 0, marginLeft: 'auto', fontSize: 20, fontWeight: 300, color: '#aab2bd', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <i className="ti ti-history" /> ID Card Generation History
+            <Icon className="ti ti-history" /> ID Card Generation History
           </h3>
         </div>
         <div className="students-table-container">
@@ -966,7 +1013,7 @@ export default function IcardGeneratorPage() {
                   disabled={page <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                 >
-                  <i className="ti ti-angle-left" /> Previous
+                  <Icon className="ti ti-angle-left" /> Previous
                 </button>
                 {getPageNumbers(page, totalPages).map((p, i) => (
                   p === '...' ? (
@@ -988,7 +1035,7 @@ export default function IcardGeneratorPage() {
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 >
-                  Next <i className="ti ti-angle-right" />
+                  Next <Icon className="ti ti-angle-right" />
                 </button>
               </div>
             </div>
@@ -1001,9 +1048,9 @@ export default function IcardGeneratorPage() {
         <div className="legacy-modal-backdrop active" onClick={() => !generating && setModalOpen(false)}>
           <div className="legacy-modal-dialog" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <div className="legacy-modal-header">
-              <h3><i className="ti ti-id-badge" /> Generate ID Cards</h3>
+              <h3><Icon className="ti ti-id-badge" /> Generate ID Cards</h3>
               <button type="button" className="legacy-modal-close" onClick={() => !generating && setModalOpen(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="legacy-modal-body">
@@ -1059,9 +1106,9 @@ export default function IcardGeneratorPage() {
         <div className="legacy-modal-backdrop active" onClick={() => !generating && setStudentsModalOpen(false)}>
           <div className="legacy-modal-dialog legacy-large" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <div className="legacy-modal-header">
-              <h3><i className="ti ti-id-badge" /> Generate ID Cards for Selected Students</h3>
+              <h3><Icon className="ti ti-id-badge" /> Generate ID Cards for Selected Students</h3>
               <button type="button" className="legacy-modal-close" onClick={() => !generating && setStudentsModalOpen(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="legacy-modal-body">
@@ -1070,7 +1117,7 @@ export default function IcardGeneratorPage() {
             </p>
             {Object.keys(selectedCandidates).length > 0 && (
               <div style={{ background: '#eff6ff', color: '#1d4ed8', padding: '6px 10px', borderRadius: 4, fontSize: 12, marginBottom: 10 }}>
-                <i className="fa fa-check" style={{ marginRight: 6 }} />
+                <Icon className="fa fa-check" style={{ marginRight: 6 }} />
                 {Object.keys(selectedCandidates).length} student(s) selected
               </div>
             )}
@@ -1167,9 +1214,9 @@ export default function IcardGeneratorPage() {
         <div className="legacy-modal-backdrop active" onClick={() => setPreviewPickerOpen(false)}>
           <div className="legacy-modal-dialog legacy-large" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <div className="legacy-modal-header">
-              <h3><i className="ti ti-user" /> Preview ID Card for a Student</h3>
+              <h3><Icon className="ti ti-user" /> Preview ID Card for a Student</h3>
               <button type="button" className="legacy-modal-close" onClick={() => setPreviewPickerOpen(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="legacy-modal-body">
@@ -1246,16 +1293,16 @@ export default function IcardGeneratorPage() {
         >
           <div className="crispr-modal-dialog" style={{ maxWidth: 820 }} role="dialog" aria-modal="true">
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-id-badge" /> Review &amp; Edit — {singleEditStudent?.name || 'Student'}</h3>
+              <h3><Icon className="ti ti-id-badge" /> Review &amp; Edit — {singleEditStudent?.name || 'Student'}</h3>
               <button type="button" className="crispr-modal-close" onClick={() => !generating && setSingleEditOpen(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
 
             <div className="crispr-modal-body">
             <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 380px) 1fr', gap: 18 }}>
               {/* Editable fields */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxHeight: 460, overflowY: 'auto', paddingRight: 6 }}>
+              <div className="icard-edit-fields" style={{ display: 'flex', flexDirection: 'column', gap: 10, maxHeight: 460, overflowY: 'auto', paddingRight: 6 }}>
                 {template.metadata.printQRId && (
                   <div>
                     <label style={editLabel}>
@@ -1278,6 +1325,21 @@ export default function IcardGeneratorPage() {
                       <label style={editLabel}>
                         {prettyLabel(p)} {isPhoto ? <span style={{ color: '#9ca3af', fontWeight: 400 }}>(image URL)</span> : null}
                       </label>
+                      <div style={{ marginBottom: 6 }}>
+                        <MultiSelectDropdown
+                          value={mappedPaths(singleEditMapping[p])}
+                          onChange={(paths) => changeSingleEditFields(p, paths)}
+                          options={fieldPaths}
+                          getLabel={fieldLabel}
+                          allLabel="— Use default —"
+                          searchPlaceholder="Search fields…"
+                          buttonClassName="icard-map-trigger"
+                          disabled={fieldPaths.length === 0}
+                          joinSelected
+                          panelMinWidth={260}
+                          panelZIndex={10000}
+                        />
+                      </div>
                       <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                         {isPhoto && (
                           <div style={{
@@ -1329,7 +1391,7 @@ export default function IcardGeneratorPage() {
                 disabled={generating}
                 style={generating ? { opacity: 0.6, cursor: 'not-allowed' } : undefined}
               >
-                <i className="ti ti-check" /> {generating ? 'Generating…' : 'Confirm & Generate PDF'}
+                <Icon className="ti ti-check" /> {generating ? 'Generating…' : 'Confirm & Generate PDF'}
               </button>
             </div>
           </div>

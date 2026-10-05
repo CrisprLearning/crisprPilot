@@ -22,6 +22,7 @@ import {
   pauseSurvey,
   surveyFromSchema,
 } from '../lib/surveysApi';
+import Icon from '../components/Icon';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function formatDateTime(value) {
@@ -91,7 +92,7 @@ function BatchMultiSelect({ batches, selected, onChange, disabled }) {
         <span>{getLabel()}</span>
         <span style={{ display: 'flex', alignItems: 'center' }}>
           {selected.length > 0 && <span className="qar-batch-count">{selected.length}</span>}
-          <i className="ti ti-angle-down" style={{ marginLeft: 8 }} />
+          <Icon className="ti ti-angle-down" style={{ marginLeft: 8 }} />
         </span>
       </div>
       {open && !disabled && (
@@ -153,7 +154,7 @@ function CourseMultiSelect({ courses, selected, onChange, disabled }) {
         <span>{getLabel()}</span>
         <span style={{ display: 'flex', alignItems: 'center' }}>
           {selected.length > 0 && <span className="qar-batch-count">{selected.length}</span>}
-          <i className="ti ti-angle-down" style={{ marginLeft: 8 }} />
+          <Icon className="ti ti-angle-down" style={{ marginLeft: 8 }} />
         </span>
       </div>
       {open && !disabled && (
@@ -202,29 +203,29 @@ function KebabMenu({ survey, onAction, can }) {
         className="kebab-button"
         onClick={(event) => { event.stopPropagation(); setOpen((v) => !v); }}
       >
-        <i className="ti ti-more-alt" />
+        <Icon className="ti ti-more-alt" />
       </button>
       {open && (
         <div className="kebab-dropdown active">
           <button type="button" className="kebab-dropdown-item" onClick={() => { setOpen(false); onAction(survey, 'view_survey'); }}>
-            <i className="ti ti-desktop" /> Preview Survey Form
+            <Icon className="ti ti-desktop" /> Preview Survey Form
           </button>
           <button type="button" className="kebab-dropdown-item" onClick={() => { setOpen(false); onAction(survey, 'view_responses'); }}>
-            <i className="ti ti-list" /> View Responses
+            <Icon className="ti ti-list" /> View Responses
           </button>
           {survey.status === SURVEY_STATUS.ACTIVE && can?.('surveys.status.edit') && (
             <button type="button" className="kebab-dropdown-item" onClick={() => { setOpen(false); onAction(survey, 'pause'); }}>
-              <i className="ti ti-control-pause" /> Pause Survey
+              <Icon className="ti ti-control-pause" /> Pause Survey
             </button>
           )}
           {survey.status === SURVEY_STATUS.PAUSED && can?.('surveys.status.edit') && (
             <button type="button" className="kebab-dropdown-item" onClick={() => { setOpen(false); onAction(survey, 'resume'); }}>
-              <i className="ti ti-control-play" /> Resume Survey
+              <Icon className="ti ti-control-play" /> Resume Survey
             </button>
           )}
           {survey.status !== SURVEY_STATUS.RECALLED && can?.('surveys.recall') && (
             <button type="button" className="kebab-dropdown-item danger-action" onClick={() => { setOpen(false); onAction(survey, 'recall'); }}>
-              <i className="ti ti-back-left" /> Recall Survey
+              <Icon className="ti ti-back-left" /> Recall Survey
             </button>
           )}
         </div>
@@ -678,7 +679,7 @@ export default function SurveyDashboardPage() {
         <section className="courses-list-page" style={{ padding: 0 }}>
           <div className="page-header-section">
             <div className="page-header-title-group">
-              <span className="page-header-icon-box"><i className="fa fa-bar-chart" /></span>
+              <span className="page-header-icon-box"><Icon className="fa fa-bar-chart" /></span>
               <div>
                 <h2>Survey Dashboard</h2>
                 <p>Create, dispatch, and review custom surveys for students.</p>
@@ -686,14 +687,14 @@ export default function SurveyDashboardPage() {
             </div>
             <Can permission={PERMS.SURVEYS_EDIT}>
               <button type="button" className="page-action-button" onClick={() => setCurrentView('create')}>
-                <i className="ti ti-plus" /> Create Survey
+                <Icon className="ti ti-plus" /> Create Survey
               </button>
             </Can>
           </div>
 
           <div className="filter-bar" style={{ marginBottom: '24px' }}>
             <div className="search-wrapper">
-              <i className={`ti ${listSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setListSearch('')} aria-hidden="true" />
+              <Icon className={`ti ${listSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setListSearch('')} aria-hidden="true" />
               <input
                 type="text"
                 className="search-input"
@@ -742,7 +743,7 @@ export default function SurveyDashboardPage() {
               <button type="button" className="filter-clear-btn" onClick={() => {
                 setListSearch(''); setListStatusFilter('all'); setListResponseFilter('all'); setListAudienceFilter('');
               }}>
-                <i className="ti ti-close" /> Clear
+                <Icon className="ti ti-close" /> Clear
               </button>
             )}
           </div>
@@ -799,7 +800,7 @@ export default function SurveyDashboardPage() {
                     </td>
                     <td>
                       <div className="contact-info">
-                        <i className="ti ti-calendar" style={{ marginRight: '6px' }} />
+                        <Icon className="ti ti-calendar" style={{ marginRight: '6px' }} />
                         {timeWindowLabel(s)}
                       </div>
                     </td>
@@ -820,7 +821,7 @@ export default function SurveyDashboardPage() {
                   <tr>
                     <td colSpan={7} style={{ textAlign: 'center', padding: '40px' }}>
                       <div className="qar-empty-state" style={{ border: 'none', background: 'transparent' }}>
-                        <i className="ti ti-search" />
+                        <Icon className="ti ti-search" />
                         <h4>No Surveys Found</h4>
                         <p>Adjust your filters or create a new survey.</p>
                       </div>
@@ -843,7 +844,7 @@ export default function SurveyDashboardPage() {
                 </div>
                 <div className="pagination-controls">
                   <button type="button" className="pagination-btn" disabled={listSafePage === 1} onClick={() => setListPage((p) => Math.max(1, p - 1))}>
-                    <i className="ti ti-angle-left" /> Previous
+                    <Icon className="ti ti-angle-left" /> Previous
                   </button>
                   {listPageNumbers().map((p, idx) => (
                     p === '...' ? (
@@ -853,7 +854,7 @@ export default function SurveyDashboardPage() {
                     )
                   ))}
                   <button type="button" className="pagination-btn" disabled={listSafePage === listTotalPages} onClick={() => setListPage((p) => Math.min(listTotalPages, p + 1))}>
-                    Next <i className="ti ti-angle-right" />
+                    Next <Icon className="ti ti-angle-right" />
                   </button>
                 </div>
               </div>
@@ -866,15 +867,15 @@ export default function SurveyDashboardPage() {
         <div className="legacy-modal-backdrop active" onMouseDown={(e) => { if (e.target === e.currentTarget && !csSaving) setCurrentView('list'); }}>
           <div className="legacy-modal-dialog legacy-large" role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}>
             <div className="legacy-modal-header">
-              <h3><i className="ti ti-pencil" /> Create a New Survey</h3>
-              <button type="button" className="legacy-modal-close" onClick={() => setCurrentView('list')}><i className="ti ti-close" /></button>
+              <h3><Icon className="ti ti-pencil" /> Create a New Survey</h3>
+              <button type="button" className="legacy-modal-close" onClick={() => setCurrentView('list')}><Icon className="ti ti-close" /></button>
             </div>
 
           <form className="survey-modal-form form-modal" onSubmit={handleCreateSurvey}>
             <div className="legacy-modal-body">
 
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Survey Details</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Survey Details</div>
                 <div className="asset-form-grid basic-grid">
                   <label className="field-cell">
                     <div className="float-field">
@@ -916,7 +917,7 @@ export default function SurveyDashboardPage() {
               </div>
 
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-settings" /> Availability &amp; Access</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-settings" /> Availability &amp; Access</div>
                 <div className="asset-form-grid">
                   <label className="field-cell">
                     <div className="float-field float-always">
@@ -966,7 +967,7 @@ export default function SurveyDashboardPage() {
               </div>
 
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-list-check" /> Questions Base</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-list-check" /> Questions Base</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   {csQuestions.map((q, idx) => (
                     <div key={idx} className="survey-question-card">
@@ -1000,7 +1001,7 @@ export default function SurveyDashboardPage() {
                         </label>
                         {csQuestions.length > 1 && (
                           <button type="button" className="survey-icon-btn danger" onClick={() => setCsQuestions(csQuestions.filter((_, i) => i !== idx))}>
-                            <i className="ti ti-trash" />
+                            <Icon className="ti ti-trash" />
                           </button>
                         )}
                       </div>
@@ -1020,7 +1021,7 @@ export default function SurveyDashboardPage() {
                                 <button type="button" className="survey-icon-btn danger" onClick={() => {
                                   const n = [...csQuestions]; n[idx].options = n[idx].options.filter((_, i) => i !== oIdx); setCsQuestions(n);
                                 }}>
-                                  <i className="ti ti-trash" />
+                                  <Icon className="ti ti-trash" />
                                 </button>
                               )}
                             </div>
@@ -1031,7 +1032,7 @@ export default function SurveyDashboardPage() {
                             n[idx].options.push('');
                             setCsQuestions(n);
                           }}>
-                            <i className="ti ti-plus" /> Add Option
+                            <Icon className="ti ti-plus" /> Add Option
                           </button>
                         </div>
                       )}
@@ -1039,7 +1040,7 @@ export default function SurveyDashboardPage() {
                   ))}
                 </div>
                 <button type="button" className="survey-add-btn block" onClick={() => setCsQuestions([...csQuestions, { text: '', type: 'Text Input', required: true, options: ['', ''] }])}>
-                  <i className="ti ti-plus" /> Add Next Question
+                  <Icon className="ti ti-plus" /> Add Next Question
                 </button>
               </div>
 
@@ -1048,7 +1049,7 @@ export default function SurveyDashboardPage() {
             <div className="legacy-modal-footer">
               <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setCurrentView('list')}>Cancel</button>
               <button type="submit" className="legacy-btn legacy-btn-success" disabled={csSaving}>
-                {csSaving ? 'Creating...' : <><i className="ti ti-check" /> Create Survey</>}
+                {csSaving ? 'Creating...' : <><Icon className="ti ti-check" /> Create Survey</>}
               </button>
             </div>
           </form>
@@ -1060,11 +1061,11 @@ export default function SurveyDashboardPage() {
         <>
           <div className="page-header-section" style={{ flexWrap: 'wrap' }}>
             <div>
-              <h2><i className="ti ti-bar-chart-alt" /> {activeSurvey.title} - Responses</h2>
+              <h2><Icon className="ti ti-bar-chart-alt" /> {activeSurvey.title} - Responses</h2>
               <p>Detailed analytical view of all feedback received for this survey.</p>
             </div>
             <button type="button" className="page-action-button" onClick={() => { setCurrentView('list'); setSearchParams((sp) => { const next = new URLSearchParams(sp); next.delete('id'); return next; }, { replace: true }); }}>
-              <i className="ti ti-arrow-left" /> Back to Dashboard
+              <Icon className="ti ti-arrow-left" /> Back to Dashboard
             </button>
           </div>
 
@@ -1105,7 +1106,7 @@ export default function SurveyDashboardPage() {
                         <span style={{ fontSize: '32px', fontWeight: 'bold', color: '#006073', lineHeight: 1 }}>{avg}</span>
                         <div style={{ display: 'flex', color: '#fbbf24', fontSize: '20px', gap: '2px' }}>
                           {[1, 2, 3, 4, 5].map(star => (
-                            <i key={star} className="fa fa-star" style={{ color: star <= Math.round(Number(avg)) ? '#fbbf24' : '#d6dde0' }} />
+                            <Icon key={star} className="fa fa-star" style={{ color: star <= Math.round(Number(avg)) ? '#fbbf24' : '#d6dde0' }} />
                           ))}
                         </div>
                         <span style={{ fontSize: '12px', color: '#59757b', marginLeft: 'auto' }}>{sq.answered} responses</span>
@@ -1148,7 +1149,7 @@ export default function SurveyDashboardPage() {
 
           <div className="filter-bar" style={{ marginBottom: '12px' }}>
             <div className="search-wrapper">
-              <i className={`ti ${rsSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setRsSearch('')} aria-hidden="true" />
+              <Icon className={`ti ${rsSearch ? 'ti-close' : 'ti-search'}`} onClick={() => setRsSearch('')} aria-hidden="true" />
               <input
                 type="text"
                 className="search-input"
@@ -1163,7 +1164,7 @@ export default function SurveyDashboardPage() {
               className={`filter-toggle-btn${hasRsModalFilters ? ' active' : ''}`}
               onClick={() => setShowRsFilterModal(true)}
             >
-              <i className="ti ti-filter" /> Filters
+              <Icon className="ti ti-filter" /> Filters
               {hasRsModalFilters && <span className="filter-count">{rsModalFilterCount}</span>}
             </button>
 
@@ -1171,7 +1172,7 @@ export default function SurveyDashboardPage() {
               <button type="button" className="filter-clear-btn" onClick={() => {
                 setRsSearch(''); setRsCourse(''); setRsBatches([]); setRsFrom(''); setRsTo('');
               }}>
-                <i className="ti ti-close" /> Clear
+                <Icon className="ti ti-close" /> Clear
               </button>
             )}
 
@@ -1183,7 +1184,7 @@ export default function SurveyDashboardPage() {
                 onClick={handleDownloadCsv}
                 style={{ marginLeft: 'auto', background: '#006073', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: filteredResponses.length === 0 ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '8px', opacity: filteredResponses.length === 0 ? 0.5 : 1 }}
               >
-                <i className="ti ti-download" /> Export to CSV
+                <Icon className="ti ti-download" /> Export to CSV
               </button>
             </Can>
           </div>
@@ -1224,7 +1225,7 @@ export default function SurveyDashboardPage() {
                           <td key={i}>
                             <span style={{ display: 'inline-flex', gap: '2px', color: '#fbbf24', fontSize: '15px' }}>
                               {[1, 2, 3, 4, 5].map((s) => (
-                                <i key={s} className="fa fa-star" style={{ color: s <= val ? '#fbbf24' : '#d6dde0' }} />
+                                <Icon key={s} className="fa fa-star" style={{ color: s <= val ? '#fbbf24' : '#d6dde0' }} />
                               ))}
                             </span>
                           </td>
@@ -1237,7 +1238,7 @@ export default function SurveyDashboardPage() {
                   <tr>
                     <td colSpan={2 + activeSurvey.questions.length} style={{ textAlign: 'center', padding: '40px' }}>
                       <div className="qar-empty-state" style={{ border: 'none', background: 'transparent' }}>
-                        <i className="ti ti-search" />
+                        <Icon className="ti ti-search" />
                         <h4>No Responses Found</h4>
                         <p>Adjust your filters or wait for students to submit.</p>
                       </div>
@@ -1259,7 +1260,7 @@ export default function SurveyDashboardPage() {
                 </div>
                 <div className="pagination-controls">
                   <button type="button" className="pagination-btn" disabled={rsSafePage === 1} onClick={() => setRsPage((p) => Math.max(1, p - 1))}>
-                    <i className="ti ti-angle-left" /> Previous
+                    <Icon className="ti ti-angle-left" /> Previous
                   </button>
                   {rsPageNumbers().map((p, idx) => (
                     p === '...' ? (
@@ -1269,7 +1270,7 @@ export default function SurveyDashboardPage() {
                     )
                   ))}
                   <button type="button" className="pagination-btn" disabled={rsSafePage === rsTotalPages} onClick={() => setRsPage((p) => Math.min(rsTotalPages, p + 1))}>
-                    Next <i className="ti ti-angle-right" />
+                    Next <Icon className="ti ti-angle-right" />
                   </button>
                 </div>
               </div>
@@ -1283,16 +1284,16 @@ export default function SurveyDashboardPage() {
         <div className="legacy-modal-backdrop active" onClick={() => setShowRsFilterModal(false)}>
           <div className="legacy-modal-dialog" role="dialog" aria-modal="true" style={{ maxWidth: 560 }} onClick={(e) => e.stopPropagation()}>
             <div className="legacy-modal-header">
-              <h3><i className="ti ti-filter" /> Filter Responses</h3>
+              <h3><Icon className="ti ti-filter" /> Filter Responses</h3>
               <button type="button" className="legacy-modal-close" onClick={() => setShowRsFilterModal(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="survey-filter-form form-modal">
               <div className="legacy-modal-body">
 
                 <div className="asset-form-section">
-                  <div className="asset-form-section-title"><i className="ti ti-calendar" /> Date Range</div>
+                  <div className="asset-form-section-title"><Icon className="ti ti-calendar" /> Date Range</div>
                   <div className="asset-form-grid">
                     <label className="field-cell">
                       <div className="float-field float-always date-custom">
@@ -1330,7 +1331,7 @@ export default function SurveyDashboardPage() {
                 </div>
 
                 <div className="asset-form-section">
-                  <div className="asset-form-section-title"><i className="ti ti-book" /> Course &amp; Batch</div>
+                  <div className="asset-form-section-title"><Icon className="ti ti-book" /> Course &amp; Batch</div>
                   <div className="asset-form-grid">
                     <label className="field-cell full-span">
                       <div className="float-field float-always">
@@ -1351,10 +1352,10 @@ export default function SurveyDashboardPage() {
               </div>
               <div className="legacy-modal-footer">
                 <button type="button" className="legacy-btn legacy-btn-default" onClick={() => { setRsCourse(''); setRsBatches([]); setRsFrom(''); setRsTo(''); }}>
-                  <i className="ti ti-reload" /> Clear Filters
+                  <Icon className="ti ti-reload" /> Clear Filters
                 </button>
                 <button type="button" className="legacy-btn legacy-btn-success" onClick={() => setShowRsFilterModal(false)}>
-                  <i className="ti ti-check" /> Apply Filters
+                  <Icon className="ti ti-check" /> Apply Filters
                 </button>
               </div>
             </div>
@@ -1367,9 +1368,9 @@ export default function SurveyDashboardPage() {
         <div className="legacy-modal-backdrop active" onClick={() => setSurveyToView(null)}>
           <div className="legacy-modal-dialog legacy-large" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
             <div className="legacy-modal-header">
-              <h3><i className="ti ti-desktop" /> Survey Preview: {surveyToView.title}</h3>
+              <h3><Icon className="ti ti-desktop" /> Survey Preview: {surveyToView.title}</h3>
               <button type="button" className="legacy-modal-close" onClick={() => setSurveyToView(null)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
 
@@ -1382,21 +1383,21 @@ export default function SurveyDashboardPage() {
                 {surveyToView.brief ? <p className="survey-preview-brief">{surveyToView.brief}</p> : null}
                 <div className="survey-meta-chips">
                   <div className="survey-meta-chip">
-                    <span className="survey-meta-icon"><i className="ti ti-user" /></span>
+                    <span className="survey-meta-icon"><Icon className="ti ti-user" /></span>
                     <span className="survey-meta-text">
                       <small>Audience</small>
                       <strong>{surveyToView.audienceLabel}</strong>
                     </span>
                   </div>
                   <div className="survey-meta-chip">
-                    <span className="survey-meta-icon"><i className="ti ti-eye" /></span>
+                    <span className="survey-meta-icon"><Icon className="ti ti-eye" /></span>
                     <span className="survey-meta-text">
                       <small>Anonymous</small>
                       <strong>{surveyToView.anonymousSubmissionsAllowed ? 'Allowed' : 'Disabled'}</strong>
                     </span>
                   </div>
                   <div className="survey-meta-chip">
-                    <span className="survey-meta-icon"><i className="ti ti-reload" /></span>
+                    <span className="survey-meta-icon"><Icon className="ti ti-reload" /></span>
                     <span className="survey-meta-text">
                       <small>Multiple Submissions</small>
                       <strong>{surveyToView.multipleSubmissionsAllowed ? 'Allowed' : 'Disabled'}</strong>
@@ -1414,14 +1415,14 @@ export default function SurveyDashboardPage() {
                         <strong style={{ color: 'var(--ink)', fontSize: '14px' }}>{i + 1}. {q.text}</strong>
                         {q.required && <span style={{ color: '#dc2626', fontSize: '12px', fontWeight: 'bold' }}>Required</span>}
                       </div>
-                      <div style={{ fontSize: '12px', color: '#59757b', marginBottom: '12px' }}><i className="ti ti-info-circle" /> Type: {q.type}</div>
+                      <div style={{ fontSize: '12px', color: '#59757b', marginBottom: '12px' }}><Icon className="ti ti-info-circle" /> Type: {q.type}</div>
                       
                       {q.type === 'Text Input' && (
                         <input type="text" disabled placeholder="Text response block..." style={{ width: '100%', padding: '8px 12px', border: '1px solid var(--line)', borderRadius: '6px', background: '#eef4f5', color: '#a0aab2' }} />
                       )}
                       {(q.type === 'Star Rating' || q.type === 'Rating') && (
                         <div style={{ display: 'flex', color: '#fbbf24', fontSize: '24px', gap: '4px' }}>
-                          {[1,2,3,4,5].map(s => <i key={s} className="ti ti-star" style={{ opacity: 0.4 }} /> )}
+                          {[1,2,3,4,5].map(s => <Icon key={s} className="ti ti-star" style={{ opacity: 0.4 }} /> )}
                         </div>
                       )}
                       {q.type === 'Multi Select' && q.options && (
@@ -1453,8 +1454,8 @@ export default function SurveyDashboardPage() {
         <div className="crispr-modal-backdrop active" onMouseDown={(e) => { if (e.target === e.currentTarget) setAudienceModalSurvey(null); }}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 480 }}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-target" /> Target Batches — {audienceModalSurvey.title}</h3>
-              <button type="button" className="crispr-modal-close" onClick={() => setAudienceModalSurvey(null)}><i className="ti ti-close" /></button>
+              <h3><Icon className="ti ti-target" /> Target Batches — {audienceModalSurvey.title}</h3>
+              <button type="button" className="crispr-modal-close" onClick={() => setAudienceModalSurvey(null)}><Icon className="ti ti-close" /></button>
             </div>
             <div className="crispr-modal-body">
               <p style={{ margin: '0 0 16px', color: '#59757b', fontSize: '13px' }}>
@@ -1465,7 +1466,7 @@ export default function SurveyDashboardPage() {
                   const batch = availableBatches.find((b) => b.id === bid);
                   return (
                     <div key={bid} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', border: '1px solid var(--line)', borderRadius: '8px', background: '#f8fafc' }}>
-                      <i className="ti ti-users" style={{ color: '#006073' }} />
+                      <Icon className="ti ti-users" style={{ color: '#006073' }} />
                       <span style={{ fontWeight: 600, color: 'var(--ink)' }}>{batch?.name || `Batch #${bid}`}</span>
                     </div>
                   );

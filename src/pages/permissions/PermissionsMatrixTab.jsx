@@ -8,6 +8,7 @@ import {
   extractApiError,
 } from '../../lib/rbacApi';
 import { formatPageLabel, formatActionLabel } from './RolePermissionTree';
+import Icon from '../../components/Icon';
 
 function KebabMenu({ children }) {
   const [open, setOpen] = useState(false);
@@ -28,7 +29,7 @@ function KebabMenu({ children }) {
         className="kebab-button"
         onClick={(event) => { event.stopPropagation(); setOpen((v) => !v); }}
       >
-        <i className="ti ti-more-alt" />
+        <Icon className="ti ti-more-alt" />
       </button>
       {open && (
         <div className="kebab-dropdown active">
@@ -255,7 +256,7 @@ export default function PermissionsMatrixTab({ roles, tree, showToast, refetchRo
       >
         {loading && roles.length === 0 && (
           <div style={{ padding: 16, color: 'var(--muted, #6b7280)', fontSize: 13 }}>
-            <i className="fa fa-spinner fa-spin" /> Loading roles…
+            <Icon className="fa fa-spinner fa-spin" /> Loading roles…
           </div>
         )}
         {!loading && roles.length === 0 && (
@@ -318,7 +319,7 @@ export default function PermissionsMatrixTab({ roles, tree, showToast, refetchRo
                         className="kebab-dropdown-item danger-action"
                         onClick={() => { close(); setDeleteTarget(selectedRole); }}
                       >
-                        <i className="ti ti-trash" /><span>Delete Permission</span>
+                        <Icon className="ti ti-trash" /><span>Delete Permission</span>
                       </button>
                     )}
                   </KebabMenu>
@@ -329,7 +330,7 @@ export default function PermissionsMatrixTab({ roles, tree, showToast, refetchRo
             <div style={{ padding: '12px 24px 96px' }}>
               {loadingRole ? (
                 <div style={{ padding: 32, textAlign: 'center', color: 'var(--muted, #6b7280)' }}>
-                  <i className="fa fa-spinner fa-spin" /> Loading permissions…
+                  <Icon className="fa fa-spinner fa-spin" /> Loading permissions…
                 </div>
               ) : groups.length === 0 ? (
                 <p style={{ color: 'var(--muted, #6b7280)', padding: '16px 0' }}>
@@ -398,7 +399,7 @@ export default function PermissionsMatrixTab({ roles, tree, showToast, refetchRo
                                       <span style={{ lineHeight: 1, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                                         {formatActionLabel(perm.action) || perm.key}
                                         {perm.is_high_risk && (
-                                          <i className="fa fa-exclamation-triangle" title="High-risk action" style={{ color: '#b45309', fontSize: 11 }} />
+                                          <Icon className="fa fa-exclamation-triangle" title="High-risk action" style={{ color: '#b45309', fontSize: 11 }} />
                                         )}
                                       </span>
                                     </label>
@@ -437,9 +438,9 @@ export default function PermissionsMatrixTab({ roles, tree, showToast, refetchRo
       <div className={`legacy-modal-backdrop ${deleteTarget ? 'active' : ''}`} onClick={() => !deleting && setDeleteTarget(null)}>
         <div className="legacy-modal-dialog legacy-confirm" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
           <div className="legacy-modal-header legacy-danger-header">
-            <h3><i className="ti ti-alert" /> Confirm Delete</h3>
+            <h3><Icon className="ti ti-alert" /> Confirm Delete</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setDeleteTarget(null)} disabled={deleting} aria-label="Close">
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
@@ -451,7 +452,7 @@ export default function PermissionsMatrixTab({ roles, tree, showToast, refetchRo
               Cancel
             </button>
             <button type="button" className="legacy-btn legacy-btn-danger" onClick={confirmDelete} disabled={deleting}>
-              <i className="ti ti-trash" /> {deleting ? 'Deleting…' : 'Delete role'}
+              <Icon className="ti ti-trash" /> {deleting ? 'Deleting…' : 'Delete role'}
             </button>
           </div>
         </div>

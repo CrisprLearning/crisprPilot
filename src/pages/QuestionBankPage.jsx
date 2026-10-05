@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ToastRegion from '../components/ToastRegion';
 import FilterDropdown from '../components/FilterDropdown';
 import { questionBankDemoLite } from '../data/adminRemainingDemo';
+import Icon from '../components/Icon';
 
 // ─── Chapter data (keyed by subject, grouped by grade) ───────────────────────
 const CHAPTER_MAP = {
@@ -123,7 +124,7 @@ function KebabMenu({ question, onView, onEdit, onToggleVerify, onToggleChallenge
         className="kebab-button"
         onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
       >
-        <i className="ti ti-more-alt" />
+        <Icon className="ti ti-more-alt" />
       </button>
       {open && (
         <div className="kebab-dropdown active">
@@ -132,28 +133,28 @@ function KebabMenu({ question, onView, onEdit, onToggleVerify, onToggleChallenge
             className="kebab-dropdown-item"
             onClick={() => { setOpen(false); onView(); }}
           >
-            <i className="ti ti-eye" /> View Details
+            <Icon className="ti ti-eye" /> View Details
           </button>
           <button
             type="button"
             className="kebab-dropdown-item"
             onClick={() => { setOpen(false); onEdit(); }}
           >
-            <i className="ti ti-pencil" /> Edit Question
+            <Icon className="ti ti-pencil" /> Edit Question
           </button>
           <button
             type="button"
             className="kebab-dropdown-item"
             onClick={() => { setOpen(false); onToggleVerify(); }}
           >
-            <i className={`ti ${question.verified ? 'ti-close' : 'ti-check'}`} /> {question.verified ? 'Unverify' : 'Mark Verified'}
+            <Icon className={`ti ${question.verified ? 'ti-close' : 'ti-check'}`} /> {question.verified ? 'Unverify' : 'Mark Verified'}
           </button>
           <button
             type="button"
             className={`kebab-dropdown-item${question.challenged ? ' qb-challenge-remove' : ' qb-challenge-add'}`}
             onClick={() => { setOpen(false); onToggleChallenge(); }}
           >
-            <i className="ti ti-alert" /> {question.challenged ? 'Remove Challenge' : 'Flag Challenge'}
+            <Icon className="ti ti-alert" /> {question.challenged ? 'Remove Challenge' : 'Flag Challenge'}
           </button>
         </div>
       )}
@@ -167,21 +168,21 @@ function ViewModal({ question, onClose, onEdit }) {
     <div className="crispr-modal-backdrop active" onClick={onClose}>
       <div className="crispr-modal-dialog" style={{ maxWidth: 600 }} onClick={(e) => e.stopPropagation()}>
         <div className="crispr-modal-header">
-          <h3><i className="ti ti-help-alt" /> {question.displayKey}</h3>
+          <h3><Icon className="ti ti-help-alt" /> {question.displayKey}</h3>
           <button type="button" className="crispr-modal-close" onClick={onClose}>
-            <i className="ti ti-close" />
+            <Icon className="ti ti-close" />
           </button>
         </div>
         <div className="crispr-modal-body" style={{ padding: 24 }}>
           <div className="qb-view-flags">
             {question.verified && (
-              <span className="qb-flag verified"><i className="ti ti-check" /> Verified</span>
+              <span className="qb-flag verified"><Icon className="ti ti-check" /> Verified</span>
             )}
             {question.hasSolution && (
-              <span className="qb-flag solution"><i className="ti ti-book" /> Solution Added</span>
+              <span className="qb-flag solution"><Icon className="ti ti-book" /> Solution Added</span>
             )}
             {question.challenged && (
-              <span className="qb-flag challenged"><i className="ti ti-alert" /> Challenged</span>
+              <span className="qb-flag challenged"><Icon className="ti ti-alert" /> Challenged</span>
             )}
           </div>
           <table className="qb-detail-table">
@@ -216,7 +217,7 @@ function ViewModal({ question, onClose, onEdit }) {
         <div className="crispr-modal-footer">
           <button type="button" className="btn-modal-cancel" onClick={onClose}>Close</button>
           <button type="button" className="btn-modal-primary" onClick={() => { onClose(); onEdit(); }}>
-            <i className="ti ti-pencil" /> Edit
+            <Icon className="ti ti-pencil" /> Edit
           </button>
         </div>
       </div>
@@ -262,9 +263,9 @@ function EditModal({ question, onClose, onSave }) {
     <div className="crispr-modal-backdrop active" onClick={onClose}>
       <div className="crispr-modal-dialog" style={{ maxWidth: 700 }} onClick={(e) => e.stopPropagation()}>
         <div className="crispr-modal-header">
-          <h3><i className="ti ti-pencil" /> Editing Question #{question.id}</h3>
+          <h3><Icon className="ti ti-pencil" /> Editing Question #{question.id}</h3>
           <button type="button" className="crispr-modal-close" onClick={onClose}>
-            <i className="ti ti-close" />
+            <Icon className="ti ti-close" />
           </button>
         </div>
         <div className="crispr-modal-body" style={{ padding: 24 }}>
@@ -413,7 +414,7 @@ function EditModal({ question, onClose, onSave }) {
         <div className="crispr-modal-footer">
           <button type="button" className="btn-modal-cancel" onClick={onClose}>Cancel</button>
           <button type="button" className="btn-modal-primary" onClick={handleSave}>
-            <i className="ti ti-save" /> Save Changes
+            <Icon className="ti ti-save" /> Save Changes
           </button>
         </div>
       </div>
@@ -455,8 +456,8 @@ export default function QuestionBankPage() {
   }
 
   function SortIcon({ col }) {
-    if (sortKey !== col) return <i className="sort-icon ti ti-arrows-vertical" />;
-    return <i className={`sort-icon ti ti-arrow-${sortDir === 'asc' ? 'up' : 'down'}`} />;
+    if (sortKey !== col) return <Icon className="sort-icon ti ti-arrows-vertical" />;
+    return <Icon className={`sort-icon ti ti-arrow-${sortDir === 'asc' ? 'up' : 'down'}`} />;
   }
 
   // Build subject options
@@ -570,7 +571,7 @@ export default function QuestionBankPage() {
 
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-database" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-database" /></span>
           <div>
             <h2>Question Bank</h2>
             <p>Browse, verify, and manage the question repository across subjects, chapters, and difficulty levels.</p>
@@ -581,28 +582,28 @@ export default function QuestionBankPage() {
       {/* Stat tiles */}
       <div className="qb-stats-row">
         <div className="qb-stat-tile" onClick={() => setFilterStatus('')}>
-          <div className="qb-stat-icon total"><i className="ti ti-help-alt" /></div>
+          <div className="qb-stat-icon total"><Icon className="ti ti-help-alt" /></div>
           <div className="qb-stat-body">
             <div className="qb-stat-value">{stats.total}</div>
             <div className="qb-stat-label">Total Questions</div>
           </div>
         </div>
         <div className="qb-stat-tile" onClick={() => setFilterStatus('VERIFIED')}>
-          <div className="qb-stat-icon verified"><i className="ti ti-check-box" /></div>
+          <div className="qb-stat-icon verified"><Icon className="ti ti-check-box" /></div>
           <div className="qb-stat-body">
             <div className="qb-stat-value">{stats.verified}</div>
             <div className="qb-stat-label">Verified</div>
           </div>
         </div>
         <div className="qb-stat-tile" onClick={() => setFilterStatus('CHALLENGED')}>
-          <div className="qb-stat-icon challenged"><i className="ti ti-alert" /></div>
+          <div className="qb-stat-icon challenged"><Icon className="ti ti-alert" /></div>
           <div className="qb-stat-body">
             <div className="qb-stat-value">{stats.challenged}</div>
             <div className="qb-stat-label">Challenged</div>
           </div>
         </div>
         <div className="qb-stat-tile" onClick={() => setFilterStatus('NOSOLUTION')}>
-          <div className="qb-stat-icon nosolution"><i className="ti ti-book" /></div>
+          <div className="qb-stat-icon nosolution"><Icon className="ti ti-book" /></div>
           <div className="qb-stat-body">
             <div className="qb-stat-value">{stats.withoutSolution}</div>
             <div className="qb-stat-label">Without Solution</div>
@@ -613,11 +614,10 @@ export default function QuestionBankPage() {
       {/* Filter Bar */}
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i
+          <Icon
             className={`ti ${searchText ? 'ti-close' : 'ti-search'}`}
             onClick={() => { setSearchText(''); setCurrentPage(1); }}
-            style={{ cursor: searchText ? 'pointer' : 'default' }}
-          />
+            style={{ cursor: searchText ? 'pointer' : 'default' }} />
           <input
             type="text"
             className="search-input"
@@ -708,15 +708,15 @@ export default function QuestionBankPage() {
                   <td>
                     <div className="profile-name">{q.id}</div>
                     <div className="qb-id-icons">
-                      {q.verified && <i className="ti ti-check qb-icon-verified" title="Verified" />}
-                      {q.hasSolution && <i className="ti ti-book qb-icon-solution" title="Solution Added" />}
-                      {q.challenged && <i className="ti ti-alert qb-icon-challenged" title="Challenged" />}
+                      {q.verified && <Icon className="ti ti-check qb-icon-verified" title="Verified" />}
+                      {q.hasSolution && <Icon className="ti ti-book qb-icon-solution" title="Solution Added" />}
+                      {q.challenged && <Icon className="ti ti-alert qb-icon-challenged" title="Challenged" />}
                       <span
                         className="qb-copy-icon"
                         title="Copy ID"
                         onClick={(e) => { e.stopPropagation(); handleCopy(String(q.id)); }}
                       >
-                        <i className="ti ti-files" />
+                        <Icon className="ti ti-files" />
                       </span>
                     </div>
                   </td>
@@ -728,7 +728,7 @@ export default function QuestionBankPage() {
                       title="Copy Key"
                       onClick={(e) => { e.stopPropagation(); handleCopy(q.displayKey); }}
                     >
-                      <i className="ti ti-files" />
+                      <Icon className="ti ti-files" />
                     </span>
                   </td>
                   {/* Subject badge */}
@@ -783,7 +783,7 @@ export default function QuestionBankPage() {
                 disabled={safePage === 1}
                 onClick={() => goToPage(safePage - 1)}
               >
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {pageNumbers().map((p) => (
                 <button
@@ -801,7 +801,7 @@ export default function QuestionBankPage() {
                 disabled={safePage === totalPages}
                 onClick={() => goToPage(safePage + 1)}
               >
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>

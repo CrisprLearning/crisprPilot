@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ToastRegion from '../components/ToastRegion';
 import { examsDemo } from '../data/examsDemo';
 import { testSeriesDemo } from '../data/testSeriesDemo';
+import Icon from '../components/Icon';
 
 function loadAvailableExams() {
   const drafts = JSON.parse(window.localStorage.getItem('examDrafts') || '[]');
@@ -268,20 +269,20 @@ export default function TestSeriesListPage() {
 
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-tasks" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-tasks" /></span>
           <div>
             <h2>Test Series Management</h2>
             <p>Manage grouped exam collections and assign free or premium access per exam.</p>
           </div>
         </div>
         <button type="button" className="create-test-series-btn" onClick={() => openCreateModal()}>
-          <i className="ti ti-plus" /> Create Test Series
+          <Icon className="ti ti-plus" /> Create Test Series
         </button>
       </div>
 
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} />
+          <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} />
           <input
             type="text"
             className="search-input"
@@ -301,14 +302,14 @@ export default function TestSeriesListPage() {
             <thead>
               <tr>
                 <th className={`sortable ${sortColumn === 'name' ? 'active' : ''}`} onClick={() => handleSort('name')}>
-                  Test Series Name <i className={`sort-icon ti ${sortIcon('name', sortColumn, sortReverse)}`} />
+                  Test Series Name <Icon className={`sort-icon ti ${sortIcon('name', sortColumn, sortReverse)}`} />
                 </th>
                 <th className={`sortable center-align ${sortColumn === 'examCount' ? 'active' : ''}`} onClick={() => handleSort('examCount')}>
-                  Total Exams <i className={`sort-icon ti ${sortIcon('examCount', sortColumn, sortReverse)}`} />
+                  Total Exams <Icon className={`sort-icon ti ${sortIcon('examCount', sortColumn, sortReverse)}`} />
                 </th>
                 <th className="center-align">Access Type</th>
                 <th className={`sortable center-align ${sortColumn === 'status' ? 'active' : ''}`} onClick={() => handleSort('status')}>
-                  Status <i className={`sort-icon ti ${sortIcon('status', sortColumn, sortReverse)}`} />
+                  Status <Icon className={`sort-icon ti ${sortIcon('status', sortColumn, sortReverse)}`} />
                 </th>
                 <th className="center-align actions-column">Actions</th>
               </tr>
@@ -355,15 +356,15 @@ export default function TestSeriesListPage() {
                           setActiveKebabId((current) => (current === series.id ? null : series.id));
                         }}
                       >
-                        <i className="ti ti-more-alt" />
+                        <Icon className="ti ti-more-alt" />
                       </button>
                       <div className={`kebab-dropdown ${activeKebabId === series.id ? 'active' : ''}`}>
                         <button type="button" className="kebab-dropdown-item edit-action" onClick={() => openCreateModal(series)}>
-                          <i className="ti ti-pencil" />
+                          <Icon className="ti ti-pencil" />
                           <span>Edit Series</span>
                         </button>
                         <button type="button" className="kebab-dropdown-item delete-action" onClick={() => deleteSeries(series)}>
-                          <i className="ti ti-trash" />
+                          <Icon className="ti ti-trash" />
                           <span>Delete Series</span>
                         </button>
                       </div>
@@ -391,7 +392,7 @@ export default function TestSeriesListPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={page === 1} onClick={() => setCurrentPage((current) => Math.max(1, current - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {getPageNumbers(page, totalPages).map((pageNumber) => (
                 <button key={pageNumber} type="button" className={`pagination-btn ${pageNumber === page ? 'active' : ''}`} onClick={() => setCurrentPage(pageNumber)}>
@@ -399,18 +400,18 @@ export default function TestSeriesListPage() {
                 </button>
               ))}
               <button type="button" className="pagination-btn" disabled={page === totalPages} onClick={() => setCurrentPage((current) => Math.min(totalPages, current + 1))}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
         </div>
       ) : (
         <div className="empty-state">
-          <i className="ti ti-clipboard" />
+          <Icon className="ti ti-clipboard" />
           <h3>No Test Series Found</h3>
           <p>Create your first test series to get started</p>
           <button type="button" className="btn btn-success" onClick={() => openCreateModal()}>
-            <i className="ti ti-plus" /> Create Test Series
+            <Icon className="ti ti-plus" /> Create Test Series
           </button>
         </div>
       )}
@@ -492,11 +493,11 @@ function CreateSeriesModal({
       <div className="crispr-modal-dialog test-series-create-dialog form-modal" role="dialog" aria-modal="true">
         <div className="crispr-modal-header">
           <h3>{editMode ? 'Edit Test Series' : 'Create Test Series'}</h3>
-          <button type="button" className="crispr-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <button type="button" className="crispr-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <div className="crispr-modal-body">
           <div className="asset-form-section">
-            <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Basic Information</div>
+            <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Basic Information</div>
             <div className="asset-form-grid basic-grid">
               <label className="field-cell">
                 <div className="float-field">
@@ -539,7 +540,7 @@ function CreateSeriesModal({
 
           <div className="asset-form-section">
             <div className="form-section-header">
-              <div className="asset-form-section-title"><i className="ti ti-list-check" /> Select Exams <span className="req">*</span></div>
+              <div className="asset-form-section-title"><Icon className="ti ti-list-check" /> Select Exams <span className="req">*</span></div>
               {selectedExamItems.length > 0 ? (
                 <div className="selected-exams-summary">
                   <SummaryItem label="Selected:" value={selectedExamItems.length} tone="total" />
@@ -553,7 +554,7 @@ function CreateSeriesModal({
 
             <div className="search-box">
               <div className="input-group">
-                <span className="input-group-addon"><i className="ti ti-search" /></span>
+                <span className="input-group-addon"><Icon className="ti ti-search" /></span>
                 <input
                   type="text"
                   className="form-control"
@@ -563,7 +564,7 @@ function CreateSeriesModal({
                 />
                 {examSearchQuery ? (
                   <button type="button" className="input-group-clear" onClick={() => setExamSearchQuery('')}>
-                    <i className="ti ti-close" />
+                    <Icon className="ti ti-close" />
                   </button>
                 ) : null}
               </div>
@@ -586,9 +587,9 @@ function CreateSeriesModal({
                         <div className="exam-info">
                           <div className="exam-title">{exam.title}</div>
                           <div className="exam-meta">
-                            <span><i className="ti ti-time" /> {exam.duration} min</span>
-                            <span><i className="ti ti-help" /> {exam.totalQuestions} questions</span>
-                            <span><i className="ti ti-layout-grid2" /> {exam.numberOfSections} sections</span>
+                            <span><Icon className="ti ti-time" /> {exam.duration} min</span>
+                            <span><Icon className="ti ti-help" /> {exam.totalQuestions} questions</span>
+                            <span><Icon className="ti ti-layout-grid2" /> {exam.numberOfSections} sections</span>
                           </div>
                         </div>
                       </div>
@@ -617,7 +618,7 @@ function CreateSeriesModal({
               </div>
             ) : (
               <div className="modal-empty-state">
-                <i className="ti ti-info-alt" />
+                <Icon className="ti ti-info-alt" />
                 <p>{examSearchQuery ? `No exams found matching "${examSearchQuery}"` : 'No exams available'}</p>
               </div>
             )}
@@ -625,7 +626,7 @@ function CreateSeriesModal({
             {examTotalPages > 1 ? (
               <div className="exam-pagination">
                 <button type="button" className="exam-pagination-btn" disabled={examPage === 1} onClick={() => onExamPageChange((current) => Math.max(1, current - 1))}>
-                  <i className="ti ti-angle-left" />
+                  <Icon className="ti ti-angle-left" />
                 </button>
                 {getPageNumbers(examPage, examTotalPages).map((page) => (
                   <button key={page} type="button" className={`exam-pagination-btn ${examPage === page ? 'active' : ''}`} onClick={() => onExamPageChange(page)}>
@@ -633,7 +634,7 @@ function CreateSeriesModal({
                   </button>
                 ))}
                 <button type="button" className="exam-pagination-btn" disabled={examPage === examTotalPages} onClick={() => onExamPageChange((current) => Math.min(examTotalPages, current + 1))}>
-                  <i className="ti ti-angle-right" />
+                  <Icon className="ti ti-angle-right" />
                 </button>
                 <span className="exam-pagination-info">
                   Showing {examStart + 1}-{Math.min(examStart + 6, filteredAvailableExamsCount)} of {filteredAvailableExamsCount} exams
@@ -667,8 +668,8 @@ function ConfirmDeleteModal({ message, onClose, onConfirm }) {
     <div className="crispr-modal-backdrop active" role="presentation" onClick={onClose}>
       <div className="crispr-modal-dialog confirm-dialog" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
         <div className="crispr-modal-header danger-header">
-          <h3><i className="ti ti-alert" /> Confirm Delete</h3>
-          <button type="button" className="crispr-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <h3><Icon className="ti ti-alert" /> Confirm Delete</h3>
+          <button type="button" className="crispr-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <div className="crispr-modal-body">
           <p className="confirm-message">{message}</p>
@@ -676,7 +677,7 @@ function ConfirmDeleteModal({ message, onClose, onConfirm }) {
         <div className="crispr-modal-footer">
           <button type="button" className="btn btn-default" onClick={onClose}>Cancel</button>
           <button type="button" className="btn btn-danger" onClick={onConfirm}>
-            <i className="ti ti-trash" /> Delete
+            <Icon className="ti ti-trash" /> Delete
           </button>
         </div>
       </div>

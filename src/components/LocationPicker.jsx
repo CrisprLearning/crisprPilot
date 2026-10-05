@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { listLocations } from '../lib/locationsApi';
+import Icon from './Icon';
 
 // Shared single-select location typeahead, backed by the locations API.
 // Mirrors the picker used in the Digital Signage "Apply to branches" control.
@@ -116,7 +117,7 @@ function LocationDropdown({ rect, query, setQuery, items, loading, hasMore, load
     }}>
       <div style={{ padding: 8, borderBottom: '1px solid var(--line)', display: 'flex', gap: 6 }}>
         <div style={{ position: 'relative', flex: 1 }}>
-          <i className="ti ti-search" style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', fontSize: 12 }} />
+          <Icon className="ti ti-search" style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', fontSize: 12 }} />
           <input
             autoFocus value={query} onChange={(e) => setQuery(e.target.value)}
             placeholder="Search locations…"
@@ -125,7 +126,7 @@ function LocationDropdown({ rect, query, setQuery, items, loading, hasMore, load
         </div>
         {allowClear && (
           <button type="button" onMouseDown={(e) => { e.preventDefault(); onClear(); }} style={btnGhost} title="Clear selection">
-            <i className="ti ti-close" />
+            <Icon className="ti ti-close" />
           </button>
         )}
       </div>
@@ -143,7 +144,7 @@ function LocationDropdown({ rect, query, setQuery, items, loading, hasMore, load
                 borderTop: '1px solid #f3f5f6',
               }}
             >
-              <i className={`ti ${sel ? 'ti-check' : 'ti-building'}`} style={{ color: sel ? 'var(--brand)' : 'var(--muted)', fontSize: 13 }} />
+              <Icon className={`ti ${sel ? 'ti-check' : 'ti-building'}`} style={{ color: sel ? 'var(--brand)' : 'var(--muted)', fontSize: 13 }} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 600, color: 'var(--ink)', fontSize: 13, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{loc.name}</div>
                 {loc.address && (
@@ -161,7 +162,7 @@ function LocationDropdown({ rect, query, setQuery, items, loading, hasMore, load
         {hasMore && <div ref={sentinelRef} style={{ height: 1 }} />}
         {loading && (
           <div style={{ padding: '10px 12px', fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
-            <i className="ti ti-reload" style={{ marginRight: 6 }} />Loading…
+            <Icon className="ti ti-reload" style={{ marginRight: 6 }} />Loading…
           </div>
         )}
       </div>
@@ -233,11 +234,11 @@ export default function LocationPicker({ value, initialLabel, onChange, placehol
           cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.6 : 1,
         }}
       >
-        <i className={`ti ${value ? 'ti-map-pin' : 'ti-building'}`} style={{ color: value ? 'var(--brand)' : 'var(--muted)' }} />
+        <Icon className={`ti ${value ? 'ti-map-pin' : 'ti-building'}`} style={{ color: value ? 'var(--brand)' : 'var(--muted)' }} />
         <span style={{ flex: 1, color: label ? 'var(--ink)' : 'var(--muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {label || (value ? `#${value}` : placeholder)}
         </span>
-        <i className={`ti ${open ? 'ti-chevron-up' : 'ti-chevron-down'}`} style={{ color: 'var(--muted)', fontSize: 12 }} />
+        <Icon className={`ti ${open ? 'ti-chevron-up' : 'ti-chevron-down'}`} style={{ color: 'var(--muted)', fontSize: 12 }} />
       </button>
       {open && rect && (
         <LocationDropdown

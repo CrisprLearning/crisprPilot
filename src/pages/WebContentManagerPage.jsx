@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import ToastRegion from '../components/ToastRegion';
 import { vouchersDemo, autoEnrollCoursesDemo, catalogItemsDemo } from '../data/adminRemainingDemo';
+import Icon from '../components/Icon';
 
 function getPageNumbers(currentPage, totalPages) {
   const pages = [];
@@ -67,17 +68,17 @@ function VoucherKebabMenu({ voucher, onViewUsers, onRevoke }) {
         className="kebab-button"
         onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
       >
-        <i className="ti ti-more-alt" />
+        <Icon className="ti ti-more-alt" />
       </button>
       <div className={`kebab-dropdown${open ? ' active' : ''}`}>
         {canViewUsers && (
           <button type="button" className="kebab-dropdown-item" onClick={() => { setOpen(false); onViewUsers(voucher); }}>
-            <i className="ti ti-user" /> View Users
+            <Icon className="ti ti-user" /> View Users
           </button>
         )}
         {canRevoke && (
           <button type="button" className="kebab-dropdown-item danger-action" onClick={() => { setOpen(false); onRevoke(voucher); }}>
-            <i className="ti ti-ban" /> Revoke Code
+            <Icon className="ti ti-ban" /> Revoke Code
           </button>
         )}
         {!canViewUsers && !canRevoke && (
@@ -237,9 +238,9 @@ export default function WebContentManagerPage() {
         {/* Auto-Enrollment Section */}
         <div className="wcm-section-card">
             <div className="wcm-section-header">
-                <h2 className="wcm-section-title"><i className="ti ti-user" style={{ marginRight: '10px' }}></i>New User Auto-Enrollment</h2>
+                <h2 className="wcm-section-title"><Icon className="ti ti-user" style={{ marginRight: '10px' }} />New User Auto-Enrollment</h2>
                 <button className="wcm-btn wcm-btn-primary-custom" onClick={saveAutoEnrollCourses}>
-                    <i className="ti ti-save"></i> Save Changes
+                    <Icon className="ti ti-save" /> Save Changes
                 </button>
             </div>
 
@@ -247,14 +248,14 @@ export default function WebContentManagerPage() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
                     <label style={{ fontWeight: 600, color: '#4b5563', margin: 0 }}>Selected Courses</label>
                     <button className="wcm-btn wcm-btn-default" style={{ border: '1px solid #d1d5db', color: '#4b5563' }} onClick={() => setEnrollModalOpen(true)}>
-                        <i className="ti ti-plus"></i> Select Courses
+                        <Icon className="ti ti-plus" /> Select Courses
                     </button>
                 </div>
 
                 <div className="wcm-course-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(30%, 1fr))' }}>
                     {autoEnrollCourses.length > 0 ? autoEnrollCourses.map(course => (
                        <div key={course.code} className="wcm-course-card" style={{ cursor: 'default', borderColor: '#006073', background: '#e5faff' }}>
-                           <div className="wcm-course-icon" style={{ background: '#006073', color: 'white' }}><i className="ti ti-book"></i></div>
+                           <div className="wcm-course-icon" style={{ background: '#006073', color: 'white' }}><Icon className="ti ti-book" /></div>
                            <div>
                                <strong>{course.title || course.code}</strong>
                                <div style={{ fontSize: '12px', color: '#666' }}>{course.code}</div>
@@ -262,7 +263,7 @@ export default function WebContentManagerPage() {
                        </div>
                     )) : (
                        <div style={{ padding: '30px', background: '#f9fafb', borderRadius: '8px', border: '1px dashed #d1d5db', color: '#6b7280', textAlign: 'center', gridColumn: '1 / -1' }}>
-                           <i className="ti ti-book" style={{ fontSize: '24px', marginBottom: '10px', display: 'block' }}></i>
+                           <Icon className="ti ti-book" style={{ fontSize: '24px', marginBottom: '10px', display: 'block' }} />
                            No courses selected for auto-enrollment.
                        </div>
                     )}
@@ -273,14 +274,14 @@ export default function WebContentManagerPage() {
         {/* Discount Codes Section */}
         <div className="wcm-section-card">
             <div className="wcm-section-header">
-                <h2 className="wcm-section-title"><i className="ti ti-ticket" style={{ marginRight: '10px' }}></i>Discount Codes</h2>
+                <h2 className="wcm-section-title"><Icon className="ti ti-ticket" style={{ marginRight: '10px' }} />Discount Codes</h2>
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                     <select id="wcm-statusFilter" style={{ padding: '8px 35px 8px 15px', border: '1px solid #d1d5db', borderRadius: '6px', background: 'white', color: '#4b5563', fontSize: '14px', fontWeight: 500 }} value={discountStatusFilter} onChange={(e) => { setDiscountStatusFilter(e.target.value); setDiscountPage(1); }}>
                         <option value="all">All Codes</option>
                         <option value="active">Active Only</option>
                     </select>
                     <button className="wcm-btn wcm-btn-success-custom" onClick={() => { setNewDiscount({ code: '', type: 'percentage', value: '', validUntil: '', limitUsers: false }); setDiscountModalOpen(true); }}>
-                        <i className="ti ti-plus"></i> Add New Code
+                        <Icon className="ti ti-plus" /> Add New Code
                     </button>
                 </div>
             </div>
@@ -352,7 +353,7 @@ export default function WebContentManagerPage() {
                         </div>
                         <div className="pagination-controls">
                             <button type="button" className="pagination-btn" onClick={() => setDiscountPage(p => Math.max(1, p - 1))} disabled={discountPage === 1}>
-                                <i className="ti ti-angle-left"></i> Previous
+                                <Icon className="ti ti-angle-left" /> Previous
                             </button>
                             {getPageNumbers(discountPage, totalDiscountPages).map((page, idx) => (
                                 page === '...'
@@ -360,7 +361,7 @@ export default function WebContentManagerPage() {
                                     : <button key={page} type="button" className={`pagination-btn ${discountPage === page ? 'active' : ''}`} onClick={() => setDiscountPage(page)}>{page}</button>
                             ))}
                             <button type="button" className="pagination-btn" onClick={() => setDiscountPage(p => Math.min(totalDiscountPages, p + 1))} disabled={discountPage >= totalDiscountPages}>
-                                Next <i className="ti ti-angle-right"></i>
+                                Next <Icon className="ti ti-angle-right" />
                             </button>
                         </div>
                     </div>
@@ -375,7 +376,7 @@ export default function WebContentManagerPage() {
                     <div className="crispr-modal-header">
                         <h3>Select Courses</h3>
                         <button className="crispr-modal-close" onClick={() => setEnrollModalOpen(false)}>
-                            <i className="ti ti-close"></i>
+                            <Icon className="ti ti-close" />
                         </button>
                     </div>
                     <div className="crispr-modal-body" style={{ padding: 0 }}>
@@ -390,7 +391,7 @@ export default function WebContentManagerPage() {
                                        <label key={course.code} style={{ margin: 0, fontWeight: 'normal' }}>
                                            <input type="checkbox" className="wcm-course-checkbox" checked={checked} onChange={() => handleCourseSelectionToggle(course)} />
                                            <div className="wcm-course-card">
-                                               <div className="wcm-course-icon"><i className="ti ti-book"></i></div>
+                                               <div className="wcm-course-icon"><Icon className="ti ti-book" /></div>
                                                <div>
                                                    <strong>{course.title}</strong>
                                                    <div style={{ fontSize: '12px', color: '#666' }}>{course.code}</div>
@@ -401,7 +402,7 @@ export default function WebContentManagerPage() {
                                 })}
                                 {filteredCatalogForEnrollment.length === 0 && (
                                     <div style={{ textAlign: 'center', padding: '40px', color: '#6c757d', gridColumn: '1 / -1' }}>
-                                        <i className="ti ti-search" style={{ fontSize: '48px', marginBottom: '15px', display: 'block', opacity: 0.5 }}></i>
+                                        <Icon className="ti ti-search" style={{ fontSize: '48px', marginBottom: '15px', display: 'block', opacity: 0.5 }} />
                                         <p style={{ margin: 0 }}>No courses found</p>
                                     </div>
                                 )}
@@ -423,14 +424,14 @@ export default function WebContentManagerPage() {
                     <div className="legacy-modal-header">
                         <h3>Add Discount Code</h3>
                         <button type="button" className="legacy-modal-close" onClick={() => setDiscountModalOpen(false)}>
-                            <i className="ti ti-close"></i>
+                            <Icon className="ti ti-close" />
                         </button>
                     </div>
 
                     <form id="wcmDiscountForm" className="batch-modal-form form-modal" onSubmit={handleCreateDiscount}>
                       <div className="legacy-modal-body">
                         <div className="asset-form-section">
-                            <div className="asset-form-section-title"><i className="ti ti-ticket" /> Discount Details</div>
+                            <div className="asset-form-section-title"><Icon className="ti ti-ticket" /> Discount Details</div>
                             <div className="asset-form-grid">
                                 <label className="field-cell full-span">
                                     <div className="float-field">
@@ -495,7 +496,7 @@ export default function WebContentManagerPage() {
                         </div>
 
                         <div className="asset-form-section">
-                            <div className="asset-form-section-title"><i className="ti ti-users" /> Usage Restriction</div>
+                            <div className="asset-form-section-title"><Icon className="ti ti-users" /> Usage Restriction</div>
                             <label style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', cursor: 'pointer', margin: 0, fontWeight: 600, color: '#475569' }}>
                                 <input type="checkbox" checked={newDiscount.limitUsers} onChange={e => { setNewDiscount({...newDiscount, limitUsers: e.target.checked}); if (!e.target.checked) { setSelectedUsers([]); setUserSearchQuery(''); } }} style={{ margin: 0, width: '18px', height: '18px', cursor: 'pointer' }} />
                                 Limit to Specific User(s)
@@ -507,7 +508,7 @@ export default function WebContentManagerPage() {
                                     {/* Search Input */}
                                     <div style={{ position: 'relative', marginBottom: '10px' }}>
                                         <input type="text" className="form-control" value={userSearchQuery} onChange={e => setUserSearchQuery(e.target.value)} placeholder="Search user by name, email, or mobile..." style={{ width: '100%', padding: '12px 16px 12px 40px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '14px' }} />
-                                        <i className="ti ti-search" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', fontSize: '16px' }}></i>
+                                        <Icon className="ti ti-search" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', fontSize: '16px' }} />
                                     </div>
 
                                     {/* Selected Users Tags */}
@@ -517,7 +518,7 @@ export default function WebContentManagerPage() {
                                                 <span key={u.id} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 12px', background: '#e0f2f1', color: '#006073', borderRadius: '20px', fontSize: '13px', fontWeight: 500 }}>
                                                     {u.name}
                                                     <button type="button" onClick={() => setSelectedUsers(selectedUsers.filter(s => s.id !== u.id))} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#dc2626', fontSize: '14px', lineHeight: 1 }}>
-                                                        <i className="ti ti-close"></i>
+                                                        <Icon className="ti ti-close" />
                                                     </button>
                                                 </span>
                                             ))}
@@ -533,7 +534,7 @@ export default function WebContentManagerPage() {
                                                         <strong style={{ fontSize: '14px' }}>{u.name}</strong>
                                                         <div style={{ fontSize: '12px', color: '#6b7280' }}>{u.email} · {u.phone}</div>
                                                     </div>
-                                                    <i className="ti ti-plus" style={{ color: '#006073' }}></i>
+                                                    <Icon className="ti ti-plus" style={{ color: '#006073' }} />
                                                 </div>
                                             ))}
                                         </div>
@@ -564,14 +565,14 @@ export default function WebContentManagerPage() {
                     <div className="legacy-modal-header">
                         <h3>Users Associated with Voucher</h3>
                         <button type="button" className="legacy-modal-close" onClick={() => setViewUsersModalOpen(false)}>
-                            <i className="ti ti-close"></i>
+                            <Icon className="ti ti-close" />
                         </button>
                     </div>
                     <div className="legacy-modal-body">
                         <div className="asset-form-section">
-                            <div className="asset-form-section-title"><i className="ti ti-users" /> {selectedVoucherForUsers.code}</div>
+                            <div className="asset-form-section-title"><Icon className="ti ti-users" /> {selectedVoucherForUsers.code}</div>
                             <div className="search-wrapper" style={{ marginBottom: '16px' }}>
-                                <i className={`ti ${voucherUserSearch ? 'ti-close' : 'ti-search'}`} onClick={() => { setVoucherUserSearch(''); setVoucherUserPage(1); }} aria-hidden="true" />
+                                <Icon className={`ti ${voucherUserSearch ? 'ti-close' : 'ti-search'}`} onClick={() => { setVoucherUserSearch(''); setVoucherUserPage(1); }} aria-hidden="true" />
                                 <input
                                     type="text"
                                     className="search-input"
@@ -609,7 +610,7 @@ export default function WebContentManagerPage() {
                                         </div>
                                         <div className="pagination-controls">
                                             <button type="button" className="pagination-btn" onClick={() => setVoucherUserPage(p => Math.max(1, p - 1))} disabled={voucherUserPage === 1}>
-                                                <i className="ti ti-angle-left"></i> Previous
+                                                <Icon className="ti ti-angle-left" /> Previous
                                             </button>
                                             {getPageNumbers(voucherUserPage, totalVoucherUserPages).map((page, idx) => (
                                                 page === '...'
@@ -617,7 +618,7 @@ export default function WebContentManagerPage() {
                                                     : <button key={page} type="button" className={`pagination-btn ${voucherUserPage === page ? 'active' : ''}`} onClick={() => setVoucherUserPage(page)}>{page}</button>
                                             ))}
                                             <button type="button" className="pagination-btn" onClick={() => setVoucherUserPage(p => Math.min(totalVoucherUserPages, p + 1))} disabled={voucherUserPage >= totalVoucherUserPages}>
-                                                Next <i className="ti ti-angle-right"></i>
+                                                Next <Icon className="ti ti-angle-right" />
                                             </button>
                                         </div>
                                     </div>
@@ -637,14 +638,14 @@ export default function WebContentManagerPage() {
             <div className="crispr-modal-backdrop active" onClick={() => setRevokeModalOpen(false)}>
                 <div className="crispr-modal-dialog" style={{ maxWidth: '450px' }} onClick={e => e.stopPropagation()}>
                     <div className="crispr-modal-header" style={{ background: 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)' }}>
-                        <h3><i className="ti ti-alert-circle"></i> Confirm Revoke</h3>
+                        <h3><Icon className="ti ti-alert-circle" /> Confirm Revoke</h3>
                         <button className="crispr-modal-close" onClick={() => setRevokeModalOpen(false)}>
-                            <i className="ti ti-close"></i>
+                            <Icon className="ti ti-close" />
                         </button>
                     </div>
                     <div className="crispr-modal-body">
                         <div style={{ textAlign: 'center', padding: '20px 0' }}>
-                            <i className="ti ti-ban" style={{ fontSize: '64px', color: '#dc2626', marginBottom: '15px' }}></i>
+                            <Icon className="ti ti-ban" style={{ fontSize: '64px', color: '#dc2626', marginBottom: '15px' }} />
                             <h4 style={{ margin: '0 0 10px 0', color: '#1f2937' }}>Revoke Voucher Code?</h4>
                             <p style={{ color: '#6b7280', margin: '0 0 5px 0' }}>Are you sure you want to revoke this voucher code?</p>
                             <p style={{ color: '#dc2626', fontWeight: 600, margin: 0 }}>{voucherToRevoke.code}</p>
@@ -654,7 +655,7 @@ export default function WebContentManagerPage() {
                     <div className="crispr-modal-footer">
                         <button className="btn btn-default" onClick={() => setRevokeModalOpen(false)}>Cancel</button>
                         <button className="btn btn-danger" style={{ background: '#dc2626', color: 'white', border: 'none', fontWeight: 600 }} onClick={handleRevokeConfirm}>
-                            <i className="ti ti-ban"></i> Revoke Code
+                            <Icon className="ti ti-ban" /> Revoke Code
                         </button>
                     </div>
                 </div>

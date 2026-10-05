@@ -20,6 +20,7 @@ import {
   validateVenue,
   extractApiError,
 } from '../lib/locationsApi';
+import Icon from '../components/Icon';
 
 function KebabMenu({ children }) {
   const [open, setOpen] = useState(false);
@@ -40,7 +41,7 @@ function KebabMenu({ children }) {
         className="kebab-button"
         onClick={(event) => { event.stopPropagation(); setOpen((v) => !v); }}
       >
-        <i className="ti ti-more-alt" />
+        <Icon className="ti ti-more-alt" />
       </button>
       {open && (
         <div className="kebab-dropdown active">
@@ -302,14 +303,14 @@ export default function LocationsPage() {
 
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-map-marker" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-map-marker" /></span>
           <div>
             <h2>Locations</h2>
             <p>Manage operational locations and the venues at each location.</p>
           </div>
         </div>
         <button type="button" className="create-mentor-button" onClick={openAddLocation}>
-          <i className="ti ti-plus" /> New Location
+          <Icon className="ti ti-plus" /> New Location
         </button>
       </div>
 
@@ -321,7 +322,7 @@ export default function LocationsPage() {
               <div className="loc-empty">Loading…</div>
             ) : locations.length === 0 ? (
               <div className="loc-empty">
-                <i className="ti ti-map-2" />
+                <Icon className="ti ti-map-2" />
                 <p>No locations yet.</p>
               </div>
             ) : (
@@ -355,7 +356,7 @@ export default function LocationsPage() {
         <div className="loc-detail">
           {!selected ? (
             <div className="loc-detail-empty">
-              <i className="ti ti-map-2" />
+              <Icon className="ti ti-map-2" />
               <h3>Select a location</h3>
               <p>Choose one from the list, or add a new location to get started.</p>
             </div>
@@ -382,13 +383,13 @@ export default function LocationsPage() {
                     {({ close }) => (
                       <>
                         <button type="button" className="kebab-dropdown-item" onClick={() => { close(); openEditLocation(selected); }}>
-                          <i className="ti ti-pencil" /><span>Edit</span>
+                          <Icon className="ti ti-pencil" /><span>Edit</span>
                         </button>
                         <button type="button" className="kebab-dropdown-item" onClick={() => { close(); togglePublicAccess(selected); }}>
-                          <i className="ti ti-eye" /><span>{selected.isPublicAccessible ? 'Make Private' : 'Make Public'}</span>
+                          <Icon className="ti ti-eye" /><span>{selected.isPublicAccessible ? 'Make Private' : 'Make Public'}</span>
                         </button>
                         <button type="button" className="kebab-dropdown-item" onClick={() => { close(); toggleLocationOpen(selected); }}>
-                          <i className={`ti ${selected.open ? 'ti-na' : 'ti-check'}`} /><span>{selected.open ? 'Close Permanently' : 'Re-open Location'}</span>
+                          <Icon className={`ti ${selected.open ? 'ti-na' : 'ti-check'}`} /><span>{selected.open ? 'Close Permanently' : 'Re-open Location'}</span>
                         </button>
                       </>
                     )}
@@ -410,7 +411,7 @@ export default function LocationsPage() {
                   </div>
                   <div className="loc-venues-head-actions">
                     <button type="button" className="loc-add-venue-btn" onClick={openAddVenue}>
-                      <i className="ti ti-plus" /> Add Venue
+                      <Icon className="ti ti-plus" /> Add Venue
                     </button>
                   </div>
                 </div>
@@ -471,10 +472,10 @@ export default function LocationsPage() {
                                 {({ close }) => (
                                   <>
                                     <button type="button" className="kebab-dropdown-item" onClick={() => { close(); toggleVenueActive(v); }}>
-                                      <i className={`ti ${v.active ? 'ti-na' : 'ti-check'}`} /><span>{v.active ? 'Disable Venue' : 'Enable Venue'}</span>
+                                      <Icon className={`ti ${v.active ? 'ti-na' : 'ti-check'}`} /><span>{v.active ? 'Disable Venue' : 'Enable Venue'}</span>
                                     </button>
                                     <button type="button" className="kebab-dropdown-item" onClick={() => { close(); openEditVenue(v); }}>
-                                      <i className="ti ti-pencil" /><span>Edit</span>
+                                      <Icon className="ti ti-pencil" /><span>Edit</span>
                                     </button>
                                   </>
                                 )}
@@ -497,15 +498,15 @@ export default function LocationsPage() {
       <div className={`legacy-modal-backdrop ${locModalOpen ? 'active' : ''}`} onClick={() => setLocModalOpen(false)}>
         <div className="legacy-modal-dialog legacy-large" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
           <div className="legacy-modal-header">
-            <h3><i className="ti ti-map-2" /> {locEditMode ? 'Edit Location' : 'New Location'}</h3>
+            <h3><Icon className="ti ti-map-2" /> {locEditMode ? 'Edit Location' : 'New Location'}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setLocModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <form className="form-modal" onSubmit={(e) => { e.preventDefault(); saveLocation(); }}>
           <div className="legacy-modal-body">
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Details</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Details</div>
               <div className="asset-form-grid">
                 <label className="field-cell full-span">
                   <div className={`float-field ${locFormErrors.name ? 'has-error' : ''}`}>
@@ -624,7 +625,7 @@ export default function LocationsPage() {
               Cancel
             </button>
             <button type="submit" className="legacy-btn legacy-btn-success" disabled={savingLoc}>
-              <i className="ti ti-check" /> {savingLoc ? 'Saving…' : (locEditMode ? 'Update' : 'Create')} Location
+              <Icon className="ti ti-check" /> {savingLoc ? 'Saving…' : (locEditMode ? 'Update' : 'Create')} Location
             </button>
           </div>
           </form>
@@ -635,15 +636,15 @@ export default function LocationsPage() {
       <div className={`legacy-modal-backdrop ${venueModalOpen ? 'active' : ''}`} onClick={() => setVenueModalOpen(false)}>
         <div className="legacy-modal-dialog legacy-large" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
           <div className="legacy-modal-header">
-            <h3><i className="ti ti-home" /> {venueEditMode ? 'Edit Venue' : 'New Venue'}</h3>
+            <h3><Icon className="ti ti-home" /> {venueEditMode ? 'Edit Venue' : 'New Venue'}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setVenueModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <form className="form-modal" onSubmit={(e) => { e.preventDefault(); saveVenue(); }}>
           <div className="legacy-modal-body">
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Details</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Details</div>
               <div className="asset-form-grid">
                 <label className="field-cell full-span">
                   <div className={`float-field ${venueFormErrors.name ? 'has-error' : ''}`}>
@@ -692,7 +693,7 @@ export default function LocationsPage() {
               </div>
             </div>
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-sparkles" /> Amenities</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-sparkles" /> Amenities</div>
               <div className="asset-form-grid config-grid">
                 {['AC', 'Studio', 'Premium'].map((k) => (
                   <div key={k} className="field-cell field-cell-inline">
@@ -717,7 +718,7 @@ export default function LocationsPage() {
               Cancel
             </button>
             <button type="submit" className="legacy-btn legacy-btn-success" disabled={savingVenue}>
-              <i className="ti ti-check" /> {savingVenue ? 'Saving…' : (venueEditMode ? 'Update' : 'Create')} Venue
+              <Icon className="ti ti-check" /> {savingVenue ? 'Saving…' : (venueEditMode ? 'Update' : 'Create')} Venue
             </button>
           </div>
           </form>

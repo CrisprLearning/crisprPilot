@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { methodIcon, methodLabel, paymentLabel, statusMeta, summarizeOrder } from '../lib/paymentsModel';
 import { mergeInstallments } from '../lib/paymentsStore';
+import Icon from './Icon';
 
 const money = (n) => Number(n || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtDate = (ts) => (ts ? new Date(ts * 1000).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) : '—');
@@ -52,10 +53,10 @@ export default function OrderPaymentSummary({ order, payments, highlightPaymentI
     <>
       <div className="order-modal-header">
         <div>
-          <i className="ti ti-calendar" /> {fmtDate(headline ? (headline.paidAt || headline.dueDate) : order.orderDate)}
-          <span><i className="ti ti-user" /> {order.customer.name}</span>
-          <span><i className="ti ti-shopping-cart" /> {order.orderNumber}</span>
-          {order.bundleNumber ? <span><i className="ti ti-package" /> {order.bundleNumber}</span> : null}
+          <Icon className="ti ti-calendar" /> {fmtDate(headline ? (headline.paidAt || headline.dueDate) : order.orderDate)}
+          <span><Icon className="ti ti-user" /> {order.customer.name}</span>
+          <span><Icon className="ti ti-shopping-cart" /> {order.orderNumber}</span>
+          {order.bundleNumber ? <span><Icon className="ti ti-package" /> {order.bundleNumber}</span> : null}
         </div>
         {headline ? (
           <span className={`status-badge ${paymentBadgeClass(headline)}`}>{statusMeta(headline.status).label}</span>
@@ -81,16 +82,16 @@ export default function OrderPaymentSummary({ order, payments, highlightPaymentI
                 </label>
               ) : null}
               <div className={`payment-item-badge ${p.status}`}>
-                <i className={`ti ${p.status === 'paid' ? 'ti-check' : p.status === 'overdue' || p.status === 'failed' ? 'ti-alert' : 'ti-time'}`} />
+                <Icon className={`ti ${p.status === 'paid' ? 'ti-check' : p.status === 'overdue' || p.status === 'failed' ? 'ti-alert' : 'ti-time'}`} />
               </div>
               <div className="order-item-details">
                 <h5>{paymentLabel(p)}</h5>
                 <div>
                   {p.status === 'paid'
-                    ? <>Paid {fmtDate(p.paidAt)} | {p.channel === 'OFFLINE' ? 'Offline' : 'Online'} | <i className={`ti ${methodIcon(p.method)}`} /> {methodLabel(p.method)}{p.reference ? <> | {p.reference}</> : null}</>
+                    ? <>Paid {fmtDate(p.paidAt)} | {p.channel === 'OFFLINE' ? 'Offline' : 'Online'} | <Icon className={`ti ${methodIcon(p.method)}`} /> {methodLabel(p.method)}{p.reference ? <> | {p.reference}</> : null}</>
                     : p.dueDate ? <>Due {fmtDate(p.dueDate)}</> : <>Not scheduled</>}
                 </div>
-                {p.note ? <div className="payment-item-note"><i className="ti ti-comment-alt" /> {p.note}</div> : null}
+                {p.note ? <div className="payment-item-note"><Icon className="ti ti-comment-alt" /> {p.note}</div> : null}
                 {p.originalBaseAmount != null && p.originalBaseAmount !== p.baseAmount ? (
                   <div className="payment-item-note">Adjusted from ₹{money(p.originalBaseAmount)} + GST</div>
                 ) : null}
@@ -99,7 +100,7 @@ export default function OrderPaymentSummary({ order, payments, highlightPaymentI
                 ) : null}
                 {p.mergedFrom?.length ? (
                   <div className="payment-item-note">
-                    <i className="ti ti-layers" /> Merged from {p.mergedFrom.map((m) => `${m.label} (₹${money(m.amount)}${m.dueDate ? ` due ${fmtDate(m.dueDate)}` : ''})`).join(' + ')}
+                    <Icon className="ti ti-layers" /> Merged from {p.mergedFrom.map((m) => `${m.label} (₹${money(m.amount)}${m.dueDate ? ` due ${fmtDate(m.dueDate)}` : ''})`).join(' + ')}
                   </div>
                 ) : null}
               </div>
@@ -109,7 +110,7 @@ export default function OrderPaymentSummary({ order, payments, highlightPaymentI
                 <span className={`status-badge ${paymentBadgeClass(p)}`}>{statusMeta(p.status).label}</span>
                 {onMarkPaid && p.status !== 'paid' ? (
                   <button type="button" className="mark-paid-btn" onClick={() => onMarkPaid(p)}>
-                    <i className="ti ti-check" /> Mark as Paid
+                    <Icon className="ti ti-check" /> Mark as Paid
                   </button>
                 ) : null}
               </div>
@@ -129,7 +130,7 @@ export default function OrderPaymentSummary({ order, payments, highlightPaymentI
                   </div>
                 </label>
                 <button type="button" className="legacy-btn legacy-btn-success" disabled={!mergeDate} onClick={doMerge}>
-                  <i className="ti ti-layers" /> Merge Installments
+                  <Icon className="ti ti-layers" /> Merge Installments
                 </button>
               </div>
             </div>
@@ -141,10 +142,10 @@ export default function OrderPaymentSummary({ order, payments, highlightPaymentI
         <aside>
           <div className="customer-info">
             <h5>Student Details</h5>
-            <p><i className="ti ti-user" /> {order.customer.name}</p>
-            <p><i className="ti ti-email" /> {order.customer.email}</p>
-            <p><i className="ti ti-mobile" /> {order.customer.phone}</p>
-            <p><i className="ti ti-id-badge" /> ID: {order.customer.id}</p>
+            <p><Icon className="ti ti-user" /> {order.customer.name}</p>
+            <p><Icon className="ti ti-email" /> {order.customer.email}</p>
+            <p><Icon className="ti ti-mobile" /> {order.customer.phone}</p>
+            <p><Icon className="ti ti-id-badge" /> ID: {order.customer.id}</p>
           </div>
           <div className="order-summary">
             {order.feeLines.map((l) => (

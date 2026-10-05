@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import ToastRegion from '../components/ToastRegion';
 import { PreparationJourneys } from '../lib/preparationJourneysApi';
+import Icon from '../components/Icon';
 
 /* ── Seed data: app versions published so far ─────────────────────────── */
 const SEED_RELEASES = [
@@ -152,7 +153,7 @@ function RichTextEditor({ valueRef, initialHtml = '' }) {
       <div className="mas-rte-toolbar">
         {tools.map((t) => (
           <button key={t.cmd} type="button" title={t.title} onMouseDown={(e) => { e.preventDefault(); exec(t.cmd); }}>
-            {t.icon ? <i className={`ti ${t.icon}`} /> : <span style={t.labelStyle}>{t.label}</span>}
+            {t.icon ? <Icon className={`ti ${t.icon}`} /> : <span style={t.labelStyle}>{t.label}</span>}
           </button>
         ))}
         <button
@@ -164,7 +165,7 @@ function RichTextEditor({ valueRef, initialHtml = '' }) {
             if (url) exec('createLink', url);
           }}
         >
-          <i className="ti ti-link" />
+          <Icon className="ti ti-link" />
         </button>
       </div>
       <div
@@ -625,7 +626,7 @@ export default function MobileAppSettingsPage() {
 
       <div className="page-header-section" style={{ flexWrap: 'wrap' }}>
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-mobile" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-mobile" /></span>
           <div>
             <h2>Mobile App Settings</h2>
             <p>Manage published mobile app releases, version history, and update policies.</p>
@@ -636,17 +637,17 @@ export default function MobileAppSettingsPage() {
       <div className="wcm-section-card">
       <div className="wcm-section-header">
         <div>
-          <h2 className="wcm-section-title"><i className="ti ti-package" style={{ marginRight: '10px' }} />Published Versions</h2>
+          <h2 className="wcm-section-title"><Icon className="ti ti-package" style={{ marginRight: '10px' }} />Published Versions</h2>
           <p className="mas-section-sub">All app versions published so far, newest first.</p>
         </div>
         <button type="button" className="wcm-btn wcm-btn-primary-custom" onClick={openAddModal}>
-          <i className="ti ti-plus" /> Add Release Note
+          <Icon className="ti ti-plus" /> Add Release Note
         </button>
       </div>
 
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} aria-hidden="true" />
+          <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} aria-hidden="true" />
           <input
             type="text"
             className="search-input"
@@ -663,10 +664,10 @@ export default function MobileAppSettingsPage() {
             onClick={() => setMinMenuOpen((o) => !o)}
             title="Users on a lower version will be asked to force update"
           >
-            <i className="ti ti-shield-check" />
+            <Icon className="ti ti-shield-check" />
             <span className="mas-minver-label">Minimum Supported Version</span>
             <span className="mas-minver-value">{minVersion}</span>
-            <i className={`ti ti-angle-${minMenuOpen ? 'up' : 'down'}`} />
+            <Icon className={`ti ti-angle-${minMenuOpen ? 'up' : 'down'}`} />
           </button>
           {minMenuOpen && (
             <div className="mas-minver-menu">
@@ -682,9 +683,9 @@ export default function MobileAppSettingsPage() {
                     showToast('success', 'Minimum Version Updated', `Users below v${r.version} will be prompted to force update.`);
                   }}
                 >
-                  <i className="ti ti-package" />
+                  <Icon className="ti ti-package" />
                   <span>{r.version}</span>
-                  {r.version === minVersion && <i className="ti ti-check" style={{ marginLeft: 'auto', color: '#006073' }} />}
+                  {r.version === minVersion && <Icon className="ti ti-check" style={{ marginLeft: 'auto', color: '#006073' }} />}
                 </button>
               ))}
             </div>
@@ -718,7 +719,7 @@ export default function MobileAppSettingsPage() {
             {pagedReleases.length > 0 ? pagedReleases.map((r) => (
               <tr key={r.id}>
                 <td>
-                  <span className="mas-version-pill"><i className="ti ti-package" /> {r.version}</span>
+                  <span className="mas-version-pill"><Icon className="ti ti-package" /> {r.version}</span>
                 </td>
                 <td>{formatReleaseDate(r.releaseDate)}</td>
                 <td style={{ textAlign: 'center' }}>
@@ -728,17 +729,17 @@ export default function MobileAppSettingsPage() {
                 </td>
                 <td>
                   <button type="button" className="mas-view-btn" onClick={() => setViewRelease(r)}>
-                    <i className="ti ti-eye" /> Release Notes
+                    <Icon className="ti ti-eye" /> Release Notes
                   </button>
                 </td>
                 <td style={{ textAlign: 'center' }}>
                   <div className="kebab-menu-container">
                     <button type="button" className="kebab-button" onClick={(e) => { e.stopPropagation(); setActiveRelMenu(activeRelMenu === r.id ? null : r.id); }}>
-                      <i className="ti ti-more-alt" />
+                      <Icon className="ti ti-more-alt" />
                     </button>
                     <div className={`kebab-dropdown ${activeRelMenu === r.id ? 'active' : ''}`} onClick={(e) => e.stopPropagation()}>
-                      <button type="button" className="kebab-dropdown-item" onClick={() => { setViewRelease(r); setActiveRelMenu(null); }}><i className="ti ti-eye" /> Release Notes</button>
-                      <button type="button" className="kebab-dropdown-item delete-action" onClick={() => { setConfirmDeleteRelease(r); setActiveRelMenu(null); }}><i className="ti ti-trash" /> Delete</button>
+                      <button type="button" className="kebab-dropdown-item" onClick={() => { setViewRelease(r); setActiveRelMenu(null); }}><Icon className="ti ti-eye" /> Release Notes</button>
+                      <button type="button" className="kebab-dropdown-item delete-action" onClick={() => { setConfirmDeleteRelease(r); setActiveRelMenu(null); }}><Icon className="ti ti-trash" /> Delete</button>
                     </div>
                   </div>
                 </td>
@@ -747,7 +748,7 @@ export default function MobileAppSettingsPage() {
               <tr>
                 <td colSpan={5} style={{ textAlign: 'center', padding: '40px' }}>
                   <div className="qar-empty-state" style={{ border: 'none', background: 'transparent' }}>
-                    <i className="ti ti-mobile" />
+                    <Icon className="ti ti-mobile" />
                     <h4>No Releases Found</h4>
                     <p>No app versions match your search.</p>
                   </div>
@@ -768,7 +769,7 @@ export default function MobileAppSettingsPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={relSafePage === 1} onClick={() => setRelPage((p) => Math.max(1, p - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {getPageNumbers(relSafePage, relTotalPages).map((p, idx) => (
                 p === '...' ? (
@@ -778,7 +779,7 @@ export default function MobileAppSettingsPage() {
                 )
               ))}
               <button type="button" className="pagination-btn" disabled={relSafePage === relTotalPages} onClick={() => setRelPage((p) => Math.min(relTotalPages, p + 1))}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
@@ -790,11 +791,11 @@ export default function MobileAppSettingsPage() {
       <div className="wcm-section-card">
       <div className="wcm-section-header">
         <div>
-          <h2 className="wcm-section-title"><i className="ti ti-layout-slider" style={{ marginRight: '10px' }} />App Home Screen Sliders</h2>
+          <h2 className="wcm-section-title"><Icon className="ti ti-layout-slider" style={{ marginRight: '10px' }} />App Home Screen Sliders</h2>
           <p className="mas-section-sub">Slides rendered in the home screen slideshow of the mobile app.</p>
         </div>
         <button type="button" className="wcm-btn wcm-btn-primary-custom" onClick={() => openSliderModal()}>
-          <i className="ti ti-plus" /> Add Slider
+          <Icon className="ti ti-plus" /> Add Slider
         </button>
       </div>
       <div style={{ padding: '28px 20px' }}>
@@ -810,7 +811,7 @@ export default function MobileAppSettingsPage() {
                 onClick={() => setSliderIndex((i) => (i - 1 + sliders.length) % sliders.length)}
                 aria-label="Previous slide"
               >
-                <i className="ti ti-angle-left" />
+                <Icon className="ti ti-angle-left" />
               </button>
 
               <div className="mas-phone">
@@ -836,8 +837,8 @@ export default function MobileAppSettingsPage() {
                   </div>
                 </div>
                 <div className="mas-slide-actions">
-                  <button type="button" className="mas-slide-action" onClick={() => openSliderModal(s)}><i className="ti ti-pencil" /> Edit</button>
-                  <button type="button" className="mas-slide-action danger" onClick={() => setConfirmDeleteSlider(s)}><i className="ti ti-trash" /> Delete</button>
+                  <button type="button" className="mas-slide-action" onClick={() => openSliderModal(s)}><Icon className="ti ti-pencil" /> Edit</button>
+                  <button type="button" className="mas-slide-action danger" onClick={() => setConfirmDeleteSlider(s)}><Icon className="ti ti-trash" /> Delete</button>
                 </div>
               </div>
 
@@ -848,13 +849,13 @@ export default function MobileAppSettingsPage() {
                 onClick={() => setSliderIndex((i) => (i + 1) % sliders.length)}
                 aria-label="Next slide"
               >
-                <i className="ti ti-angle-right" />
+                <Icon className="ti ti-angle-right" />
               </button>
             </div>
           );
         })() : (
           <div className="qar-empty-state" style={{ border: 'none', background: 'transparent' }}>
-            <i className="ti ti-image" />
+            <Icon className="ti ti-image" />
             <h4>No Sliders Configured</h4>
             <p>Add a slider to show it on the app home screen.</p>
           </div>
@@ -866,11 +867,11 @@ export default function MobileAppSettingsPage() {
       <div className="wcm-section-card">
       <div className="wcm-section-header">
         <div>
-          <h2 className="wcm-section-title"><i className="ti ti-world" style={{ marginRight: '10px' }} />Login Methods</h2>
+          <h2 className="wcm-section-title"><Icon className="ti ti-world" style={{ marginRight: '10px' }} />Login Methods</h2>
           <p className="mas-section-sub">Country codes supported by the app and their default OTP delivery mode.</p>
         </div>
         <button type="button" className="wcm-btn wcm-btn-primary-custom" onClick={() => openLoginModal()}>
-          <i className="ti ti-plus" /> Add Country
+          <Icon className="ti ti-plus" /> Add Country
         </button>
       </div>
       <div className="students-table-container">
@@ -916,11 +917,11 @@ export default function MobileAppSettingsPage() {
                 <td style={{ textAlign: 'center' }}>
                   <div className="kebab-menu-container">
                     <button type="button" className="kebab-button" onClick={(e) => { e.stopPropagation(); setActiveLoginMenu(activeLoginMenu === m.id ? null : m.id); }}>
-                      <i className="ti ti-more-alt" />
+                      <Icon className="ti ti-more-alt" />
                     </button>
                     <div className={`kebab-dropdown ${activeLoginMenu === m.id ? 'active' : ''}`} onClick={(e) => e.stopPropagation()}>
-                      <button type="button" className="kebab-dropdown-item" onClick={() => { openLoginModal(m); setActiveLoginMenu(null); }}><i className="ti ti-pencil" /> Edit</button>
-                      <button type="button" className="kebab-dropdown-item" style={{ color: '#dc2626' }} onClick={() => { setConfirmDeleteLogin(m); setActiveLoginMenu(null); }}><i className="ti ti-trash" /> Delete</button>
+                      <button type="button" className="kebab-dropdown-item" onClick={() => { openLoginModal(m); setActiveLoginMenu(null); }}><Icon className="ti ti-pencil" /> Edit</button>
+                      <button type="button" className="kebab-dropdown-item" style={{ color: '#dc2626' }} onClick={() => { setConfirmDeleteLogin(m); setActiveLoginMenu(null); }}><Icon className="ti ti-trash" /> Delete</button>
                     </div>
                   </div>
                 </td>
@@ -929,7 +930,7 @@ export default function MobileAppSettingsPage() {
               <tr>
                 <td colSpan={5} style={{ textAlign: 'center', padding: '40px' }}>
                   <div className="qar-empty-state" style={{ border: 'none', background: 'transparent' }}>
-                    <i className="ti ti-world" />
+                    <Icon className="ti ti-world" />
                     <h4>No Login Methods</h4>
                     <p>Add a country code to enable login from that region.</p>
                   </div>
@@ -945,11 +946,11 @@ export default function MobileAppSettingsPage() {
       <div className="wcm-section-card">
       <div className="wcm-section-header">
         <div>
-          <h2 className="wcm-section-title"><i className="ti ti-rocket" style={{ marginRight: '10px' }} />Preparation Journeys</h2>
+          <h2 className="wcm-section-title"><Icon className="ti ti-rocket" style={{ marginRight: '10px' }} />Preparation Journeys</h2>
           <p className="mas-section-sub">Exam preparation tracks offered in the app, with their target exam dates.</p>
         </div>
         <button type="button" className="wcm-btn wcm-btn-primary-custom" onClick={() => openJourneyModal()}>
-          <i className="ti ti-plus" /> Add Journey
+          <Icon className="ti ti-plus" /> Add Journey
         </button>
       </div>
 
@@ -998,17 +999,17 @@ export default function MobileAppSettingsPage() {
                 <td>{j.datesUnsure ? formatExamMonth(j.examDate) : formatExamDate(j.examDate)}</td>
                 <td style={{ textAlign: 'center' }}>
                   <span className={`mas-status-badge ${j.status === 'Active' ? 'active' : 'completed'}`}>
-                    <i className="ti ti-circle-filled" /> {j.status}
+                    <Icon className="ti ti-circle-filled" /> {j.status}
                   </span>
                 </td>
                 <td style={{ textAlign: 'center' }}>
                   <div className="kebab-menu-container">
                     <button type="button" className="kebab-button" onClick={(e) => { e.stopPropagation(); setActiveJourneyMenu(activeJourneyMenu === j.id ? null : j.id); }}>
-                      <i className="ti ti-more-alt" />
+                      <Icon className="ti ti-more-alt" />
                     </button>
                     <div className={`kebab-dropdown ${activeJourneyMenu === j.id ? 'active' : ''}`} onClick={(e) => e.stopPropagation()}>
-                      <button type="button" className="kebab-dropdown-item" onClick={() => { openJourneyModal(j); setActiveJourneyMenu(null); }}><i className="ti ti-pencil" /> Edit</button>
-                      <button type="button" className="kebab-dropdown-item delete-action" onClick={() => { deleteJourney(j); setActiveJourneyMenu(null); }}><i className="ti ti-trash" /> Delete</button>
+                      <button type="button" className="kebab-dropdown-item" onClick={() => { openJourneyModal(j); setActiveJourneyMenu(null); }}><Icon className="ti ti-pencil" /> Edit</button>
+                      <button type="button" className="kebab-dropdown-item delete-action" onClick={() => { deleteJourney(j); setActiveJourneyMenu(null); }}><Icon className="ti ti-trash" /> Delete</button>
                     </div>
                   </div>
                 </td>
@@ -1017,7 +1018,7 @@ export default function MobileAppSettingsPage() {
               <tr>
                 <td colSpan={6} style={{ textAlign: 'center', padding: '40px' }}>
                   <div className="qar-empty-state" style={{ border: 'none', background: 'transparent' }}>
-                    <i className="ti ti-rocket" />
+                    <Icon className="ti ti-rocket" />
                     <h4>No Preparation Journeys</h4>
                     <p>{journeyFilter === 'completed' ? 'No completed journeys yet.' : journeyFilter === 'active' ? 'No active journeys. Add one to get started.' : 'Add a preparation journey to get started.'}</p>
                   </div>
@@ -1036,13 +1037,13 @@ export default function MobileAppSettingsPage() {
           <div className="legacy-modal-header">
             <h3>Add Release Note</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setShowAddModal(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <form className="form-modal" onSubmit={handleSubmit}>
             <div className="legacy-modal-body">
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Release Details</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Release Details</div>
                 <div className="asset-form-grid basic-grid">
                   <label className="field-cell">
                     <div className={`float-field ${versionError ? 'has-error' : ''}`}>
@@ -1088,7 +1089,7 @@ export default function MobileAppSettingsPage() {
               </div>
 
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-file-text" /> Release Summary</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-file-text" /> Release Summary</div>
                 <div className="asset-form-grid">
                   <div className="field-cell full-span">
                     <RichTextEditor valueRef={summaryRef} />
@@ -1099,7 +1100,7 @@ export default function MobileAppSettingsPage() {
             <div className="legacy-modal-footer">
               <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setShowAddModal(false)}>Cancel</button>
               <button type="submit" className="legacy-btn legacy-btn-success" disabled={!!versionError || !formVersion.trim()}>
-                <i className="ti ti-check" /> Publish Release
+                <Icon className="ti ti-check" /> Publish Release
               </button>
             </div>
           </form>
@@ -1112,13 +1113,13 @@ export default function MobileAppSettingsPage() {
           <div className="legacy-modal-header">
             <h3>{editingSliderId ? 'Edit Home Screen Slider' : 'Add Home Screen Slider'}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setShowSliderModal(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <form className="form-modal" onSubmit={handleSliderSubmit}>
             <div className="legacy-modal-body">
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-text" /> Slide Content</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-text" /> Slide Content</div>
                 <div className="asset-form-grid">
                   <label className="field-cell full-span">
                     <div className="float-field">
@@ -1175,8 +1176,8 @@ export default function MobileAppSettingsPage() {
         <div className="crispr-modal-backdrop active" onMouseDown={(e) => { if (e.target === e.currentTarget) setShowLoginModal(false); }}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 560 }}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-world" /> {editingLoginId ? 'Edit Login Country' : 'Add Login Country'}</h3>
-              <button type="button" className="crispr-modal-close" onClick={() => setShowLoginModal(false)}><i className="ti ti-close" /></button>
+              <h3><Icon className="ti ti-world" /> {editingLoginId ? 'Edit Login Country' : 'Add Login Country'}</h3>
+              <button type="button" className="crispr-modal-close" onClick={() => setShowLoginModal(false)}><Icon className="ti ti-close" /></button>
             </div>
             <form onSubmit={handleLoginSubmit}>
               <div className="crispr-modal-body">
@@ -1237,7 +1238,7 @@ export default function MobileAppSettingsPage() {
               <div className="crispr-modal-footer">
                 <button type="button" className="btn btn-default" onClick={() => setShowLoginModal(false)}>Cancel</button>
                 <button type="submit" className="btn btn-success" disabled={!!loginCodeError || !loginCode.trim() || !loginCountry.trim()}>
-                  <i className="ti ti-check" /> {editingLoginId ? 'Save Changes' : 'Add Country'}
+                  <Icon className="ti ti-check" /> {editingLoginId ? 'Save Changes' : 'Add Country'}
                 </button>
               </div>
             </form>
@@ -1250,8 +1251,8 @@ export default function MobileAppSettingsPage() {
         <div className="crispr-modal-backdrop active" onMouseDown={(e) => { if (e.target === e.currentTarget) setConfirmDeleteSlider(null); }}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 440 }}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-alert-triangle" style={{ color: '#dc2626' }} /> Delete Slider</h3>
-              <button type="button" className="crispr-modal-close" onClick={() => setConfirmDeleteSlider(null)}><i className="ti ti-close" /></button>
+              <h3><Icon className="ti ti-alert-triangle" style={{ color: '#dc2626' }} /> Delete Slider</h3>
+              <button type="button" className="crispr-modal-close" onClick={() => setConfirmDeleteSlider(null)}><Icon className="ti ti-close" /></button>
             </div>
             <div className="crispr-modal-body">
               <p style={{ margin: 0, color: '#475569', fontSize: '14px', lineHeight: 1.6 }}>
@@ -1261,7 +1262,7 @@ export default function MobileAppSettingsPage() {
             <div className="crispr-modal-footer">
               <button type="button" className="btn btn-default" onClick={() => setConfirmDeleteSlider(null)}>Cancel</button>
               <button type="button" className="btn btn-danger" onClick={() => { removeSlider(confirmDeleteSlider); setConfirmDeleteSlider(null); }}>
-                <i className="ti ti-trash" /> Delete
+                <Icon className="ti ti-trash" /> Delete
               </button>
             </div>
           </div>
@@ -1273,8 +1274,8 @@ export default function MobileAppSettingsPage() {
         <div className="crispr-modal-backdrop active" onMouseDown={(e) => { if (e.target === e.currentTarget) setConfirmDeleteRelease(null); }}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 440 }}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-alert-triangle" style={{ color: '#dc2626' }} /> Delete Release Note</h3>
-              <button type="button" className="crispr-modal-close" onClick={() => setConfirmDeleteRelease(null)}><i className="ti ti-close" /></button>
+              <h3><Icon className="ti ti-alert-triangle" style={{ color: '#dc2626' }} /> Delete Release Note</h3>
+              <button type="button" className="crispr-modal-close" onClick={() => setConfirmDeleteRelease(null)}><Icon className="ti ti-close" /></button>
             </div>
             <div className="crispr-modal-body">
               <p style={{ margin: 0, color: '#475569', fontSize: '14px', lineHeight: 1.6 }}>
@@ -1284,7 +1285,7 @@ export default function MobileAppSettingsPage() {
             <div className="crispr-modal-footer">
               <button type="button" className="btn btn-default" onClick={() => setConfirmDeleteRelease(null)}>Cancel</button>
               <button type="button" className="btn btn-danger" onClick={() => { deleteRelease(confirmDeleteRelease); setConfirmDeleteRelease(null); }}>
-                <i className="ti ti-trash" /> Delete
+                <Icon className="ti ti-trash" /> Delete
               </button>
             </div>
           </div>
@@ -1296,8 +1297,8 @@ export default function MobileAppSettingsPage() {
         <div className="crispr-modal-backdrop active" onMouseDown={(e) => { if (e.target === e.currentTarget) setConfirmDeleteLogin(null); }}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 440 }}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-alert-triangle" style={{ color: '#dc2626' }} /> Remove Login Method</h3>
-              <button type="button" className="crispr-modal-close" onClick={() => setConfirmDeleteLogin(null)}><i className="ti ti-close" /></button>
+              <h3><Icon className="ti ti-alert-triangle" style={{ color: '#dc2626' }} /> Remove Login Method</h3>
+              <button type="button" className="crispr-modal-close" onClick={() => setConfirmDeleteLogin(null)}><Icon className="ti ti-close" /></button>
             </div>
             <div className="crispr-modal-body">
               <p style={{ margin: 0, color: '#475569', fontSize: '14px', lineHeight: 1.6 }}>
@@ -1307,7 +1308,7 @@ export default function MobileAppSettingsPage() {
             <div className="crispr-modal-footer">
               <button type="button" className="btn btn-default" onClick={() => setConfirmDeleteLogin(null)}>Cancel</button>
               <button type="button" className="btn btn-danger" onClick={() => { deleteLoginMethod(confirmDeleteLogin); setConfirmDeleteLogin(null); }}>
-                <i className="ti ti-trash" /> Remove
+                <Icon className="ti ti-trash" /> Remove
               </button>
             </div>
           </div>
@@ -1319,8 +1320,8 @@ export default function MobileAppSettingsPage() {
         <div className="crispr-modal-backdrop active" onMouseDown={(e) => { if (e.target === e.currentTarget) setViewRelease(null); }}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 560 }}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-package" /> Version {viewRelease.version}</h3>
-              <button type="button" className="crispr-modal-close" onClick={() => setViewRelease(null)}><i className="ti ti-close" /></button>
+              <h3><Icon className="ti ti-package" /> Version {viewRelease.version}</h3>
+              <button type="button" className="crispr-modal-close" onClick={() => setViewRelease(null)}><Icon className="ti ti-close" /></button>
             </div>
             <div className="crispr-modal-body">
               <div style={{ display: 'flex', gap: '20px', marginBottom: '16px', flexWrap: 'wrap' }}>
@@ -1347,8 +1348,8 @@ export default function MobileAppSettingsPage() {
         <div className="crispr-modal-backdrop active" onMouseDown={(e) => { if (e.target === e.currentTarget) setShowJourneyModal(false); }}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 560 }}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-rocket" /> {editingJourneyId ? 'Edit Preparation Journey' : 'Add Preparation Journey'}</h3>
-              <button type="button" className="crispr-modal-close" onClick={() => setShowJourneyModal(false)}><i className="ti ti-close" /></button>
+              <h3><Icon className="ti ti-rocket" /> {editingJourneyId ? 'Edit Preparation Journey' : 'Add Preparation Journey'}</h3>
+              <button type="button" className="crispr-modal-close" onClick={() => setShowJourneyModal(false)}><Icon className="ti ti-close" /></button>
             </div>
             <form onSubmit={handleJourneySubmit}>
               <div className="crispr-modal-body">
@@ -1401,7 +1402,7 @@ export default function MobileAppSettingsPage() {
               <div className="crispr-modal-footer">
                 <button type="button" className="btn btn-default" onClick={() => setShowJourneyModal(false)} disabled={journeySaving}>Cancel</button>
                 <button type="submit" className="btn btn-success" disabled={journeySaving}>
-                  <i className={`ti ${journeySaving ? 'ti-reload' : 'ti-check'}`} /> {journeySaving ? 'Saving…' : (editingJourneyId ? 'Save Changes' : 'Add Journey')}
+                  <Icon className={`ti ${journeySaving ? 'ti-reload' : 'ti-check'}`} /> {journeySaving ? 'Saving…' : (editingJourneyId ? 'Save Changes' : 'Add Journey')}
                 </button>
               </div>
             </form>

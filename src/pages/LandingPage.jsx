@@ -6,6 +6,7 @@ import { changePassword } from '../lib/userProfileApi';
 import { allScreens } from '../lib/legacyScreens';
 import { canAccess } from '../lib/roles';
 import { useUser } from '../lib/userStore';
+import Icon from '../components/Icon';
 
 function getGreeting(date) {
   const h = date.getHours();
@@ -228,10 +229,10 @@ export default function LandingPage() {
                 </div>
                 <div className="landing-popdown-actions">
                   <button type="button" className="landing-popdown-btn" onClick={() => { setProfilePopdownOpen(false); openEdit(); }}>
-                    <i className="ti ti-pencil" /> Edit Profile
+                    <Icon className="ti ti-pencil" /> Edit Profile
                   </button>
                   <button type="button" className="landing-popdown-btn" onClick={() => { setProfilePopdownOpen(false); openChangePassword(); }}>
-                    <i className="ti ti-lock" /> Change Password
+                    <Icon className="ti ti-lock" /> Change Password
                   </button>
                 </div>
               </div>
@@ -243,7 +244,7 @@ export default function LandingPage() {
             <div className="landing-greeting-sub">
               <span>Here's what's happening across your workspace today.</span>
               {displayRole && (
-                <span className="landing-role-chip"><i className="fa fa-shield" /> {displayRole}</span>
+                <span className="landing-role-chip"><Icon className="fa fa-shield" /> {displayRole}</span>
               )}
             </div>
           </div>
@@ -265,7 +266,7 @@ export default function LandingPage() {
             <>
               <div className="landing-section-head">
                 <h3>
-                  <i className="ti ti-thumb-tack" /> Your Pinned Pages
+                  <Icon className="ti ti-thumb-tack" /> Your Pinned Pages
                 </h3>
                 <span className="landing-section-hint">{pinnedScreens.length} shortcut{pinnedScreens.length === 1 ? '' : 's'}</span>
               </div>
@@ -302,7 +303,7 @@ export default function LandingPage() {
                     {it.alert >= 1 && <span className="landing-summary-alert-dot" title="Needs attention" />}
                     <div className="landing-summary-head">
                       <div className="landing-summary-icon" style={{ background: `${it.color}1f` }}>
-                        <i className={it.icon} style={{ color: it.color }} />
+                        <Icon className={it.icon} style={{ color: it.color }} />
                       </div>
                       <div className="landing-summary-body">
                         <div className="landing-summary-label">{it.label}</div>
@@ -328,9 +329,9 @@ export default function LandingPage() {
         <div className="crispr-modal-backdrop active" onClick={() => !editSaving && setEditOpen(false)}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 480 }} onClick={(e) => e.stopPropagation()}>
             <div className="crispr-modal-header" style={{ background: 'linear-gradient(135deg, #006073 0%, #005a6b 100%)' }}>
-              <h3><i className="ti ti-pencil" /> Edit Profile</h3>
+              <h3><Icon className="ti ti-pencil" /> Edit Profile</h3>
               <button className="crispr-modal-close" onClick={() => !editSaving && setEditOpen(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="crispr-modal-body">
@@ -352,7 +353,7 @@ export default function LandingPage() {
             <div className="crispr-modal-footer">
               <button type="button" className="btn btn-default" disabled={editSaving} onClick={() => setEditOpen(false)}>Cancel</button>
               <button type="button" className="btn btn-primary" disabled={editSaving} onClick={saveProfile}>
-                {editSaving ? (<><i className="ti ti-reload" /> Saving...</>) : (<><i className="ti ti-check" /> Save Changes</>)}
+                {editSaving ? (<><Icon className="ti ti-reload" /> Saving...</>) : (<><Icon className="ti ti-check" /> Save Changes</>)}
               </button>
             </div>
           </div>
@@ -364,9 +365,9 @@ export default function LandingPage() {
         <div className="crispr-modal-backdrop active" onClick={() => !pwSaving && setPwOpen(false)}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 480 }} onClick={(e) => e.stopPropagation()}>
             <div className="crispr-modal-header" style={{ background: 'linear-gradient(135deg, #006073 0%, #005a6b 100%)' }}>
-              <h3><i className="ti ti-lock" /> Change Password</h3>
+              <h3><Icon className="ti ti-lock" /> Change Password</h3>
               <button className="crispr-modal-close" onClick={() => !pwSaving && setPwOpen(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="crispr-modal-body">
@@ -388,7 +389,7 @@ export default function LandingPage() {
             <div className="crispr-modal-footer">
               <button type="button" className="btn btn-default" disabled={pwSaving} onClick={() => setPwOpen(false)}>Cancel</button>
               <button type="button" className="btn btn-primary" disabled={pwSaving} onClick={submitChangePassword}>
-                {pwSaving ? (<><i className="ti ti-reload" /> Updating...</>) : (<><i className="ti ti-check" /> Update Password</>)}
+                {pwSaving ? (<><Icon className="ti ti-reload" /> Updating...</>) : (<><Icon className="ti ti-check" /> Update Password</>)}
               </button>
             </div>
           </div>
@@ -438,7 +439,7 @@ function DeltaLine({ delta, good }) {
     <div className="landing-summary-foot">
       <div className={`landing-summary-delta is-${tone}`}>
         <span className="landing-summary-delta-pill">
-          <i className={`fa ${icon}`} aria-hidden="true" />
+          <Icon className={`fa ${icon}`} aria-hidden="true" />
           {dir === 'flat' ? 'No change' : `${Math.abs(delta)}%`}
         </span>
         <span>vs yesterday</span>
@@ -451,7 +452,7 @@ function DeltaLine({ delta, good }) {
 function ProfileRow({ icon, label, value }) {
   return (
     <div className="landing-profile-row" title={label}>
-      <i className={`ti ${icon}`} />
+      <Icon className={`ti ${icon}`} />
       <span style={{ color: value ? '#1f2933' : '#9aa5b1', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
         {value || '—'}
       </span>
@@ -475,7 +476,7 @@ function TileCard({ screen, onOpen, onUnpin, onPin }) {
     >
       <div className="landing-tile-top">
         <div className="landing-tile-icon">
-          <i className={iconClass} />
+          <Icon className={iconClass} />
         </div>
         <div className="landing-tile-title">{screen.title}</div>
       </div>
@@ -492,7 +493,7 @@ function TileCard({ screen, onOpen, onUnpin, onPin }) {
           className={`landing-tile-pin ${onUnpin ? 'is-pinned' : 'is-unpinned'}`}
           onClick={(e) => { e.stopPropagation(); (onUnpin || onPin)(); }}
         >
-          <i className="fa fa-thumb-tack" />
+          <Icon className="fa fa-thumb-tack" />
         </button>
       )}
     </div>

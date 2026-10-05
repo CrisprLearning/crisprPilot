@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ToastRegion from '../components/ToastRegion';
 import { availableBatches, availableCourses, ensureAttempts } from '../data/attemptReportsDemo';
 import { examsDemo } from '../data/examsDemo';
+import Icon from '../components/Icon';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -146,7 +147,7 @@ function BatchMultiselect({ batches, selected, onChange, disabled }) {
         <span>{getLabel()}</span>
         <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           {selected.length > 0 && <span className="ear-batch-count">{selected.length}</span>}
-          <i className="ti ti-angle-down" />
+          <Icon className="ti ti-angle-down" />
         </span>
       </button>
       {open && !disabled && (
@@ -192,7 +193,7 @@ function KebabMenu({ ranking, onViewAttempt, onResetAttempt, onDownloadReport })
         className="kebab-button"
         onClick={(event) => { event.stopPropagation(); setOpen((v) => !v); }}
       >
-        <i className="ti ti-more-alt" />
+        <Icon className="ti ti-more-alt" />
       </button>
       <div className={`kebab-dropdown${open ? ' active' : ''}`}>
         <button
@@ -200,14 +201,14 @@ function KebabMenu({ ranking, onViewAttempt, onResetAttempt, onDownloadReport })
           className="kebab-dropdown-item"
           onClick={() => { setOpen(false); onViewAttempt(ranking); }}
         >
-          <i className="ti ti-eye" /> View Attempt
+          <Icon className="ti ti-eye" /> View Attempt
         </button>
         <button
           type="button"
           className="kebab-dropdown-item"
           onClick={() => { setOpen(false); onDownloadReport(ranking); }}
         >
-          <i className="ti ti-download" /> Download Report
+          <Icon className="ti ti-download" /> Download Report
         </button>
         {ranking.status === 'completed' && (
           <button
@@ -215,7 +216,7 @@ function KebabMenu({ ranking, onViewAttempt, onResetAttempt, onDownloadReport })
             className="kebab-dropdown-item draft-action"
             onClick={() => { setOpen(false); onResetAttempt(ranking); }}
           >
-            <i className="ti ti-reload" /> Reset Attempt
+            <Icon className="ti ti-reload" /> Reset Attempt
           </button>
         )}
       </div>
@@ -461,7 +462,7 @@ export default function ExamAttemptReportPage() {
         <div className="ear-header-top">
           <div className="ear-header-main">
             <h2 className="ear-header-title">
-              <i className="ti ti-bar-chart" /> {exam.title}
+              <Icon className="ti ti-bar-chart" /> {exam.title}
             </h2>
             <p className="ear-header-desc">{exam.brief}</p>
             {sections.length > 0 && (
@@ -475,28 +476,28 @@ export default function ExamAttemptReportPage() {
 
           <div className="ear-header-info-group">
             <div className="ear-header-info-item">
-              <div className="ear-header-info-icon"><i className="ti ti-help-alt" /></div>
+              <div className="ear-header-info-icon"><Icon className="ti ti-help-alt" /></div>
               <div className="ear-header-info-content">
                 <div className="ear-header-info-label">Questions</div>
                 <div className="ear-header-info-value">{exam.totalQuestions || 0}</div>
               </div>
             </div>
             <div className="ear-header-info-item">
-              <div className="ear-header-info-icon"><i className="ti ti-timer" /></div>
+              <div className="ear-header-info-icon"><Icon className="ti ti-timer" /></div>
               <div className="ear-header-info-content">
                 <div className="ear-header-info-label">Duration</div>
                 <div className="ear-header-info-value">{exam.duration || 0} min</div>
               </div>
             </div>
             <div className="ear-header-info-item">
-              <div className="ear-header-info-icon"><i className="ti ti-view-list" /></div>
+              <div className="ear-header-info-icon"><Icon className="ti ti-view-list" /></div>
               <div className="ear-header-info-content">
                 <div className="ear-header-info-label">Sections</div>
                 <div className="ear-header-info-value">{sections.length || exam.numberOfSections || 0}</div>
               </div>
             </div>
             <div className="ear-header-info-item">
-              <div className="ear-header-info-icon"><i className="ti ti-info-alt" /></div>
+              <div className="ear-header-info-icon"><Icon className="ti ti-info-alt" /></div>
               <div className="ear-header-info-content">
                 <div className="ear-header-info-label">Status</div>
                 <div className="ear-header-info-value">{getStatusLabel(exam.status)}</div>
@@ -506,7 +507,7 @@ export default function ExamAttemptReportPage() {
 
           <div className="ear-header-actions">
             <button type="button" className="ear-back-btn" onClick={() => navigate('/exam-listing')}>
-              <i className="ti ti-arrow-left" /> Back
+              <Icon className="ti ti-arrow-left" /> Back
             </button>
           </div>
         </div>
@@ -514,28 +515,28 @@ export default function ExamAttemptReportPage() {
         <div className="ear-header-body">
           <div className="ear-stats-row">
             <div className="ear-stat-card">
-              <div className="ear-stat-icon ear-stat-indigo"><i className="ti ti-user" /></div>
+              <div className="ear-stat-icon ear-stat-indigo"><Icon className="ti ti-user" /></div>
               <div className="ear-stat-info">
                 <h3>{exam.attempts?.length || 0}</h3>
                 <p>Total Attempts</p>
               </div>
             </div>
             <div className="ear-stat-card">
-              <div className="ear-stat-icon ear-stat-green"><i className="ti ti-check" /></div>
+              <div className="ear-stat-icon ear-stat-green"><Icon className="ti ti-check" /></div>
               <div className="ear-stat-info">
                 <h3>{rankings.filter((r) => r.status === 'completed').length}</h3>
                 <p>Completed</p>
               </div>
             </div>
             <div className="ear-stat-card">
-              <div className="ear-stat-icon ear-stat-orange"><i className="ti ti-timer" /></div>
+              <div className="ear-stat-icon ear-stat-orange"><Icon className="ti ti-timer" /></div>
               <div className="ear-stat-info">
                 <h3>{rankings.filter((r) => r.status !== 'completed').length}</h3>
                 <p>In Progress</p>
               </div>
             </div>
             <div className="ear-stat-card">
-              <div className="ear-stat-icon ear-stat-teal"><i className="ti ti-bar-chart" /></div>
+              <div className="ear-stat-icon ear-stat-teal"><Icon className="ti ti-bar-chart" /></div>
               <div className="ear-stat-info">
                 <h3>{averageScore}%</h3>
                 <p>Avg Score</p>
@@ -548,11 +549,10 @@ export default function ExamAttemptReportPage() {
       {/* ── Filter Bar ── */}
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i
+          <Icon
             className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`}
             onClick={() => { if (searchQuery) { setSearchQuery(''); setCurrentPage(1); } }}
-            aria-hidden="true"
-          />
+            aria-hidden="true" />
           <input
             type="text"
             className="search-input"
@@ -567,13 +567,13 @@ export default function ExamAttemptReportPage() {
           className={`filter-toggle-btn${hasModalFilters ? ' active' : ''}`}
           onClick={() => setShowFilterModal(true)}
         >
-          <i className="ti ti-filter" /> Filter
+          <Icon className="ti ti-filter" /> Filter
           {hasModalFilters && <span className="filter-count">{modalFilterCount}</span>}
         </button>
 
         {hasActiveFilters && (
           <button type="button" className="filter-clear-btn" onClick={clearFilters}>
-            <i className="ti ti-reload" /> Clear Filters
+            <Icon className="ti ti-reload" /> Clear Filters
           </button>
         )}
 
@@ -584,7 +584,7 @@ export default function ExamAttemptReportPage() {
             disabled={filteredRankings.length === 0}
             onClick={() => setShowReEvaluateModal(true)}
           >
-            <i className="ti ti-reload" /> Re-evaluate Responses
+            <Icon className="ti ti-reload" /> Re-evaluate Responses
           </button>
           <button
             type="button"
@@ -592,7 +592,7 @@ export default function ExamAttemptReportPage() {
             disabled={filteredRankings.length === 0}
             onClick={() => setShowExportModal(true)}
           >
-            <i className="ti ti-download" /> Export Rank List to PDF
+            <Icon className="ti ti-download" /> Export Rank List to PDF
           </button>
         </div>
       </div>
@@ -604,19 +604,19 @@ export default function ExamAttemptReportPage() {
             <thead>
               <tr>
                 <th className={`sortable${sortColumn === 'rank' ? ' active' : ''}`} style={{ width: 80 }} onClick={() => toggleSort('rank')}>
-                  Rank <i className={`ti ${getSortIcon('rank')} sort-icon`} />
+                  Rank <Icon className={`ti ${getSortIcon('rank')} sort-icon`} />
                 </th>
                 <th className={`sortable${sortColumn === 'studentName' ? ' active' : ''}`} onClick={() => toggleSort('studentName')}>
-                  Student Name <i className={`ti ${getSortIcon('studentName')} sort-icon`} />
+                  Student Name <Icon className={`ti ${getSortIcon('studentName')} sort-icon`} />
                 </th>
                 <th className={`sortable${sortColumn === 'rollNumber' ? ' active' : ''}`} onClick={() => toggleSort('rollNumber')}>
-                  Roll Number <i className={`ti ${getSortIcon('rollNumber')} sort-icon`} />
+                  Roll Number <Icon className={`ti ${getSortIcon('rollNumber')} sort-icon`} />
                 </th>
                 <th>Email</th>
                 <th>Status</th>
                 <th>Score</th>
                 <th className={`sortable${sortColumn === 'percentage' ? ' active' : ''}`} onClick={() => toggleSort('percentage')}>
-                  Percentage <i className={`ti ${getSortIcon('percentage')} sort-icon`} />
+                  Percentage <Icon className={`ti ${getSortIcon('percentage')} sort-icon`} />
                 </th>
                 <th>Time Taken</th>
                 <th>Started At</th>
@@ -703,7 +703,7 @@ export default function ExamAttemptReportPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={safePage === 1} onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {getPageNumbers(safePage, totalPages).map((page, index) => (
                 page === '...'
@@ -720,14 +720,14 @@ export default function ExamAttemptReportPage() {
                   )
               ))}
               <button type="button" className="pagination-btn" disabled={safePage === totalPages} onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
         </div>
       ) : (
         <div className="ear-empty-state">
-          <i className="ti ti-search" />
+          <Icon className="ti ti-search" />
           <h4>No Results Found</h4>
           <p>{hasActiveFilters ? 'Try adjusting your search or filters.' : 'No students have attempted this exam yet.'}</p>
         </div>
@@ -740,14 +740,14 @@ export default function ExamAttemptReportPage() {
         <div className="ear-modal-scrim" role="presentation" onClick={() => setShowFilterModal(false)}>
           <div className="ear-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <div className="ear-modal-header ear-modal-header-teal">
-              <h3><i className="ti ti-filter" /> Filter Attempts</h3>
+              <h3><Icon className="ti ti-filter" /> Filter Attempts</h3>
               <button type="button" className="ear-modal-close" onClick={() => setShowFilterModal(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="ear-modal-body form-modal">
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Status</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Status</div>
                 <div className="asset-form-grid">
                   <label className="field-cell full-span">
                     <div className="float-field float-always">
@@ -763,7 +763,7 @@ export default function ExamAttemptReportPage() {
               </div>
 
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-calendar" /> Date Range</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-calendar" /> Date Range</div>
                 <div className="asset-form-grid">
                   <label className="field-cell">
                     <div className="float-field float-always date-custom">
@@ -783,7 +783,7 @@ export default function ExamAttemptReportPage() {
               </div>
 
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-book" /> Course &amp; Batch</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-book" /> Course &amp; Batch</div>
                 <div className="asset-form-grid">
                   <label className="field-cell full-span">
                     <div className="float-field float-always">
@@ -815,7 +815,7 @@ export default function ExamAttemptReportPage() {
             <div className="ear-modal-footer">
               <button type="button" className="ear-btn-default" onClick={() => { clearFilters(); }}>Clear Filters</button>
               <button type="button" className="ear-btn-export" onClick={() => setShowFilterModal(false)}>
-                <i className="ti ti-check" /> Apply Filters
+                <Icon className="ti ti-check" /> Apply Filters
               </button>
             </div>
           </div>
@@ -827,15 +827,15 @@ export default function ExamAttemptReportPage() {
         <div className="ear-modal-scrim" role="presentation" onClick={() => setShowReEvaluateModal(false)}>
           <div className="ear-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <div className="ear-modal-header ear-modal-header-orange">
-              <h3><i className="ti ti-reload" /> Confirm Re-evaluation</h3>
+              <h3><Icon className="ti ti-reload" /> Confirm Re-evaluation</h3>
               <button type="button" className="ear-modal-close" onClick={() => setShowReEvaluateModal(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="ear-modal-body">
               <div className="ear-modal-center">
                 <div className="ear-modal-icon-circle ear-icon-warning">
-                  <i className="ti ti-alert" style={{ fontSize: 32, color: '#856404' }} />
+                  <Icon className="ti ti-alert" style={{ fontSize: 32, color: '#856404' }} />
                 </div>
                 <h4 className="ear-modal-heading">Re-evaluate all student attempts?</h4>
                 <p className="ear-modal-subtext">
@@ -843,7 +843,7 @@ export default function ExamAttemptReportPage() {
                 </p>
                 <div className="ear-modal-info-box">
                   <div className="ear-modal-info-title">
-                    <i className="ti ti-info-alt" style={{ color: '#006073', marginRight: 5 }} />
+                    <Icon className="ti ti-info-alt" style={{ color: '#006073', marginRight: 5 }} />
                     <strong>What this does:</strong>
                   </div>
                   <ul className="ear-modal-info-list">
@@ -853,7 +853,7 @@ export default function ExamAttemptReportPage() {
                   </ul>
                 </div>
                 <div className="ear-modal-warning-box">
-                  <i className="ti ti-alert-circle" style={{ color: '#856404', fontSize: 18, marginTop: 2 }} />
+                  <Icon className="ti ti-alert-circle" style={{ color: '#856404', fontSize: 18, marginTop: 2 }} />
                   <div style={{ fontSize: 12, color: '#856404', lineHeight: 1.5 }}>
                     <strong>Note:</strong> This action cannot be undone. Student notifications may be sent if scores change significantly.
                   </div>
@@ -870,7 +870,7 @@ export default function ExamAttemptReportPage() {
                   showToast('success', 'Re-evaluation Started', `Successfully queued re-evaluation for ${filteredRankings.length} response(s).`);
                 }}
               >
-                <i className="ti ti-check" /> Yes, Re-evaluate
+                <Icon className="ti ti-check" /> Yes, Re-evaluate
               </button>
             </div>
           </div>
@@ -882,15 +882,15 @@ export default function ExamAttemptReportPage() {
         <div className="ear-modal-scrim" role="presentation" onClick={() => setShowExportModal(false)}>
           <div className="ear-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <div className="ear-modal-header ear-modal-header-teal">
-              <h3><i className="ti ti-download" /> Export Rank List</h3>
+              <h3><Icon className="ti ti-download" /> Export Rank List</h3>
               <button type="button" className="ear-modal-close" onClick={() => setShowExportModal(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="ear-modal-body">
               <div className="ear-modal-center">
                 <div className="ear-modal-icon-circle ear-icon-teal">
-                  <i className="ti ti-file-pdf" style={{ fontSize: 32, color: '#006073' }} />
+                  <Icon className="ti ti-file-pdf" style={{ fontSize: 32, color: '#006073' }} />
                 </div>
                 <h4 className="ear-modal-heading">Confirm PDF Export</h4>
                 <p className="ear-modal-subtext">
@@ -899,7 +899,7 @@ export default function ExamAttemptReportPage() {
                 <div className="ear-modal-info-box">
                   <div className="ear-modal-info-title" style={{ justifyContent: 'space-between' }}>
                     <span>
-                      <i className="ti ti-layout-list" style={{ color: '#006073', marginRight: 5 }} />
+                      <Icon className="ti ti-layout-list" style={{ color: '#006073', marginRight: 5 }} />
                       <strong>Select columns to include:</strong>
                     </span>
                     <button
@@ -925,18 +925,18 @@ export default function ExamAttemptReportPage() {
                             disabled={locked}
                           />
                           <span>{exportColumnLabels[col]}</span>
-                          {locked && <i className="ti ti-lock" style={{ fontSize: 10, color: '#6c757d', marginLeft: 'auto' }} />}
+                          {locked && <Icon className="ti ti-lock" style={{ fontSize: 10, color: '#6c757d', marginLeft: 'auto' }} />}
                         </label>
                       );
                     })}
                   </div>
                   <div className="ear-export-hint">
-                    <i className="ti ti-info-alt" /> Either Student Name or Roll Number must be selected. Either Rank or Total Score must be selected.
+                    <Icon className="ti ti-info-alt" /> Either Student Name or Roll Number must be selected. Either Rank or Total Score must be selected.
                   </div>
                 </div>
                 {hasActiveFilters && (
                   <div className="ear-modal-filter-notice">
-                    <i className="ti ti-filter" style={{ color: '#006073', fontSize: 18 }} />
+                    <Icon className="ti ti-filter" style={{ color: '#006073', fontSize: 18 }} />
                     <div style={{ fontSize: 12, color: '#006073', lineHeight: 1.5 }}>
                       Active filters are applied. Only filtered records will be exported.
                     </div>
@@ -957,7 +957,7 @@ export default function ExamAttemptReportPage() {
                   }
                 }}
               >
-                <i className="ti ti-download" /> Export PDF
+                <Icon className="ti ti-download" /> Export PDF
               </button>
             </div>
           </div>
@@ -969,9 +969,9 @@ export default function ExamAttemptReportPage() {
         <div className="ear-modal-scrim" role="presentation" onClick={() => setViewAttemptItem(null)}>
           <div className="ear-modal ear-modal-wide" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <div className="ear-modal-header ear-modal-header-teal">
-              <h3><i className="ti ti-eye" /> Attempt Details</h3>
+              <h3><Icon className="ti ti-eye" /> Attempt Details</h3>
               <button type="button" className="ear-modal-close" onClick={() => setViewAttemptItem(null)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="ear-modal-body">
@@ -1058,22 +1058,22 @@ export default function ExamAttemptReportPage() {
         <div className="ear-modal-scrim" role="presentation" onClick={() => setResetAttemptItem(null)}>
           <div className="ear-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <div className="ear-modal-header ear-modal-header-orange">
-              <h3><i className="ti ti-reload" /> Reset Attempt</h3>
+              <h3><Icon className="ti ti-reload" /> Reset Attempt</h3>
               <button type="button" className="ear-modal-close" onClick={() => setResetAttemptItem(null)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="ear-modal-body">
               <div className="ear-modal-center">
                 <div className="ear-modal-icon-circle ear-icon-warning">
-                  <i className="ti ti-alert" style={{ fontSize: 32, color: '#856404' }} />
+                  <Icon className="ti ti-alert" style={{ fontSize: 32, color: '#856404' }} />
                 </div>
                 <h4 className="ear-modal-heading">Reset this attempt?</h4>
                 <p className="ear-modal-subtext">
                   You are about to reset the attempt for <strong style={{ color: '#006073' }}>{resetAttemptItem.studentName}</strong>. This will clear all their responses and scores.
                 </p>
                 <div className="ear-modal-warning-box">
-                  <i className="ti ti-alert-circle" style={{ color: '#856404', fontSize: 18, marginTop: 2 }} />
+                  <Icon className="ti ti-alert-circle" style={{ color: '#856404', fontSize: 18, marginTop: 2 }} />
                   <div style={{ fontSize: 12, color: '#856404', lineHeight: 1.5 }}>
                     <strong>Warning:</strong> This action cannot be undone. The student will lose their current attempt data.
                   </div>
@@ -1090,7 +1090,7 @@ export default function ExamAttemptReportPage() {
                   showToast('success', 'Attempt Reset', `Attempt for ${resetAttemptItem.studentName} has been reset.`);
                 }}
               >
-                <i className="ti ti-check" /> Yes, Reset
+                <Icon className="ti ti-check" /> Yes, Reset
               </button>
             </div>
           </div>

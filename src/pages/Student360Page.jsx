@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../lib/api';
 import useDebouncedValue from '../hooks/useDebouncedValue';
+import Icon from '../components/Icon';
 
 /**
  * Student 360 — a 360° performance view for a single student.
@@ -124,7 +125,7 @@ function Card({ title, icon, action, children, className = '', style }) {
       {(title || action) && (
         <header className="s360-card-head">
           <h3>
-            {icon && <i className={`fa ${icon}`} />}
+            {icon && <Icon className={`fa ${icon}`} />}
             {title}
           </h3>
           {action}
@@ -315,7 +316,7 @@ function StudentSearch({ onSelect }) {
 
   return (
     <div className="s360-search" ref={boxRef}>
-      <i className="fa fa-search s360-search-icon" />
+      <Icon className="fa fa-search s360-search-icon" />
       <input
         type="text"
         className="s360-search-input"
@@ -327,12 +328,12 @@ function StudentSearch({ onSelect }) {
       />
       {query && (
         <button type="button" className="s360-search-clear" onClick={() => { setQuery(''); setResults([]); }}>
-          <i className="fa fa-times" />
+          <Icon className="fa fa-times" />
         </button>
       )}
       {showDropdown && (
         <div className="s360-search-menu">
-          {loading && <div className="s360-search-state"><i className="fa fa-spinner fa-spin" /> Searching…</div>}
+          {loading && <div className="s360-search-state"><Icon className="fa fa-spinner fa-spin" /> Searching…</div>}
           {!loading && error && <div className="s360-search-state">Couldn't reach the server. Try again.</div>}
           {!loading && !error && results.length === 0 && (
             <div className="s360-search-state">No students match “{debounced.trim()}”.</div>
@@ -352,7 +353,7 @@ function StudentSearch({ onSelect }) {
                 <strong>{r.name || 'Unnamed'}</strong>
                 <small>{r.email || r.phone || r.id}</small>
               </span>
-              <span className="s360-search-pick">View <i className="fa fa-arrow-right" /></span>
+              <span className="s360-search-pick">View <Icon className="fa fa-arrow-right" /></span>
             </button>
           ))}
         </div>
@@ -466,7 +467,7 @@ export default function Student360Page() {
       {/* Header */}
       <div className="s360-pagehead">
         <div className="s360-pagehead-title">
-          <span className="s360-pagehead-icon"><i className="fa fa-user-circle-o" /></span>
+          <span className="s360-pagehead-icon"><Icon className="fa fa-user-circle-o" /></span>
           <div>
             <h2>Student 360</h2>
             <p>A complete view of the student's preparation, performance and engagement.</p>
@@ -475,7 +476,7 @@ export default function Student360Page() {
         <div className="s360-pagehead-actions">
           <StudentSearch onSelect={handleSelect} />
           <button type="button" className="s360-btn-ghost" onClick={() => window.print()}>
-            <i className="fa fa-download" /> Export report
+            <Icon className="fa fa-download" /> Export report
           </button>
         </div>
       </div>
@@ -493,16 +494,16 @@ export default function Student360Page() {
                 aria-label={`View ${s.name}'s photo`}
               >
                 <img className="s360-avatar" src={s.avatar} alt={s.name} />
-                <span className="s360-avatar-zoom"><i className="fa fa-search-plus" /></span>
+                <span className="s360-avatar-zoom"><Icon className="fa fa-search-plus" /></span>
               </button>
             ) : (
               <span className="s360-avatar s360-avatar-empty">{(s.name || '?').charAt(0).toUpperCase()}</span>
             )}
             <div className="s360-hero-id">
-              <h3>{s.name} {profileLoading && <i className="fa fa-spinner fa-spin s360-hero-spin" />}</h3>
+              <h3>{s.name} {profileLoading && <Icon className="fa fa-spinner fa-spin s360-hero-spin" />}</h3>
               <span className="s360-id-chip">{s.id}</span>
               <ul className="s360-contact">
-                <li><i className="fa fa-phone" /> {s.phone}</li>
+                <li><Icon className="fa fa-phone" /> {s.phone}</li>
               </ul>
             </div>
             <div className="s360-goal-chip">
@@ -514,7 +515,7 @@ export default function Student360Page() {
           {/* Prep Journey */}
           <div className="s360-journey">
             <div className="s360-journey-head">
-              <h4><i className="fa fa-flag-checkered" /> Prep Journey: IAT 2026</h4>
+              <h4><Icon className="fa fa-flag-checkered" /> Prep Journey: IAT 2026</h4>
               <span className="s360-journey-mentor">
                 <img src={s.mentor.avatar} alt={s.mentor.name} className="s360-journey-dp" /> Mentor:{' '}
                 <Link to="/mentor-profiles?id=20425492429424524" className="s360-mentor-link">
@@ -526,7 +527,7 @@ export default function Student360Page() {
                   Ajeesh Nair
                 </Link>
                 <span className="s360-journey-sep">·</span>
-                <i className="fa fa-cubes s360-journey-ic" /> Batch: <strong>Offline O1</strong>
+                <Icon className="fa fa-cubes s360-journey-ic" /> Batch: <strong>Offline O1</strong>
               </span>
             </div>
           </div>
@@ -572,7 +573,7 @@ export default function Student360Page() {
             {s.courses.map((c, i) => (
               <li key={i}>
                 <span className={`s360-course-icon ${c.type}`}>
-                  <i className={`fa ${c.type === 'series' ? 'fa-tasks' : 'fa-book'}`} />
+                  <Icon className={`fa ${c.type === 'series' ? 'fa-tasks' : 'fa-book'}`} />
                 </span>
                 <div className="s360-course-meta">
                   <span className="s360-course-name">{c.name}</span>
@@ -611,7 +612,7 @@ export default function Student360Page() {
           icon="fa-trophy"
           action={
             <span className={`s360-delta ${mockDelta >= 0 ? 'up' : 'down'}`}>
-              <i className={`fa fa-arrow-${mockDelta >= 0 ? 'up' : 'down'}`} /> {Math.abs(mockDelta)}%
+              <Icon className={`fa fa-arrow-${mockDelta >= 0 ? 'up' : 'down'}`} /> {Math.abs(mockDelta)}%
             </span>
           }
         >
@@ -647,7 +648,7 @@ export default function Student360Page() {
         <Card title="Online Streaks" icon="fa-fire">
           <div className="s360-streak">
             <div className="s360-streak-big">
-              <i className="fa fa-fire" />
+              <Icon className="fa fa-fire" />
               <div>
                 <strong>{s.stats.currentStreak}</strong>
                 <span>day current streak</span>
@@ -656,7 +657,7 @@ export default function Student360Page() {
             <div className="s360-streak-week">
               {dayLabels.map((d, i) => (
                 <div key={i} className={`s360-streak-day${i < 5 ? ' lit' : ''}`}>
-                  <span className="s360-streak-flame"><i className="fa fa-fire" /></span>
+                  <span className="s360-streak-flame"><Icon className="fa fa-fire" /></span>
                   <span className="s360-streak-dl">{d}</span>
                 </div>
               ))}
@@ -707,7 +708,7 @@ function PhotoLightbox({ src, name, onClose }) {
   return (
     <div className="s360-lightbox" onClick={onClose} role="dialog" aria-modal="true" aria-label={`${name} photo`}>
       <button type="button" className="s360-lightbox-close" onClick={onClose} aria-label="Close">
-        <i className="fa fa-times" />
+        <Icon className="fa fa-times" />
       </button>
       <figure className="s360-lightbox-figure" onClick={(e) => e.stopPropagation()}>
         <img src={src} alt={name} />
@@ -721,7 +722,7 @@ function KpiTile({ icon, tint, value, label, sub }) {
   return (
     <div className="s360-kpi">
       <span className="s360-kpi-icon" style={{ '--kpi-bg': `${tint}1a`, '--kpi-fg': tint, background: `${tint}1a`, color: tint }}>
-        <i className={`fa ${icon}`} />
+        <Icon className={`fa ${icon}`} />
       </span>
       <div className="s360-kpi-meta">
         <strong>{value}</strong>

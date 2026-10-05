@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { catalogItemsDemo } from '../data/adminRemainingDemo';
 import { demoCandidates } from '../data/candidateProfileDemo';
 import { createOrderBundle } from '../lib/paymentsStore';
+import Icon from './Icon';
 
 const INR = (n) => `₹${Number(n || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const round2 = (n) => Math.round(n * 100) / 100;
@@ -134,14 +135,14 @@ export default function CreateOrderBundleModal({ onClose, onCreated }) {
     <div className="crispr-modal-backdrop active" role="presentation" onClick={onClose}>
       <div className="crispr-modal-dialog order-dialog create-order-dialog" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
         <div className="crispr-modal-header">
-          <h3><i className="ti ti-plus" /> Create Order Bundle</h3>
-          <button type="button" className="crispr-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <h3><Icon className="ti ti-plus" /> Create Order Bundle</h3>
+          <button type="button" className="crispr-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <form className="orders-modal-form form-modal" onSubmit={(e) => { e.preventDefault(); submit(); }}>
           <div className="crispr-modal-body">
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-user" /> Student</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-user" /> Student</div>
               {student ? (
                 <div className="cob-student-card">
                   <div>
@@ -179,7 +180,7 @@ export default function CreateOrderBundleModal({ onClose, onCreated }) {
                         </button>
                       )) : (
                         <div className="cob-student-empty">
-                          <i className="ti ti-alert" /> No registered student matches “{studentQuery.trim()}”.
+                          <Icon className="ti ti-alert" /> No registered student matches “{studentQuery.trim()}”.
                           Orders can only be created for students already in the system.
                         </div>
                       )}
@@ -191,7 +192,7 @@ export default function CreateOrderBundleModal({ onClose, onCreated }) {
             </div>
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-package" /> Catalog Items ({items.length} order{items.length === 1 ? '' : 's'} in bundle)</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-package" /> Catalog Items ({items.length} order{items.length === 1 ? '' : 's'} in bundle)</div>
               {availableItems.length > 0 && (
                 <div className="cob-catalog-list">
                   {availableItems.map((catalogItem) => (
@@ -201,7 +202,7 @@ export default function CreateOrderBundleModal({ onClose, onCreated }) {
                         <div className="profile-subtext">{catalogItem.code} · {catalogItem.type} · {INR(catalogItem.sellingPrice)}</div>
                       </div>
                       <button type="button" className="legacy-btn legacy-btn-default" onClick={() => { setItems((current) => [...current, defaultItemState(catalogItem)]); setError(''); }}>
-                        <i className="ti ti-plus" /> Add
+                        <Icon className="ti ti-plus" /> Add
                       </button>
                     </div>
                   ))}
@@ -217,7 +218,7 @@ export default function CreateOrderBundleModal({ onClose, onCreated }) {
                       <div className="profile-subtext">{item.catalogItem.code} · {item.catalogItem.type}</div>
                     </div>
                     <button type="button" className="cob-item-remove" title="Remove item" onClick={() => setItems((current) => current.filter((_, i) => i !== index))}>
-                      <i className="ti ti-trash" />
+                      <Icon className="ti ti-trash" />
                     </button>
                   </div>
                   <div className="asset-form-grid">
@@ -282,7 +283,7 @@ export default function CreateOrderBundleModal({ onClose, onCreated }) {
                     )}
                   </div>
                   {math[index].error ? (
-                    <p className="field-error"><i className="ti ti-alert" /> {math[index].error}</p>
+                    <p className="field-error"><Icon className="ti ti-alert" /> {math[index].error}</p>
                   ) : (
                     <span className="field-hint">
                       {INR(math[index].payable)} + GST ({GST_PERCENT}%) {INR(math[index].gst)} → <strong>{INR(math[index].total)}</strong>
@@ -296,7 +297,7 @@ export default function CreateOrderBundleModal({ onClose, onCreated }) {
             </div>
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-money" /> Payment Details</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-money" /> Payment Details</div>
               <div className="asset-form-grid">
                 <label className="field-cell">
                   <div className="float-field float-always">
@@ -332,7 +333,7 @@ export default function CreateOrderBundleModal({ onClose, onCreated }) {
 
             {items.length > 0 && (
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-receipt" /> Bundle Summary</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-receipt" /> Bundle Summary</div>
                 <div className="order-summary">
                   <div className="summary-row"><span>Subtotal</span><span>{INR(totals.subtotal)}</span></div>
                   {totals.discount > 0 ? <div className="summary-row discount"><span>Discount</span><span>-{INR(totals.discount)}</span></div> : null}
@@ -346,12 +347,12 @@ export default function CreateOrderBundleModal({ onClose, onCreated }) {
               </div>
             )}
 
-            {error ? <p className="field-error"><i className="ti ti-alert" /> {error}</p> : null}
+            {error ? <p className="field-error"><Icon className="ti ti-alert" /> {error}</p> : null}
           </div>
           <div className="crispr-modal-footer">
             <button type="button" className="legacy-btn legacy-btn-default" onClick={onClose}>Cancel</button>
             <button type="submit" className="legacy-btn legacy-btn-success" disabled={!valid}>
-              <i className="ti ti-check" /> Create {items.length > 0 ? `${items.length} Order${items.length === 1 ? '' : 's'} in Bundle` : 'Order Bundle'}
+              <Icon className="ti ti-check" /> Create {items.length > 0 ? `${items.length} Order${items.length === 1 ? '' : 's'} in Bundle` : 'Order Bundle'}
             </button>
           </div>
         </form>

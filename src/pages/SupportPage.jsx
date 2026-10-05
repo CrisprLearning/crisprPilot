@@ -18,6 +18,7 @@ import {
 } from '../lib/supportApi';
 import { useUser, usePermission } from '../lib/userStore';
 import { SEARCH_DEBOUNCE_MS } from '../hooks/useDebouncedValue';
+import Icon from '../components/Icon';
 
 const TAGS = ['None', 'Escalation', 'Feedback', 'Purchase', 'Complaint', 'Legal', 'Technical Issue', 'Other'];
 
@@ -701,7 +702,7 @@ export default function SupportPage() {
     <div className="support-inbox-page">
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-life-ring" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-life-ring" /></span>
           <div>
             <h2>Support Inbox</h2>
             <p>Consolidated view for student support tickets and potential leads chats.</p>
@@ -714,7 +715,7 @@ export default function SupportPage() {
         <div className="support-left-panel">
           <div className="filter-bar support-internal-filters">
             <div className="search-wrapper" style={{ width: '100%', marginBottom: '10px' }}>
-              <i className={`ti ${searchInput ? 'ti-close' : 'ti-search'}`}
+              <Icon className={`ti ${searchInput ? 'ti-close' : 'ti-search'}`}
                  style={{ cursor: searchInput ? 'pointer' : 'default' }}
                  onClick={() => { if (searchInput) setSearchInput(''); }} />
               <input
@@ -750,7 +751,7 @@ export default function SupportPage() {
           <div className="support-chat-list">
             {threadsError ? (
               <div style={{ padding: '20px', textAlign: 'center', color: '#b32f2f', fontSize: '13px' }}>
-                <i className="ti ti-alert"></i> {threadsError}
+                <Icon className="ti ti-alert" /> {threadsError}
               </div>
             ) : threadsLoading && threads.length === 0 ? (
               <div style={{ padding: '20px', textAlign: 'center', color: '#999', fontSize: '14px' }}>
@@ -778,14 +779,14 @@ export default function SupportPage() {
                       data-tooltip={isApp ? 'Ticket from Students App' : 'Ticket from WhatsApp Bot'}
                       aria-label={isApp ? 'Ticket from Students App' : 'Ticket from WhatsApp Bot'}
                     >
-                      <i className={`ti ${isApp ? 'ti-mobile' : 'ti-comment-alt'}`}></i>
+                      <Icon className={`ti ${isApp ? 'ti-mobile' : 'ti-comment-alt'}`} />
                     </span>
                     <div className="chat-item-content">
                       <div className="chat-item-header">
                         <span className="chat-name-wrap">
                           <span className="chat-name">
                             {chat.blockedThread === 1 && (
-                              <i className="ti ti-na chat-blocked-icon" title="Blocked Thread" aria-label="Blocked Thread"></i>
+                              <Icon className="ti ti-na chat-blocked-icon" title="Blocked Thread" aria-label="Blocked Thread" />
                             )}
                             {stripPhoneSuffix(chat.studentName)}
                           </span>
@@ -801,7 +802,7 @@ export default function SupportPage() {
                         </span>
                         <span className="chat-time-wrap">
                           {rowHasOpenTicket && chat.assignee && chat.assignee !== 'Unassigned' && (
-                            <span className="chat-badge assignee"><i className="ti ti-user"></i> {chat.assignee}</span>
+                            <span className="chat-badge assignee"><Icon className="ti ti-user" /> {chat.assignee}</span>
                           )}
                           {chat.unread && <span className="chat-unread-dot" aria-label="Unread" />}
                           <span className="chat-time">{formatTime(chat.lastUpdate)}</span>
@@ -825,7 +826,7 @@ export default function SupportPage() {
               disabled={currentPage === 1 || threadsLoading}
               onClick={() => setCurrentPage(p => p - 1)}
             >
-              <i className="ti ti-angle-left"></i> Prev
+              <Icon className="ti ti-angle-left" /> Prev
             </button>
             <span style={{ fontSize: '12px', color: '#666' }}>Page {currentPage} of {totalPages}</span>
             <button
@@ -833,7 +834,7 @@ export default function SupportPage() {
               disabled={currentPage >= totalPages || threadsLoading}
               onClick={() => setCurrentPage(p => p + 1)}
             >
-              Next <i className="ti ti-angle-right"></i>
+              Next <Icon className="ti ti-angle-right" />
             </button>
           </div>
         </div>
@@ -842,7 +843,7 @@ export default function SupportPage() {
         <div className="support-right-panel">
           {!selectedThread ? (
             <div className="support-empty-state">
-              <i className="ti ti-comments"></i>
+              <Icon className="ti ti-comments" />
               <h3>Select a conversation</h3>
               <p>Choose a ticket or chat from the left panel to view and reply.</p>
             </div>
@@ -894,7 +895,7 @@ export default function SupportPage() {
                 return (
                   <div className={`thread-source-banner ${bannerClass}`}>
                     <span className="thread-source-banner-main">
-                      <i className={`ti ${isThreadBlocked ? 'ti-na' : iconClass}`}></i>
+                      <Icon className={`ti ${isThreadBlocked ? 'ti-na' : iconClass}`} />
                       <span>{label}</span>
                     </span>
                     {isWa && !isThreadBlocked && (
@@ -927,7 +928,7 @@ export default function SupportPage() {
               <div className="support-thread-messages">
                 {messagesError ? (
                   <div style={{ textAlign: 'center', color: '#b32f2f', fontSize: '13px', padding: '20px' }}>
-                    <i className="ti ti-alert"></i> {messagesError}
+                    <Icon className="ti ti-alert" /> {messagesError}
                   </div>
                 ) : messagesLoading && localMessages.length === 0 ? (
                   <div style={{ textAlign: 'center', color: '#999', fontSize: '13px', padding: '20px' }}>
@@ -974,7 +975,7 @@ export default function SupportPage() {
                       <div key={msg.id} className={`message-bubble-wrapper ${msg.sender}`}>
                         <div className={`message-bubble ${msg._pending ? 'pending' : ''} ${msg.kind === 'resolution' ? 'resolution' : ''} ${isWhatsAppAction ? 'wa-action' : ''}`}>
                           {msg.kind === 'resolution' && (
-                            <div className="message-resolution-badge"><i className="ti ti-check"></i> Resolution</div>
+                            <div className="message-resolution-badge"><Icon className="ti ti-check" /> Resolution</div>
                           )}
                           <div>{displayText}</div>
                           {(() => {
@@ -994,12 +995,12 @@ export default function SupportPage() {
                                         data-tooltip={`User action · ${msg.intent}`}
                                         onClick={e => e.currentTarget.focus()}
                                       >
-                                        <i className="ti ti-info-alt"></i>
+                                        <Icon className="ti ti-info-alt" />
                                       </span>
                                     )}
                                     {isAdminReply ? (
                                       <span className="admin-reply-tag" aria-label={`Replied by ${msg.adminName || 'admin'}`}>
-                                        <i className="ti ti-user"></i>
+                                        <Icon className="ti ti-user" />
                                         {msg.adminName || 'Admin'}
                                       </span>
                                     ) : isAiReply && (
@@ -1049,7 +1050,7 @@ export default function SupportPage() {
                         title="Close reply"
                         onClick={() => { setShowReplyBox(false); setReplyText(''); setAsResolution(false); setSendError(''); }}
                       >
-                        <i className="ti ti-close"></i>
+                        <Icon className="ti ti-close" />
                       </button>
                     </div>
                   </div>
@@ -1093,12 +1094,12 @@ export default function SupportPage() {
                   <div className="reply-actions">
                     {emojiBlocked && (
                       <span className="reply-emoji-warning">
-                        <i className="ti ti-info-alt"></i> Emojis aren't allowed — keep replies professional.
+                        <Icon className="ti ti-info-alt" /> Emojis aren't allowed — keep replies professional.
                       </span>
                     )}
                     {sendError && (
                       <span className="reply-emoji-warning" style={{ background: '#fdecec', borderColor: '#f5c2c2', color: '#b32f2f' }}>
-                        <i className="ti ti-alert"></i> {sendError}
+                        <Icon className="ti ti-alert" /> {sendError}
                       </span>
                     )}
                     {hasOpenTicket && (
@@ -1112,7 +1113,7 @@ export default function SupportPage() {
                       </label>
                     )}
                     <button className="btn-send" onClick={handleSendMessage} disabled={sending || !replyText.trim()}>
-                      <i className="ti ti-location-arrow" style={{ marginRight: '5px' }}></i>
+                      <Icon className="ti ti-location-arrow" style={{ marginRight: '5px' }} />
                       {sending ? 'Sending…' : (asResolution ? 'Send & Close Ticket' : 'Send Message')}
                     </button>
                   </div>
@@ -1121,7 +1122,7 @@ export default function SupportPage() {
                 <div className="support-thread-reply ticket-view-panel">
                   <div className="reply-toolbar">
                     <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#444' }}>
-                      <i className="ti ti-ticket" style={{ marginRight: '6px' }}></i>
+                      <Icon className="ti ti-ticket" style={{ marginRight: '6px' }} />
                       {activeTicket.ticketCode}
                       <span style={{ marginLeft: '10px' }}>
                         {renderStatusChip(activeTicket.status)}
@@ -1137,14 +1138,14 @@ export default function SupportPage() {
                         title="Close ticket view"
                         onClick={() => { setShowViewTicket(false); setNoteDraft(''); setTicketUpdateError(''); }}
                       >
-                        <i className="ti ti-close"></i>
+                        <Icon className="ti ti-close" />
                       </button>
                     </div>
                   </div>
 
                   {ticketUpdateError && (
                     <div className="ticket-form-error" style={{ marginBottom: 0 }}>
-                      <i className="ti ti-alert"></i> {ticketUpdateError}
+                      <Icon className="ti ti-alert" /> {ticketUpdateError}
                     </div>
                   )}
 
@@ -1230,7 +1231,7 @@ export default function SupportPage() {
 
                       {noteError && (
                         <div className="ticket-form-error" style={{ marginBottom: 0 }}>
-                          <i className="ti ti-alert"></i> {noteError}
+                          <Icon className="ti ti-alert" /> {noteError}
                         </div>
                       )}
 
@@ -1270,7 +1271,7 @@ export default function SupportPage() {
                       onClick={handleOpenViewTicket}
                       title={`View active ticket ${activeTicket.ticketCode}`}
                     >
-                      <i className="ti ti-ticket"></i>
+                      <Icon className="ti ti-ticket" />
                       <span>View Active Ticket</span>
                     </button>
                   ) : !isThreadBlocked ? (
@@ -1280,7 +1281,7 @@ export default function SupportPage() {
                       onClick={openCreateTicketModal}
                       title="Create a support ticket for this conversation"
                     >
-                      <i className="ti ti-ticket"></i>
+                      <Icon className="ti ti-ticket" />
                       <span>Create Ticket</span>
                     </button>
                   ) : null}
@@ -1291,7 +1292,7 @@ export default function SupportPage() {
                       onClick={handleOpenReplyBox}
                       title={`Reply to ${sourceOf(selectedThread) === 'APP' ? 'Student' : 'Lead'}`}
                     >
-                      <i className="ti ti-comment-alt"></i>
+                      <Icon className="ti ti-comment-alt" />
                       <span>Reply</span>
                     </button>
                   )}
@@ -1308,11 +1309,11 @@ export default function SupportPage() {
           <div className="legacy-modal-dialog legacy-confirm" role="dialog" aria-modal="true" onClick={e => e.stopPropagation()}>
             <div className="legacy-modal-header">
               <h3>
-                <i className={`ti ${confirmBlockAction === 'block' ? 'ti-na' : 'ti-check'}`}></i>
+                <Icon className={`ti ${confirmBlockAction === 'block' ? 'ti-na' : 'ti-check'}`} />
                 {confirmBlockAction === 'block' ? ' Block WhatsApp Number' : ' Unblock WhatsApp Number'}
               </h3>
               <button type="button" className="legacy-modal-close" onClick={() => setConfirmBlockAction(null)} disabled={blocking}>
-                <i className="ti ti-close"></i>
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="legacy-modal-body">
@@ -1337,7 +1338,7 @@ export default function SupportPage() {
                 onClick={confirmBlockAction === 'block' ? handleBlockThread : handleUnblockThread}
                 disabled={blocking}
               >
-                <i className={`ti ${confirmBlockAction === 'block' ? 'ti-na' : 'ti-check'}`}></i>
+                <Icon className={`ti ${confirmBlockAction === 'block' ? 'ti-na' : 'ti-check'}`} />
                 {blocking
                   ? (confirmBlockAction === 'block' ? ' Blocking…' : ' Unblocking…')
                   : (confirmBlockAction === 'block' ? ' Block' : ' Unblock')}
@@ -1352,9 +1353,9 @@ export default function SupportPage() {
         <div className="legacy-modal-backdrop active" onClick={() => setShowProfileModal(null)}>
           <div className="legacy-modal-dialog" role="dialog" aria-modal="true" onClick={e => e.stopPropagation()}>
             <div className="legacy-modal-header">
-              <h3><i className="ti ti-user"></i> Student Profile</h3>
+              <h3><Icon className="ti ti-user" /> Student Profile</h3>
               <button type="button" className="legacy-modal-close" onClick={() => setShowProfileModal(null)}>
-                <i className="ti ti-close"></i>
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="legacy-modal-body">
@@ -1365,10 +1366,10 @@ export default function SupportPage() {
                 <div className="profile-details-col">
                   <h4>{showProfileModal.studentName}</h4>
                   <div className="profile-subtle-text">
-                    <i className="ti ti-email"></i> {showProfileModal.studentName.toLowerCase().replace(/\s+/g, '.')}@example.com
+                    <Icon className="ti ti-email" /> {showProfileModal.studentName.toLowerCase().replace(/\s+/g, '.')}@example.com
                   </div>
                   <div className="profile-subtle-text">
-                    <i className="ti ti-mobile"></i> +91 9999999999
+                    <Icon className="ti ti-mobile" /> +91 9999999999
                   </div>
                 </div>
               </div>
@@ -1376,7 +1377,7 @@ export default function SupportPage() {
               <div className="profile-enrolled-section">
                 <div className="enrolled-sect-title">Currently Enrolled</div>
                 <div className="enrolled-badge">
-                  <i className="ti ti-crown"></i> Crash Course + 2 others
+                  <Icon className="ti ti-crown" /> Crash Course + 2 others
                 </div>
                 <div className="profile-subtle-text" style={{ marginTop: '10px' }}>
                   Member since: January 14, 2026
@@ -1399,7 +1400,7 @@ export default function SupportPage() {
                   setShowProfileModal(null);
                 }}
               >
-                Open Full Profile <i className="ti ti-arrow-right"></i>
+                Open Full Profile <Icon className="ti ti-arrow-right" />
               </button>
             </div>
           </div>
@@ -1411,9 +1412,9 @@ export default function SupportPage() {
         <div className="legacy-modal-backdrop active" onClick={() => !creatingTicket && setShowCreateTicket(false)}>
           <div className="legacy-modal-dialog" role="dialog" aria-modal="true" onClick={e => e.stopPropagation()}>
             <div className="legacy-modal-header">
-              <h3><i className="ti ti-ticket"></i> Create Support Ticket</h3>
+              <h3><Icon className="ti ti-ticket" /> Create Support Ticket</h3>
               <button type="button" className="legacy-modal-close" onClick={() => setShowCreateTicket(false)} disabled={creatingTicket}>
-                <i className="ti ti-close"></i>
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="legacy-modal-body form-modal">
@@ -1495,7 +1496,7 @@ export default function SupportPage() {
 
               {ticketFormError && (
                 <div className="ticket-form-error">
-                  <i className="ti ti-alert"></i> {ticketFormError}
+                  <Icon className="ti ti-alert" /> {ticketFormError}
                 </div>
               )}
             </div>
@@ -1514,7 +1515,7 @@ export default function SupportPage() {
                 onClick={handleCreateTicket}
                 disabled={creatingTicket}
               >
-                <i className="ti ti-plus" style={{ marginRight: '5px' }}></i>
+                <Icon className="ti ti-plus" style={{ marginRight: '5px' }} />
                 {creatingTicket ? 'Creating…' : 'Create Ticket'}
               </button>
             </div>
@@ -1527,9 +1528,9 @@ export default function SupportPage() {
         <div className="legacy-modal-backdrop active" onClick={() => { setShowPreviousTickets(false); setDrillTicket(null); setDrillNotesVisible(false); setDrillNotes([]); }}>
           <div className="legacy-modal-dialog" role="dialog" aria-modal="true" onClick={e => e.stopPropagation()} style={{ maxWidth: 640 }}>
             <div className="legacy-modal-header">
-              <h3><i className="ti ti-list"></i> {drillTicket ? `Ticket ${drillTicket.ticketCode}` : 'Support Tickets'}</h3>
+              <h3><Icon className="ti ti-list" /> {drillTicket ? `Ticket ${drillTicket.ticketCode}` : 'Support Tickets'}</h3>
               <button type="button" className="legacy-modal-close" onClick={() => { setShowPreviousTickets(false); setDrillTicket(null); setDrillNotesVisible(false); setDrillNotes([]); }}>
-                <i className="ti ti-close"></i>
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="legacy-modal-body">
@@ -1565,7 +1566,7 @@ export default function SupportPage() {
                       style={{ background: '#fff4e0', color: '#b07a1f', boxShadow: 'none', border: '1px solid rgba(176,122,31,0.3)' }}
                       onClick={toggleDrillNotes}
                     >
-                      <i className={`ti ${drillNotesVisible ? 'ti-angle-up' : 'ti-angle-down'}`} style={{ marginRight: 4 }}></i>
+                      <Icon className={`ti ${drillNotesVisible ? 'ti-angle-up' : 'ti-angle-down'}`} style={{ marginRight: 4 }} />
                       {drillNotesVisible ? 'Hide Notes' : `See Notes (${drillTicket.noteCount ?? drillNotes.length})`}
                     </button>
                   </div>
@@ -1628,7 +1629,7 @@ export default function SupportPage() {
                   className="legacy-btn legacy-btn-default"
                   onClick={() => { setDrillTicket(null); setDrillNotesVisible(false); setDrillNotes([]); }}
                 >
-                  <i className="ti ti-angle-left"></i> Back to list
+                  <Icon className="ti ti-angle-left" /> Back to list
                 </button>
               )}
               <button

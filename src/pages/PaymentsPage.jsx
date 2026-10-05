@@ -11,6 +11,7 @@ import { getAllOrders, useManualOrders, usePayments } from '../lib/paymentsStore
 import {
   effectiveStatus, methodIcon, methodLabel, paymentLabel, statusMeta,
 } from '../lib/paymentsModel';
+import Icon from '../components/Icon';
 
 const money = (n) => Number(n || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtDate = (ts) => (ts ? new Date(ts * 1000).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) : '—');
@@ -156,7 +157,7 @@ export default function PaymentsPage() {
 
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-credit-card" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-credit-card" /></span>
           <div>
             <h2>Payments</h2>
             <p>Every payment across orders — initial payments, follow-up installments, and what is still due.</p>
@@ -173,7 +174,7 @@ export default function PaymentsPage() {
 
       <div className="filter-bar payments-filter-bar">
         <div className="search-wrapper">
-          <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => { setSearchQuery(''); setCurrentPage(1); }} />
+          <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => { setSearchQuery(''); setCurrentPage(1); }} />
           <input
             type="text"
             className="search-input"
@@ -210,7 +211,7 @@ export default function PaymentsPage() {
           onChange={(v) => setFilter('status', v)}
         />
         {hasFilters ? (
-          <button type="button" className="payments-clear-btn" onClick={clearAll}><i className="ti ti-close" /> Clear</button>
+          <button type="button" className="payments-clear-btn" onClick={clearAll}><Icon className="ti ti-close" /> Clear</button>
         ) : null}
       </div>
 
@@ -220,13 +221,13 @@ export default function PaymentsPage() {
             <thead>
               <tr>
                 <th>Payment</th>
-                <th className={`sortable ${sortColumn === 'order' ? 'active' : ''}`} onClick={() => handleSort('order')}>Order <i className={`sort-icon ti ${sortIcon('order', sortColumn, sortReverse)}`} /></th>
-                <th className={`sortable ${sortColumn === 'student' ? 'active' : ''}`} onClick={() => handleSort('student')}>Student <i className={`sort-icon ti ${sortIcon('student', sortColumn, sortReverse)}`} /></th>
+                <th className={`sortable ${sortColumn === 'order' ? 'active' : ''}`} onClick={() => handleSort('order')}>Order <Icon className={`sort-icon ti ${sortIcon('order', sortColumn, sortReverse)}`} /></th>
+                <th className={`sortable ${sortColumn === 'student' ? 'active' : ''}`} onClick={() => handleSort('student')}>Student <Icon className={`sort-icon ti ${sortIcon('student', sortColumn, sortReverse)}`} /></th>
                 <th>Type</th>
-                <th className={`sortable ${sortColumn === 'amount' ? 'active' : ''}`} onClick={() => handleSort('amount')}>Amount <i className={`sort-icon ti ${sortIcon('amount', sortColumn, sortReverse)}`} /></th>
+                <th className={`sortable ${sortColumn === 'amount' ? 'active' : ''}`} onClick={() => handleSort('amount')}>Amount <Icon className={`sort-icon ti ${sortIcon('amount', sortColumn, sortReverse)}`} /></th>
                 <th>Channel</th>
-                <th className={`sortable ${sortColumn === 'date' ? 'active' : ''}`} onClick={() => handleSort('date')}>Paid / Due <i className={`sort-icon ti ${sortIcon('date', sortColumn, sortReverse)}`} /></th>
-                <th className={`sortable ${sortColumn === 'status' ? 'active' : ''}`} onClick={() => handleSort('status')}>Status <i className={`sort-icon ti ${sortIcon('status', sortColumn, sortReverse)}`} /></th>
+                <th className={`sortable ${sortColumn === 'date' ? 'active' : ''}`} onClick={() => handleSort('date')}>Paid / Due <Icon className={`sort-icon ti ${sortIcon('date', sortColumn, sortReverse)}`} /></th>
+                <th className={`sortable ${sortColumn === 'status' ? 'active' : ''}`} onClick={() => handleSort('status')}>Status <Icon className={`sort-icon ti ${sortIcon('status', sortColumn, sortReverse)}`} /></th>
                 <th className="actions-column">Actions</th>
               </tr>
             </thead>
@@ -283,26 +284,26 @@ export default function PaymentsPage() {
                         {p.method ? (
                           <>
                             <span className={`crispr-badge payments-channel is-${p.channel.toLowerCase()}`}>{p.channel}</span>
-                            <div className="profile-subtext"><i className={`ti ${methodIcon(p.method)}`} /> {methodLabel(p.method)}</div>
+                            <div className="profile-subtext"><Icon className={`ti ${methodIcon(p.method)}`} /> {methodLabel(p.method)}</div>
                           </>
                         ) : <span className="profile-subtext">Not yet paid</span>}
                       </td>
                       <td>
-                        <div className="info-cell"><i className="ti ti-calendar" /> {fmtDate(isDue ? p.dueDate : p.paidAt)}</div>
+                        <div className="info-cell"><Icon className="ti ti-calendar" /> {fmtDate(isDue ? p.dueDate : p.paidAt)}</div>
                         {isDue && p.dueDate ? <div className="profile-subtext">{p.status === 'overdue' ? 'was due' : 'due date'}</div> : null}
                       </td>
                       <td><span className={`status-pill status-${m.pill} payments-status is-${m.tone}`}>{m.label}</span></td>
                       <td className={`actions-column ${openKebabId === p.id ? 'cell-active-menu' : ''}`} onClick={(e) => e.stopPropagation()}>
                         <div className="kebab-menu-container">
                           <button type="button" className="kebab-button" onClick={(e) => { e.stopPropagation(); setOpenKebabId((current) => (current === p.id ? null : p.id)); }}>
-                            <i className="ti ti-more-alt" />
+                            <Icon className="ti ti-more-alt" />
                           </button>
                           <div className={`kebab-dropdown ${openKebabId === p.id ? 'active' : ''}`}>
-                            <button type="button" className="kebab-dropdown-item" onClick={() => { setSelected(p); setOpenKebabId(null); }}><i className="ti ti-wallet" /> View Payment Summary</button>
-                            <button type="button" className="kebab-dropdown-item" onClick={() => { setInvoicePayment(p); setOpenKebabId(null); }}><i className="ti ti-receipt" /> View Payment Invoice</button>
-                            <button type="button" className="kebab-dropdown-item" onClick={() => { setEmailState({ payment: p, to: p.customer.email, subject: `Payment Invoice ${p.paymentNumber} — ${p.orderNumber}` }); setOpenKebabId(null); }}><i className="ti ti-email" /> Email Payment Invoice</button>
+                            <button type="button" className="kebab-dropdown-item" onClick={() => { setSelected(p); setOpenKebabId(null); }}><Icon className="ti ti-wallet" /> View Payment Summary</button>
+                            <button type="button" className="kebab-dropdown-item" onClick={() => { setInvoicePayment(p); setOpenKebabId(null); }}><Icon className="ti ti-receipt" /> View Payment Invoice</button>
+                            <button type="button" className="kebab-dropdown-item" onClick={() => { setEmailState({ payment: p, to: p.customer.email, subject: `Payment Invoice ${p.paymentNumber} — ${p.orderNumber}` }); setOpenKebabId(null); }}><Icon className="ti ti-email" /> Email Payment Invoice</button>
                             {p.status !== 'paid' && ordersById[p.orderId] && can(PERMS.PAYMENTS_RECORD) ? (
-                              <button type="button" className="kebab-dropdown-item" onClick={() => { setRecordState({ order: ordersById[p.orderId], applyToId: p.id }); setOpenKebabId(null); }}><i className="ti ti-check" /> Mark as Paid</button>
+                              <button type="button" className="kebab-dropdown-item" onClick={() => { setRecordState({ order: ordersById[p.orderId], applyToId: p.id }); setOpenKebabId(null); }}><Icon className="ti ti-check" /> Mark as Paid</button>
                             ) : null}
                           </div>
                         </div>
@@ -323,16 +324,16 @@ export default function PaymentsPage() {
                 </select>
               </div>
               <div className="pagination-controls">
-                <button type="button" className="pagination-btn" disabled={page === 1} onClick={() => setCurrentPage((c) => Math.max(1, c - 1))}><i className="ti ti-angle-left" /> Previous</button>
+                <button type="button" className="pagination-btn" disabled={page === 1} onClick={() => setCurrentPage((c) => Math.max(1, c - 1))}><Icon className="ti ti-angle-left" /> Previous</button>
                 {getPageNumbers(page, totalPages).map((n) => <button key={n} type="button" className={`pagination-btn ${page === n ? 'active' : ''}`} onClick={() => setCurrentPage(n)}>{n}</button>)}
-                <button type="button" className="pagination-btn" disabled={page >= totalPages} onClick={() => setCurrentPage((c) => Math.min(totalPages, c + 1))}>Next <i className="ti ti-angle-right" /></button>
+                <button type="button" className="pagination-btn" disabled={page >= totalPages} onClick={() => setCurrentPage((c) => Math.min(totalPages, c + 1))}>Next <Icon className="ti ti-angle-right" /></button>
               </div>
             </div>
           )}
         </div>
       ) : (
         <div className="empty-state">
-          <i className="ti ti-credit-card" />
+          <Icon className="ti ti-credit-card" />
           <h4>No Payments Found</h4>
           {hasFilters ? (
             <p>No payments match your search or filters. <button type="button" onClick={clearAll}>Clear all filters</button> to see every payment.</p>
@@ -350,8 +351,8 @@ export default function PaymentsPage() {
           <div className="crispr-modal-backdrop active" role="presentation" onClick={() => setSelected(null)}>
             <div className="crispr-modal-dialog order-dialog payments-dialog" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
               <div className="crispr-modal-header">
-                <h3><i className="ti ti-credit-card" /> Payment {selected.paymentNumber}</h3>
-                <button type="button" className="crispr-modal-close" onClick={() => setSelected(null)}><i className="ti ti-close" /></button>
+                <h3><Icon className="ti ti-credit-card" /> Payment {selected.paymentNumber}</h3>
+                <button type="button" className="crispr-modal-close" onClick={() => setSelected(null)}><Icon className="ti ti-close" /></button>
               </div>
               <div className="crispr-modal-body">
                 <OrderPaymentSummary
@@ -367,7 +368,7 @@ export default function PaymentsPage() {
                 <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setSelected(null)}>Close</button>
                 {hasReschedulable && can(PERMS.PAYMENTS_RECORD) ? (
                   <button type="button" className="legacy-btn legacy-btn-success" onClick={() => { setDueOrder(order); setSelected(null); }}>
-                    <i className="ti ti-calendar" /> Update Due Dates
+                    <Icon className="ti ti-calendar" /> Update Due Dates
                   </button>
                 ) : null}
               </div>
@@ -424,7 +425,7 @@ export default function PaymentsPage() {
 function StatCard({ icon, tone, value, label }) {
   return (
     <div className="stat-card">
-      <div className={`stat-icon ${tone}`}><i className={`ti ${icon}`} /></div>
+      <div className={`stat-icon ${tone}`}><Icon className={`ti ${icon}`} /></div>
       <div className="stat-info"><h3>{value}</h3><p>{label}</p></div>
     </div>
   );
@@ -436,8 +437,8 @@ function PaymentInvoiceModal({ payment, order, onClose, onDownload, onEmail }) {
     <div className="crispr-modal-backdrop active" role="presentation" onClick={onClose}>
       <div className="crispr-modal-dialog invoice-dialog" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
         <div className="crispr-modal-header invoice-header">
-          <h3><i className="ti ti-receipt" /> Payment Invoice - {payment.paymentNumber}</h3>
-          <button type="button" className="crispr-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <h3><Icon className="ti ti-receipt" /> Payment Invoice - {payment.paymentNumber}</h3>
+          <button type="button" className="crispr-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <div className="crispr-modal-body invoice-body">
           <div className="invoice-top">
@@ -472,7 +473,7 @@ function PaymentInvoiceModal({ payment, order, onClose, onDownload, onEmail }) {
           <div className="invoice-bottom">
             <div>
               {payment.status !== 'paid' && payment.dueDate ? (
-                <p className="discount-line"><i className="ti ti-alarm-clock" /> {payment.status === 'overdue' ? 'Was due' : 'Due'} {fmtDate(payment.dueDate)}</p>
+                <p className="discount-line"><Icon className="ti ti-alarm-clock" /> {payment.status === 'overdue' ? 'Was due' : 'Due'} {fmtDate(payment.dueDate)}</p>
               ) : null}
             </div>
             <div className="invoice-summary">
@@ -485,8 +486,8 @@ function PaymentInvoiceModal({ payment, order, onClose, onDownload, onEmail }) {
         </div>
         <div className="crispr-modal-footer">
           <button type="button" className="legacy-btn legacy-btn-default" onClick={onClose}>Close</button>
-          <button type="button" className="legacy-btn legacy-btn-default" onClick={onEmail}><i className="ti ti-email" /> Email</button>
-          <button type="button" className="legacy-btn legacy-btn-success" onClick={onDownload}><i className="ti ti-download" /> Download</button>
+          <button type="button" className="legacy-btn legacy-btn-default" onClick={onEmail}><Icon className="ti ti-email" /> Email</button>
+          <button type="button" className="legacy-btn legacy-btn-success" onClick={onDownload}><Icon className="ti ti-download" /> Download</button>
         </div>
       </div>
     </div>
@@ -498,13 +499,13 @@ function PaymentEmailModal({ emailState, setEmailState, onClose, onSend }) {
     <div className="legacy-modal-backdrop active" role="presentation" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="legacy-modal-dialog" role="dialog" aria-modal="true">
         <div className="legacy-modal-header">
-          <h3><i className="ti ti-email" /> Email Payment Invoice</h3>
-          <button type="button" className="legacy-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <h3><Icon className="ti ti-email" /> Email Payment Invoice</h3>
+          <button type="button" className="legacy-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <form className="orders-modal-form form-modal" onSubmit={(e) => { e.preventDefault(); onSend(); }}>
           <div className="legacy-modal-body">
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-send" /> Send Payment Invoice</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-send" /> Send Payment Invoice</div>
               <p className="field-static-label">Send the invoice for payment <strong>{emailState.payment.paymentNumber}</strong> ({emailState.payment.orderNumber}) to the student.</p>
               <div className="asset-form-grid">
                 <label className="field-cell full-span">
@@ -524,7 +525,7 @@ function PaymentEmailModal({ emailState, setEmailState, onClose, onSend }) {
           </div>
           <div className="legacy-modal-footer">
             <button type="button" className="legacy-btn legacy-btn-default" onClick={onClose}>Cancel</button>
-            <button type="submit" className="legacy-btn legacy-btn-success" disabled={!emailState.to}><i className="ti ti-check" /> Send Email</button>
+            <button type="submit" className="legacy-btn legacy-btn-success" disabled={!emailState.to}><Icon className="ti ti-check" /> Send Email</button>
           </div>
         </form>
       </div>

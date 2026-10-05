@@ -4,6 +4,7 @@ import ToastRegion from '../components/ToastRegion';
 import { api } from '../lib/api';
 import useDebouncedValue from '../hooks/useDebouncedValue';
 import { demoCourses, demoCourseStudents } from '../data/coursesListDemo';
+import Icon from '../components/Icon';
 
 function getInitials(name) {
   if (!name) return '??';
@@ -407,14 +408,14 @@ export default function CoursesListPage() {
 
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-list-alt" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-list-alt" /></span>
           <div>
             <h2>Courses List</h2>
             <p>Browse bundles, inspect enrolled students, and route into course content without changing the legacy workflow.</p>
           </div>
         </div>
         <button type="button" className="create-course-button" onClick={() => navigate('/course-management')}>
-          <i className="ti ti-plus" /> Create New Course
+          <Icon className="ti ti-plus" /> Create New Course
         </button>
       </div>
 
@@ -422,7 +423,7 @@ export default function CoursesListPage() {
 
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} />
+          <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} />
           <input
             type="text"
             className="search-input"
@@ -442,25 +443,25 @@ export default function CoursesListPage() {
             <tr>
               <th className={`sortable ${sortBy === 'code' ? 'active' : ''}`} onClick={() => changeSortBy('code')}>
                 Course ID
-                <i className={`sort-icon ti ${sortIcon('code')}`} />
+                <Icon className={`sort-icon ti ${sortIcon('code')}`} />
               </th>
               <th className={`sortable ${sortBy === 'name' ? 'active' : ''}`} onClick={() => changeSortBy('name')}>
                 Course Name
-                <i className={`sort-icon ti ${sortIcon('name')}`} />
+                <Icon className={`sort-icon ti ${sortIcon('name')}`} />
               </th>
               <th>Modules</th>
               <th className={`sortable center-align ${sortBy === 'chapters' ? 'active' : ''}`} onClick={() => changeSortBy('chapters')}>
                 Chapters
-                <i className={`sort-icon ti ${sortIcon('chapters')}`} />
+                <Icon className={`sort-icon ti ${sortIcon('chapters')}`} />
               </th>
               <th>Total Duration</th>
               <th className={`sortable ${sortBy === 'status' ? 'active' : ''}`} onClick={() => changeSortBy('status')}>
                 Status
-                <i className={`sort-icon ti ${sortIcon('status')}`} />
+                <Icon className={`sort-icon ti ${sortIcon('status')}`} />
               </th>
               <th className={`sortable center-align ${sortBy === 'students' ? 'active' : ''}`} onClick={() => changeSortBy('students')}>
                 Students
-                <i className={`sort-icon ti ${sortIcon('students')}`} />
+                <Icon className={`sort-icon ti ${sortIcon('students')}`} />
               </th>
               <th className="actions-column" />
             </tr>
@@ -497,7 +498,7 @@ export default function CoursesListPage() {
                     </div>
                   </td>
                   <td className="center-align"><div className="chapters-count">{course.totalChapters}</div></td>
-                  <td><div className="time-info"><i className="ti ti-time" /> {course.totalDuration}</div></td>
+                  <td><div className="time-info"><Icon className="ti ti-time" /> {course.totalDuration}</div></td>
                   <td><span className={`status-badge ${String(course.status).toLowerCase()}`}>{course.status}</span></td>
                   <td className="center-align" onClick={(event) => event.stopPropagation()}>
                     {course.totalStudents > 0 ? (
@@ -511,11 +512,11 @@ export default function CoursesListPage() {
                   <td className={`center-align ${activeKebabId === course.code ? 'cell-active-menu' : ''}`} onClick={(event) => event.stopPropagation()}>
                     <div className="kebab-menu-container">
                       <button type="button" className="kebab-button" onClick={(event) => toggleKebabMenu(course, event)}>
-                        <i className="ti ti-more-alt" />
+                        <Icon className="ti ti-more-alt" />
                       </button>
                       <div className={`kebab-dropdown ${activeKebabId === course.code ? 'active' : ''}`}>
                         <button type="button" className="kebab-dropdown-item view-profile" onClick={() => viewCourseContent(course)}>
-                          <i className="ti ti-eye" />
+                          <Icon className="ti ti-eye" />
                           <span className="item-label">View Course Content</span>
                         </button>
                         <button
@@ -523,7 +524,7 @@ export default function CoursesListPage() {
                           className={`kebab-dropdown-item ${String(course.status).toLowerCase() === 'active' ? 'draft-action' : 'enable-action'}`}
                           onClick={() => toggleCourseStatus(course)}
                         >
-                          <i className={`ti ${String(course.status).toLowerCase() === 'active' ? 'ti-pencil' : 'ti-check'}`} />
+                          <Icon className={`ti ${String(course.status).toLowerCase() === 'active' ? 'ti-pencil' : 'ti-check'}`} />
                           <span className="item-label">{String(course.status).toLowerCase() === 'active' ? 'Move as Draft' : 'Enable the Course'}</span>
                         </button>
                       </div>
@@ -537,7 +538,7 @@ export default function CoursesListPage() {
 
         {!isLoading && courses.length === 0 ? (
           <div className="courses-empty-state">
-            <i className="ti ti-search" />
+            <Icon className="ti ti-search" />
             <h3>No courses found</h3>
             <p>Try adjusting your search criteria</p>
           </div>
@@ -554,7 +555,7 @@ export default function CoursesListPage() {
           </div>
           <div className="pagination-controls">
             <button type="button" className="pagination-btn" onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} disabled={currentPage === 1}>
-              <i className="ti ti-angle-left" /> Previous
+              <Icon className="ti ti-angle-left" /> Previous
             </button>
             {pageNumbers.map((page) => (
               <button key={page} type="button" className={`pagination-btn ${page === currentPage ? 'active' : ''}`} onClick={() => setCurrentPage(page)}>
@@ -562,7 +563,7 @@ export default function CoursesListPage() {
               </button>
             ))}
             <button type="button" className="pagination-btn" onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} disabled={currentPage === totalPages || totalPages === 0}>
-              Next <i className="ti ti-angle-right" />
+              Next <Icon className="ti ti-angle-right" />
             </button>
           </div>
         </div>
@@ -571,15 +572,15 @@ export default function CoursesListPage() {
       <div className={`legacy-modal-backdrop ${Boolean(selectedCourseForStudents) ? 'active' : ''}`} onClick={closeStudentsModal}>
         <div className="legacy-modal-dialog legacy-xl courses-students-dialog" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
           <div className="legacy-modal-header">
-            <h3><i className="ti ti-user" /> Enrolled Students - {selectedCourseForStudents?.title}</h3>
+            <h3><Icon className="ti ti-user" /> Enrolled Students - {selectedCourseForStudents?.title}</h3>
             <button type="button" className="legacy-modal-close" onClick={closeStudentsModal}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
             <div className="courses-modal-search">
               <div className="search-wrapper">
-                <i className="ti ti-search" />
+                <Icon className="ti ti-search" />
                 <input
                   type="text"
                   className="search-input"
@@ -600,20 +601,20 @@ export default function CoursesListPage() {
                     <tr>
                       <th onClick={() => changeStudentsSort('name')} className="sortable">
                         Student Name
-                        <i className={`ti ${studentSortIcon('name')}`} />
+                        <Icon className={`ti ${studentSortIcon('name')}`} />
                       </th>
                       <th onClick={() => changeStudentsSort('email')} className="sortable">
                         Email
-                        <i className={`ti ${studentSortIcon('email')}`} />
+                        <Icon className={`ti ${studentSortIcon('email')}`} />
                       </th>
                       <th>Phone</th>
                       <th onClick={() => changeStudentsSort('enrollmentDate')} className="sortable">
                         Enrollment Date
-                        <i className={`ti ${studentSortIcon('enrollmentDate')}`} />
+                        <Icon className={`ti ${studentSortIcon('enrollmentDate')}`} />
                       </th>
                       <th onClick={() => changeStudentsSort('enrollmentStatus')} className="sortable">
                         Status
-                        <i className={`ti ${studentSortIcon('enrollmentStatus')}`} />
+                        <Icon className={`ti ${studentSortIcon('enrollmentStatus')}`} />
                       </th>
                     </tr>
                   </thead>
@@ -642,7 +643,7 @@ export default function CoursesListPage() {
                   </div>
                   <div className="pagination-controls">
                     <button type="button" className="pagination-btn" onClick={() => setStudentsCurrentPage((page) => Math.max(1, page - 1))} disabled={studentsCurrentPage === 1}>
-                      <i className="ti ti-angle-left" /> Previous
+                      <Icon className="ti ti-angle-left" /> Previous
                     </button>
                     {studentPageNumbers.map((page) => (
                       <button key={page} type="button" className={`pagination-btn ${page === studentsCurrentPage ? 'active' : ''}`} onClick={() => setStudentsCurrentPage(page)}>
@@ -650,7 +651,7 @@ export default function CoursesListPage() {
                       </button>
                     ))}
                     <button type="button" className="pagination-btn" onClick={() => setStudentsCurrentPage((page) => Math.min(studentsTotalPages, page + 1))} disabled={studentsCurrentPage === studentsTotalPages}>
-                      Next <i className="ti ti-angle-right" />
+                      Next <Icon className="ti ti-angle-right" />
                     </button>
                   </div>
                 </div>
@@ -659,7 +660,7 @@ export default function CoursesListPage() {
 
             {selectedCourseForStudents && studentsTotalItems === 0 && !studentSearchQuery ? (
               <div className="courses-students-empty">
-                <i className="ti ti-user" />
+                <Icon className="ti ti-user" />
                 <h4>No Students Enrolled</h4>
                 <p>This course doesn't have any enrolled students yet.</p>
               </div>
@@ -667,7 +668,7 @@ export default function CoursesListPage() {
 
             {selectedCourseForStudents && studentsTotalItems === 0 && studentSearchQuery ? (
               <div className="courses-students-empty">
-                <i className="ti ti-search" />
+                <Icon className="ti ti-search" />
                 <h4>No Students Found</h4>
                 <p>No students match your search criteria. Try adjusting your search.</p>
               </div>
@@ -679,9 +680,9 @@ export default function CoursesListPage() {
       <div className={`legacy-modal-backdrop ${confirmModalOpen ? 'active' : ''}`} onClick={() => setConfirmModalOpen(false)}>
         <div className="legacy-modal-dialog legacy-confirm" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
           <div className="legacy-modal-header">
-            <h3><i className="ti ti-alert" /> Confirm Action</h3>
+            <h3><Icon className="ti ti-alert" /> Confirm Action</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setConfirmModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
@@ -690,7 +691,7 @@ export default function CoursesListPage() {
           <div className="legacy-modal-footer">
             <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setConfirmModalOpen(false)}>Cancel</button>
             <button type="button" className="legacy-btn legacy-btn-success" onClick={confirmAction}>
-              <i className="ti ti-check" /> Confirm
+              <Icon className="ti ti-check" /> Confirm
             </button>
           </div>
         </div>

@@ -9,6 +9,7 @@ import useDebouncedValue from '../hooks/useDebouncedValue';
 import { listCandidates } from '../lib/icardApi';
 import LocationPicker from '../components/LocationPicker';
 import FilterDropdown from '../components/FilterDropdown';
+import Icon from '../components/Icon';
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100, 200];
 
@@ -281,7 +282,7 @@ export default function AttendanceMappingPage() {
       {/* ── Standard Page Header ── */}
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-id-badge" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-id-badge" /></span>
           <div>
             <h2>Attendance Mapping</h2>
             <p>Map attendance device keys to users at each location, with access validity windows.</p>
@@ -289,11 +290,11 @@ export default function AttendanceMappingPage() {
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button type="button" className="page-back-button" onClick={() => navigate('/offline-attendance')}>
-            <i className="ti ti-angle-left" /> Back to Attendance
+            <Icon className="ti ti-angle-left" /> Back to Attendance
           </button>
           <Can permission={PERMS.ATTENDANCE_MAPPING_EDIT}>
             <button type="button" className="page-action-button" onClick={() => setShowAddModal(true)}>
-              <i className="ti ti-plus" /> Add Mapping
+              <Icon className="ti ti-plus" /> Add Mapping
             </button>
           </Can>
         </div>
@@ -335,7 +336,7 @@ export default function AttendanceMappingPage() {
                 tabIndex={searchQuery ? 0 : -1}
                 aria-label={searchQuery ? 'Clear search' : 'Search'}
               >
-                <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} />
+                <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} />
               </button>
             </div>
           )}
@@ -371,9 +372,9 @@ export default function AttendanceMappingPage() {
         >
           <div className="legacy-modal-dialog legacy-confirm" role="dialog" aria-modal="true">
             <div className="legacy-modal-header">
-              <h3><i className="ti ti-alert" /> Revoke Access</h3>
+              <h3><Icon className="ti ti-alert" /> Revoke Access</h3>
               <button type="button" className="legacy-modal-close" disabled={revoking} onClick={() => setRevokeTarget(null)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="legacy-modal-body">
@@ -388,7 +389,7 @@ export default function AttendanceMappingPage() {
                 Cancel
               </button>
               <button type="button" className="legacy-btn legacy-btn-danger" disabled={revoking} onClick={confirmRevoke}>
-                <i className="ti ti-ban" /> {revoking ? 'Revoking…' : 'Revoke Access'}
+                <Icon className="ti ti-ban" /> {revoking ? 'Revoking…' : 'Revoke Access'}
               </button>
             </div>
           </div>
@@ -466,11 +467,11 @@ export default function AttendanceMappingPage() {
                         {statusKey === 1 ? (
                           <div className="kebab-menu-container">
                             <button type="button" className="kebab-button" onClick={(event) => toggleKebab(r.id, event)}>
-                              <i className="ti ti-more-alt" />
+                              <Icon className="ti ti-more-alt" />
                             </button>
                             <div className={`kebab-dropdown ${activeKebabId === r.id ? 'active' : ''}`}>
                               <button type="button" className="kebab-dropdown-item delete-action" onClick={() => handleRevoke(r)}>
-                                <i className="ti ti-ban" />
+                                <Icon className="ti ti-ban" />
                                 <span className="item-label">Revoke</span>
                               </button>
                             </div>
@@ -494,7 +495,7 @@ export default function AttendanceMappingPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={safePage === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {getPageNumbers(safePage, totalPages).map((p, idx) => (
                 p === '...' ? (
@@ -511,23 +512,23 @@ export default function AttendanceMappingPage() {
                 )
               ))}
               <button type="button" className="pagination-btn" disabled={safePage === totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
         </div>
       ) : loadError ? (
         <div className="qar-empty-state">
-          <i className="ti ti-alert" />
+          <Icon className="ti ti-alert" />
           <h4>Unable to load mappings</h4>
           <p>{loadError}</p>
           <button type="button" className="qar-btn-export" style={{ marginTop: 12 }} onClick={() => loadMappings()}>
-            <i className="ti ti-reload" /> Retry
+            <Icon className="ti ti-reload" /> Retry
           </button>
         </div>
       ) : (
         <div className="qar-empty-state">
-          <i className="ti ti-id-badge" />
+          <Icon className="ti ti-id-badge" />
           <h4>No Mappings Found</h4>
           {hasActiveFilters
             ? <p>Try adjusting your filters.</p>
@@ -618,15 +619,15 @@ function AddMappingModal({ submitting, onClose, onSubmit }) {
     >
       <div className="legacy-modal-dialog" style={{ maxWidth: 640 }} role="dialog" aria-modal="true">
         <div className="legacy-modal-header">
-          <h3><i className="ti ti-plus" /> Add Attendance Mapping</h3>
+          <h3><Icon className="ti ti-plus" /> Add Attendance Mapping</h3>
           <button type="button" className="legacy-modal-close" onClick={onClose}>
-            <i className="ti ti-close" />
+            <Icon className="ti ti-close" />
           </button>
         </div>
         <form className="batch-modal-form form-modal" onSubmit={(e) => { e.preventDefault(); if (canSubmit) submit(); }}>
           <div className="legacy-modal-body">
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-device-desktop" /> Device & User</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-device-desktop" /> Device & User</div>
               <div className="asset-form-grid">
                 {/* Device key */}
                 <label className="field-cell">
@@ -709,7 +710,7 @@ function AddMappingModal({ submitting, onClose, onSubmit }) {
             </div>
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-map-pin" /> Location & Access</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-map-pin" /> Location & Access</div>
               <div className="asset-form-grid">
                 {/* Location */}
                 <div className="field-cell">
@@ -753,7 +754,7 @@ function AddMappingModal({ submitting, onClose, onSubmit }) {
               disabled={!canSubmit}
               style={!canSubmit ? { opacity: 0.6, cursor: 'not-allowed' } : undefined}
             >
-              <i className="ti ti-check" /> {submitting ? 'Saving…' : 'Add Mapping'}
+              <Icon className="ti ti-check" /> {submitting ? 'Saving…' : 'Add Mapping'}
             </button>
           </div>
         </form>

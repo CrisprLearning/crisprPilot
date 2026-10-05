@@ -26,6 +26,7 @@ import {
   validateClassNotePdf,
 } from '../lib/classNotesApi';
 import { CLASS_NOTES_DEMO, CLASS_NOTES_DEMO_BATCHES, CLASS_NOTES_DEMO_COURSES } from '../data/classNotesDemo';
+import Icon from '../components/Icon';
 
 // Standard 7-slot pagination window with '…' ellipsis, shared across pages.
 function getPageNumbers(currentPage, totalPages) {
@@ -78,7 +79,7 @@ function SelectedChips({ ids, getLabel, onRemove, chipClassName = '', disabled =
         <span key={id} className={`cn-batch-chip ${chipClassName}`} title={getLabel(id)}>
           {getLabel(id)}
           <button type="button" className="cn-chip-remove" onClick={() => onRemove(id)} disabled={disabled} title="Remove">
-            <i className="ti ti-close" />
+            <Icon className="ti ti-close" />
           </button>
         </span>
       ))}
@@ -102,8 +103,8 @@ function VisibilityModal({ note, chapterGroups, courses, courseById, batches, ba
     <div className="crispr-modal-backdrop active" role="presentation" onClick={onClose}>
       <div className="crispr-modal-dialog cn-visibility-dialog" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
         <div className="crispr-modal-header">
-          <h3><i className="ti ti-eye" /> Visibility — {note.displayName}</h3>
-          <button type="button" className="crispr-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <h3><Icon className="ti ti-eye" /> Visibility — {note.displayName}</h3>
+          <button type="button" className="crispr-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <form
           className="form-modal"
@@ -171,7 +172,7 @@ function VisibilityModal({ note, chapterGroups, courses, courseById, batches, ba
           <div className="crispr-modal-footer">
             <button type="button" className="legacy-btn legacy-btn-default" onClick={onClose} disabled={saving}>Cancel</button>
             <button type="submit" className="legacy-btn legacy-btn-success" disabled={!canSave}>
-              <i className="ti ti-check" /> {saving ? 'Saving…' : 'Save Visibility'}
+              <Icon className="ti ti-check" /> {saving ? 'Saving…' : 'Save Visibility'}
             </button>
           </div>
         </form>
@@ -570,7 +571,7 @@ export default function ClassNotesPage() {
 
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-file-pdf-o" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-file-pdf-o" /></span>
           <div>
             <h2>Class Notes</h2>
             <p>Upload chapter-wise PDF notes for students. Files appear in the Resources section of the chapter in the mobile app, for the batches you pick.</p>
@@ -664,7 +665,7 @@ export default function ClassNotesPage() {
             />
             {!file ? (
               <>
-                <i className="ti ti-cloud-up" />
+                <Icon className="ti ti-cloud-up" />
                 <h4>Drop a PDF here or click to browse</h4>
                 <p>
                   PDF only, up to <strong>15 MB</strong>. Ideal size: {IDEAL_SIZE_TIERS.map((t) => `${t.size} for ${t.pages}`).join(' · ')}.
@@ -672,7 +673,7 @@ export default function ClassNotesPage() {
               </>
             ) : (
               <div className="cn-file-summary" onClick={(e) => e.stopPropagation()}>
-                <i className="fa fa-file-pdf-o" />
+                <Icon className="fa fa-file-pdf-o" />
                 <div className="cn-file-meta">
                   <span className="cn-file-name" title={file.name}>{file.name}</span>
                   <div className="cn-title-field">
@@ -698,12 +699,12 @@ export default function ClassNotesPage() {
                   </span>
                   {duplicateOf ? (
                     <span className="cn-file-duplicate">
-                      <i className="ti ti-alert" /> Already uploaded as “{duplicateOf.displayName}”{duplicateOf.chapterTitle ? ` under ${duplicateOf.chapterTitle}` : ''}.
+                      <Icon className="ti ti-alert" /> Already uploaded as “{duplicateOf.displayName}”{duplicateOf.chapterTitle ? ` under ${duplicateOf.chapterTitle}` : ''}.
                     </span>
                   ) : null}
                 </div>
                 <button type="button" className="cn-file-remove" onClick={clearFile} disabled={uploading} title="Remove file">
-                  <i className="ti ti-close" />
+                  <Icon className="ti ti-close" />
                 </button>
               </div>
             )}
@@ -719,7 +720,7 @@ export default function ClassNotesPage() {
               <span className="cn-upload-note">Duplicate uploads are blocked automatically using the file&apos;s SHA-256 checksum.</span>
             )}
             <button type="button" className="cn-upload-btn" disabled={!canSubmit} onClick={handleUpload}>
-              <i className="ti ti-upload" /> Upload class note
+              <Icon className="ti ti-upload" /> Upload class note
             </button>
           </div>
         </div>
@@ -727,7 +728,7 @@ export default function ClassNotesPage() {
 
       <div className="filter-bar cn-filter-bar">
         <div className="search-wrapper">
-          <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} />
+          <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} />
           <input
             type="text"
             className="search-input"
@@ -741,7 +742,7 @@ export default function ClassNotesPage() {
         <FilterDropdown label="All Batches" value={filterBatch} options={batchFilterOptions} maxHeight="280px" onChange={setFilterBatch} />
         <FilterDropdown label="Visible notes" value={filterHidden} options={HIDDEN_FILTER_OPTIONS} onChange={setFilterHidden} />
         {hasFilters ? (
-          <button type="button" className="payments-clear-btn" onClick={clearAllFilters}><i className="ti ti-close" /> Clear</button>
+          <button type="button" className="payments-clear-btn" onClick={clearAllFilters}><Icon className="ti ti-close" /> Clear</button>
         ) : null}
       </div>
 
@@ -785,10 +786,10 @@ export default function ClassNotesPage() {
                     <tr key={n.id}>
                       <td>
                         <div className="cn-cell-file">
-                          <i className="fa fa-file-pdf-o" />
+                          <Icon className="fa fa-file-pdf-o" />
                           <div>
                             <span className="cn-cell-file-name" title={n.fileName}>{n.displayName}</span>
-                            {n.hidden ? <div className="profile-subtext"><i className="ti ti-eye" /> Hidden from students</div> : null}
+                            {n.hidden ? <div className="profile-subtext"><Icon className="ti ti-eye" /> Hidden from students</div> : null}
                           </div>
                         </div>
                       </td>
@@ -828,7 +829,7 @@ export default function ClassNotesPage() {
                           <span className="cn-checksum" title={n.checksumSha256}>{n.checksumSha256.slice(0, 10)}…</span>
                         ) : <span className="profile-subtext">—</span>}
                       </td>
-                      <td><div className="info-cell"><i className="ti ti-calendar" /> {fmtDate(n.uploadedOn)}</div></td>
+                      <td><div className="info-cell"><Icon className="ti ti-calendar" /> {fmtDate(n.uploadedOn)}</div></td>
                       <td className="actions-column">
                         <div className="cn-row-actions">
                           <a
@@ -838,10 +839,10 @@ export default function ClassNotesPage() {
                             rel="noreferrer"
                             title="Open PDF"
                           >
-                            <i className="ti ti-new-window" />
+                            <Icon className="ti ti-new-window" />
                           </a>
                           <button type="button" className="cn-icon-btn" onClick={() => copyLink(n)} title="Copy CDN link" disabled={!n.fileUrl || n.fileUrl === '#'}>
-                            <i className="ti ti-link" />
+                            <Icon className="ti ti-link" />
                           </button>
                           {canEdit ? (
                             <div className="kebab-menu-container" onClick={(e) => e.stopPropagation()}>
@@ -850,7 +851,7 @@ export default function ClassNotesPage() {
                                 className="kebab-button"
                                 onClick={() => setOpenKebabId((cur) => (cur === n.id ? null : n.id))}
                               >
-                                <i className="ti ti-more-alt" />
+                                <Icon className="ti ti-more-alt" />
                               </button>
                               <div className={`kebab-dropdown ${openKebabId === n.id ? 'active' : ''}`}>
                                 <button
@@ -858,13 +859,13 @@ export default function ClassNotesPage() {
                                   className="kebab-dropdown-item"
                                   onClick={() => { setVisibilityNote(n); setOpenKebabId(null); }}
                                 >
-                                  <i className="ti ti-eye" /> Visibility
+                                  <Icon className="ti ti-eye" /> Visibility
                                 </button>
                                 <button type="button" className="kebab-dropdown-item" onClick={() => handleToggleHidden(n)}>
-                                  <i className={`ti ${n.hidden ? 'ti-eye' : 'ti-na'}`} /> {n.hidden ? 'Show to students' : 'Hide from students'}
+                                  <Icon className={`ti ${n.hidden ? 'ti-eye' : 'ti-na'}`} /> {n.hidden ? 'Show to students' : 'Hide from students'}
                                 </button>
                                 <button type="button" className="kebab-dropdown-item" onClick={() => handleDelete(n)}>
-                                  <i className="ti ti-trash" /> Delete
+                                  <Icon className="ti ti-trash" /> Delete
                                 </button>
                               </div>
                             </div>
@@ -887,20 +888,20 @@ export default function ClassNotesPage() {
                 </select>
               </div>
               <div className="pagination-controls">
-                <button type="button" className="pagination-btn" disabled={page === 1} onClick={() => setPage((c) => Math.max(1, c - 1))}><i className="ti ti-angle-left" /> Previous</button>
+                <button type="button" className="pagination-btn" disabled={page === 1} onClick={() => setPage((c) => Math.max(1, c - 1))}><Icon className="ti ti-angle-left" /> Previous</button>
                 {getPageNumbers(page, totalPages).map((n, i) => (
                   n === '...'
                     ? <span key={`el-${i}`} className="pagination-ellipsis">…</span>
                     : <button key={n} type="button" className={`pagination-btn ${page === n ? 'active' : ''}`} onClick={() => setPage(n)}>{n}</button>
                 ))}
-                <button type="button" className="pagination-btn" disabled={page >= totalPages} onClick={() => setPage((c) => Math.min(totalPages, c + 1))}>Next <i className="ti ti-angle-right" /></button>
+                <button type="button" className="pagination-btn" disabled={page >= totalPages} onClick={() => setPage((c) => Math.min(totalPages, c + 1))}>Next <Icon className="ti ti-angle-right" /></button>
               </div>
             </div>
           )}
         </div>
       ) : (
         <div className="empty-state">
-          <i className="fa fa-file-pdf-o" />
+          <Icon className="fa fa-file-pdf-o" />
           <h4>No Class Notes Found</h4>
           {hasFilters ? (
             <p>No class notes match your search or filters. <button type="button" onClick={clearAllFilters}>Clear all filters</button> to see every note.</p>

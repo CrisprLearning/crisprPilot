@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import Icon from '../../components/Icon';
 
 // Format a backend page/module segment ("courseAuthoring.instructor") into a
 // human label ("Course Authoring → Instructor").
@@ -36,7 +37,7 @@ function HighRiskBadge() {
         letterSpacing: 0.3,
       }}
     >
-      <i className="fa fa-exclamation-triangle" /> RISK
+      <Icon className="fa fa-exclamation-triangle" /> RISK
     </span>
   );
 }

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ToastRegion from '../components/ToastRegion';
 import { listRoles, getPermissionTree, extractApiError } from '../lib/rbacApi';
 import PermissionsMatrixTab from './permissions/PermissionsMatrixTab';
+import Icon from '../components/Icon';
 
 function normalizeRole(r) {
   return {
@@ -70,7 +71,7 @@ export default function PermissionsPage() {
     <div className="permissions-page data-table-page">
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-shield" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-shield" /></span>
           <div>
             <h2>Roles &amp; permissions</h2>
             <p>Define roles and control what each role can access across the platform.</p>

@@ -3,6 +3,7 @@ import { batchesDemo, catalogItemsDemo } from '../data/adminRemainingDemo';
 import { getAllOrders, useManualOrders, usePayments } from '../lib/paymentsStore';
 import { methodLabel, paymentLabel } from '../lib/paymentsModel';
 import MultiSelectDropdown from '../components/MultiSelectDropdown';
+import Icon from '../components/Icon';
 
 const INR = (n) => `₹${Number(n || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const round2 = (n) => Math.round(n * 100) / 100;
@@ -311,7 +312,7 @@ export default function CommerceReportsPage() {
     <section className="commerce-reports-page data-table-page">
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-bar-chart" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-bar-chart" /></span>
           <div>
             <h2>Commerce Reports</h2>
             <p>Generate order and payment reports for any period — filter by course, payment method, or student batch.</p>
@@ -331,14 +332,14 @@ export default function CommerceReportsPage() {
           <div className="crp-step-body">
             <div className="crp-seg">
               <button type="button" className={reportType === 'orders' ? 'active' : ''} onClick={() => { setReportType('orders'); setReport(null); }}>
-                <span className="crp-seg-icon"><i className="ti ti-receipt" /></span>
+                <span className="crp-seg-icon"><Icon className="ti ti-receipt" /></span>
                 <span className="crp-seg-text">Orders<span>Every order created during the period</span></span>
-                <i className="ti ti-check crp-seg-check" />
+                <Icon className="ti ti-check crp-seg-check" />
               </button>
               <button type="button" className={reportType === 'payments' ? 'active' : ''} onClick={() => { setReportType('payments'); setReport(null); }}>
-                <span className="crp-seg-icon"><i className="ti ti-wallet" /></span>
+                <span className="crp-seg-icon"><Icon className="ti ti-wallet" /></span>
                 <span className="crp-seg-text">Payments<span>Every payment recorded during the period</span></span>
-                <i className="ti ti-check crp-seg-check" />
+                <Icon className="ti ti-check crp-seg-check" />
               </button>
             </div>
           </div>
@@ -355,9 +356,9 @@ export default function CommerceReportsPage() {
           <div className="crp-step-body">
           <div className="crp-period-toolbar">
             <div className="crp-seg crp-seg-small">
-              <button type="button" className={periodMode === 'range' ? 'active' : ''} onClick={() => setPeriodMode('range')}><i className="ti ti-direction-alt" /> Date range</button>
-              <button type="button" className={periodMode === 'month' ? 'active' : ''} onClick={() => setPeriodMode('month')}><i className="ti ti-calendar" /> Month</button>
-              <button type="button" className={periodMode === 'fy' ? 'active' : ''} onClick={() => setPeriodMode('fy')}><i className="ti ti-briefcase" /> Financial year</button>
+              <button type="button" className={periodMode === 'range' ? 'active' : ''} onClick={() => setPeriodMode('range')}><Icon className="ti ti-direction-alt" /> Date range</button>
+              <button type="button" className={periodMode === 'month' ? 'active' : ''} onClick={() => setPeriodMode('month')}><Icon className="ti ti-calendar" /> Month</button>
+              <button type="button" className={periodMode === 'fy' ? 'active' : ''} onClick={() => setPeriodMode('fy')}><Icon className="ti ti-briefcase" /> Financial year</button>
             </div>
             <div className="crp-presets">
               <span>Quick picks</span>
@@ -373,7 +374,7 @@ export default function CommerceReportsPage() {
                 <span>From <b className="req">*</b></span>
                 <input type="date" value={fromStr} max={toStr || undefined} onChange={(e) => { setFromStr(e.target.value); setError(''); }} />
               </label>
-              <span className="crp-range-arrow"><i className="ti ti-arrow-right" /></span>
+              <span className="crp-range-arrow"><Icon className="ti ti-arrow-right" /></span>
               <label className="crp-range-field">
                 <span>To <b className="req">*</b></span>
                 <input type="date" value={toStr} min={fromStr || undefined} onChange={(e) => { setToStr(e.target.value); setError(''); }} />
@@ -391,7 +392,7 @@ export default function CommerceReportsPage() {
                 <button key={y} type="button" className={fyStart === y ? 'active' : ''} onClick={() => setFyStart(y)}>
                   <strong>FY {y}–{String((y + 1) % 100).padStart(2, '0')}</strong>
                   <span>Apr {y} – Mar {y + 1}</span>
-                  <i className="ti ti-check" />
+                  <Icon className="ti ti-check" />
                 </button>
               ))}
             </div>
@@ -399,12 +400,12 @@ export default function CommerceReportsPage() {
 
           {period ? (
             <div className="crp-period-echo">
-              <i className="ti ti-calendar" /> Reporting period: <strong>{period.label}</strong>
+              <Icon className="ti ti-calendar" /> Reporting period: <strong>{period.label}</strong>
               <em>{Math.round((period.end + 1 - period.start) / 86400)} days</em>
             </div>
           ) : (
             <div className="crp-period-echo is-empty">
-              <i className="ti ti-info-alt" /> {periodMode === 'range' ? 'Pick both dates to set the period' : 'Pick a month to set the period'}
+              <Icon className="ti ti-info-alt" /> {periodMode === 'range' ? 'Pick both dates to set the period' : 'Pick a month to set the period'}
             </div>
           )}
           </div>
@@ -470,10 +471,10 @@ export default function CommerceReportsPage() {
 
         <div className="crp-generate-row">
           {error
-            ? <p className="field-error"><i className="ti ti-alert" /> {error}</p>
+            ? <p className="field-error"><Icon className="ti ti-alert" /> {error}</p>
             : (
               <p className="crp-generate-summary">
-                <i className="ti ti-info-alt" />
+                <Icon className="ti ti-info-alt" />
                 {reportType === 'orders' ? 'Orders' : 'Payments'}
                 {period ? <> · {period.label}</> : <> · pick a period</>}
                 {courseCodes.length ? ` · ${courseCodes.length} course${courseCodes.length === 1 ? '' : 's'}` : ''}
@@ -482,7 +483,7 @@ export default function CommerceReportsPage() {
               </p>
             )}
           <button type="button" className="page-action-button" onClick={generate}>
-            <i className="ti ti-bar-chart" /> Generate Report
+            <Icon className="ti ti-bar-chart" /> Generate Report
           </button>
         </div>
       </div>
@@ -491,32 +492,32 @@ export default function CommerceReportsPage() {
         <div className="crp-result">
           <div className="crp-result-header">
             <div className="crp-result-title">
-              <span className="crp-result-icon"><i className={report.title.startsWith('Orders') ? 'ti ti-receipt' : 'ti ti-wallet'} /></span>
+              <span className="crp-result-icon"><Icon className={report.title.startsWith('Orders') ? 'ti ti-receipt' : 'ti ti-wallet'} /></span>
               <div>
                 <h3>{report.title}</h3>
                 <div className="crp-chips">
-                  <span className="crp-chip crp-chip-period"><i className="ti ti-calendar" /> {report.periodLabel}</span>
-                  {report.filters.map(([k, v]) => <span key={k} className="crp-chip"><i className="ti ti-filter" /> {v}</span>)}
+                  <span className="crp-chip crp-chip-period"><Icon className="ti ti-calendar" /> {report.periodLabel}</span>
+                  {report.filters.map(([k, v]) => <span key={k} className="crp-chip"><Icon className="ti ti-filter" /> {v}</span>)}
                 </div>
               </div>
             </div>
             <div className="crp-result-actions">
-              <button type="button" className="legacy-btn legacy-btn-default" onClick={() => handleView(false)}><i className="ti ti-new-window" /> View HTML</button>
-              <button type="button" className="legacy-btn legacy-btn-default" onClick={handleCsv}><i className="ti ti-download" /> Excel CSV</button>
-              <button type="button" className="legacy-btn legacy-btn-success" onClick={() => handleView(true)}><i className="ti ti-printer" /> PDF</button>
+              <button type="button" className="legacy-btn legacy-btn-default" onClick={() => handleView(false)}><Icon className="ti ti-new-window" /> View HTML</button>
+              <button type="button" className="legacy-btn legacy-btn-default" onClick={handleCsv}><Icon className="ti ti-download" /> Excel CSV</button>
+              <button type="button" className="legacy-btn legacy-btn-success" onClick={() => handleView(true)}><Icon className="ti ti-printer" /> PDF</button>
             </div>
           </div>
 
           <div className="orders-stats-row crp-stats">
-            <div className="stat-card"><div className="stat-icon indigo"><i className="ti ti-list" /></div><div className="stat-info"><h3>{report.rows.length}</h3><p>Records</p></div></div>
-            <div className="stat-card"><div className="stat-icon green"><i className="ti ti-layout-list-thumb" /></div><div className="stat-info"><h3>{INR(report.baseTotal)}</h3><p>{report.baseLabel}</p></div></div>
-            <div className="stat-card"><div className="stat-icon orange"><i className="ti ti-stamp" /></div><div className="stat-info"><h3>{INR(report.gstTotal)}</h3><p>Total GST</p></div></div>
-            <div className="stat-card"><div className="stat-icon teal"><i className="ti ti-money" /></div><div className="stat-info"><h3>{INR(report.grandTotal)}</h3><p>Grand Total</p></div></div>
+            <div className="stat-card"><div className="stat-icon indigo"><Icon className="ti ti-list" /></div><div className="stat-info"><h3>{report.rows.length}</h3><p>Records</p></div></div>
+            <div className="stat-card"><div className="stat-icon green"><Icon className="ti ti-layout-list-thumb" /></div><div className="stat-info"><h3>{INR(report.baseTotal)}</h3><p>{report.baseLabel}</p></div></div>
+            <div className="stat-card"><div className="stat-icon orange"><Icon className="ti ti-stamp" /></div><div className="stat-info"><h3>{INR(report.gstTotal)}</h3><p>Total GST</p></div></div>
+            <div className="stat-card"><div className="stat-icon teal"><Icon className="ti ti-money" /></div><div className="stat-info"><h3>{INR(report.grandTotal)}</h3><p>Grand Total</p></div></div>
           </div>
 
           {report.rows.length === 0 ? (
             <div className="empty-state">
-              <i className="ti ti-bar-chart" />
+              <Icon className="ti ti-bar-chart" />
               <h4>No Records In This Period</h4>
               <p>Nothing matched the selected period and filters — widen the period or clear a filter.</p>
             </div>
@@ -560,9 +561,9 @@ function MonthGridPicker({ value, onChange }) {
   return (
     <div className="crp-month-picker">
       <div className="crp-month-picker-head">
-        <button type="button" aria-label="Previous year" onClick={() => setViewYear((y) => y - 1)}><i className="ti ti-angle-left" /></button>
+        <button type="button" aria-label="Previous year" onClick={() => setViewYear((y) => y - 1)}><Icon className="ti ti-angle-left" /></button>
         <strong>{viewYear}</strong>
-        <button type="button" aria-label="Next year" onClick={() => setViewYear((y) => y + 1)}><i className="ti ti-angle-right" /></button>
+        <button type="button" aria-label="Next year" onClick={() => setViewYear((y) => y + 1)}><Icon className="ti ti-angle-right" /></button>
       </div>
       <div className="crp-month-grid">
         {MONTH_NAMES.map((name, i) => {

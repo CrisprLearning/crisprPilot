@@ -15,6 +15,7 @@ import {
 import { listLocations } from '../lib/locationsApi';
 import { SIGNAGE_FOLDER, listBunnyMedia, uploadBunnyMedia, deleteBunnyMedia, buildBunnyFileName, validateUpload, bunnyErrorMessage } from '../lib/bunnyMediaApi';
 import { BrandingScreen } from '../features/branding';
+import Icon from '../components/Icon';
 
 // Content types currently shippable in the loop editor. Everything else
 // renders disabled with a "Coming soon" badge.
@@ -176,7 +177,7 @@ function PageHeader() {
   return (
     <div className="page-header-section" style={{ flexWrap: 'wrap' }}>
       <div className="page-header-title-group">
-        <span className="page-header-icon-box"><i className="fa fa-tv" /></span>
+        <span className="page-header-icon-box"><Icon className="fa fa-tv" /></span>
         <div>
           <h2>Digital Signage</h2>
           <p>Manage TV kiosks, build loops, broadcast alerts across all branches.</p>
@@ -204,7 +205,7 @@ function TabBar({ tab, setTab }) {
               padding: '10px 14px', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: 13,
               display: 'flex', alignItems: 'center', gap: 10, width: '100%', textAlign: 'left',
             }}>
-            <i className={`ti ${t.icon}`} style={{ fontSize: 16, width: 18, textAlign: 'center', flexShrink: 0 }} /> {t.label}
+            <Icon className={`ti ${t.icon}`} style={{ fontSize: 16, width: 18, textAlign: 'center', flexShrink: 0 }} /> {t.label}
           </button>
         );
       })}
@@ -262,14 +263,14 @@ function OverviewTab({ branchFilter, setBranchFilter, onJump }) {
       {activeAlerts.length > 0 && (
         <div style={{ background: 'linear-gradient(90deg,#fee2e2,#fecaca)', border: '1px solid #fca5a5', borderRadius: 12, padding: 14, display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{ width: 38, height: 38, borderRadius: 8, background: '#dc2626', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>
-            <i className="ti ti-alert" />
+            <Icon className="ti ti-alert" />
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontWeight: 700, color: '#7f1d1d', fontSize: 14 }}>{activeAlerts.length} active alert broadcast{activeAlerts.length === 1 ? '' : 's'}</div>
             <div style={{ fontSize: 12, color: '#991b1b', marginTop: 2 }}>{activeAlerts.map((a) => a.title).join(' · ')}</div>
           </div>
           <button type="button" style={btnGhost} onClick={() => onJump('alerts')}>
-            <i className="ti ti-arrow-right" /> Manage
+            <Icon className="ti ti-arrow-right" /> Manage
           </button>
         </div>
       )}
@@ -287,7 +288,7 @@ function OverviewTab({ branchFilter, setBranchFilter, onJump }) {
           {/* Left: branches */}
           <div style={{ border: '1px solid var(--line)', borderRadius: 12, padding: 14, background: '#fbfcfd' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-              <i className="ti ti-building" style={{ color: 'var(--brand)' }} />
+              <Icon className="ti ti-building" style={{ color: 'var(--brand)' }} />
               <strong style={{ fontSize: 13, color: 'var(--ink)' }}>Branches</strong>
               {branchFilter && (
                 <button type="button" onClick={() => setBranchFilter('')}
@@ -328,7 +329,7 @@ function OverviewTab({ branchFilter, setBranchFilter, onJump }) {
           {/* Right: now playing */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-              <i className="ti ti-control-play" style={{ color: 'var(--brand)' }} />
+              <Icon className="ti ti-control-play" style={{ color: 'var(--brand)' }} />
               <strong style={{ fontSize: 13, color: 'var(--ink)' }}>Now playing</strong>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
@@ -337,7 +338,7 @@ function OverviewTab({ branchFilter, setBranchFilter, onJump }) {
               ))}
               {nowPlaying.length === 0 && (
                 <div style={{ gridColumn: '1 / -1', border: '1px dashed var(--line)', borderRadius: 10, padding: 28, textAlign: 'center', color: 'var(--muted)', background: '#fbfcfd' }}>
-                  <i className="ti ti-device-desktop" style={{ fontSize: 26, display: 'block', marginBottom: 8, color: 'var(--muted)' }} />
+                  <Icon className="ti ti-device-desktop" style={{ fontSize: 26, display: 'block', marginBottom: 8, color: 'var(--muted)' }} />
                   <div style={{ fontWeight: 600, color: 'var(--ink)' }}>No screens currently playing</div>
                   {filteredScreens.length > 0 && (
                     <div style={{ fontSize: 12, marginTop: 6, lineHeight: 1.6, maxWidth: 460, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -432,7 +433,7 @@ function NowPlayingTile({ np, timelines }) {
             <PreviewSurface items={items} preview={{ ...preview, playing: true }} />
           </div>
         ) : (
-          <i className="ti ti-control-play" style={{ fontSize: 24, color: 'rgba(255,255,255,.85)' }} />
+          <Icon className="ti ti-control-play" style={{ fontSize: 24, color: 'rgba(255,255,255,.85)' }} />
         )}
         {/* LIVE badge */}
         <span style={{ position: 'absolute', top: 8, left: 8, display: 'inline-flex', alignItems: 'center', gap: 5, padding: '2px 7px', borderRadius: 999, background: 'rgba(16,185,129,.18)', border: '1px solid rgba(16,185,129,.45)', fontSize: 9, fontWeight: 800, letterSpacing: '.08em', color: '#6ee7b7' }}>
@@ -446,12 +447,12 @@ function NowPlayingTile({ np, timelines }) {
       <div style={{ padding: 10, display: 'grid', gap: 7 }}>
         <strong style={{ fontSize: 13, color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{np.name}</strong>
         <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          <i className="ti ti-layers" style={{ color: 'var(--brand)', flex: '0 0 auto' }} />
+          <Icon className="ti ti-layers" style={{ color: 'var(--brand)', flex: '0 0 auto' }} />
           {np.loop_name || <em style={{ color: 'var(--muted)' }}>No loop</em>}
         </span>
         {np.current_item && (
           <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: 'var(--muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingTop: 6, borderTop: '1px solid var(--line)' }}>
-            <i className="ti ti-music" style={{ flex: '0 0 auto' }} /> {np.current_item}
+            <Icon className="ti ti-music" style={{ flex: '0 0 auto' }} /> {np.current_item}
           </span>
         )}
       </div>
@@ -501,11 +502,11 @@ function ScreensTab({ branchFilter, setBranchFilter, branchFilterLabel, showToas
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
           {selected.size > 0 && (
             <button type="button" style={btnGhost} onClick={() => setBulkAssign(true)}>
-              <i className="ti ti-layers" /> Assign loop ({selected.size})
+              <Icon className="ti ti-layers" /> Assign loop ({selected.size})
             </button>
           )}
           <button type="button" style={btnPrimary} onClick={() => setCreating(true)}>
-            <i className="ti ti-plus" /> Register screen
+            <Icon className="ti ti-plus" /> Register screen
           </button>
         </div>
       </div>
@@ -679,7 +680,7 @@ function PairingCodeModal({ screen, onClose, showToast }) {
 
         {loading ? (
           <div style={{ padding: 24, textAlign: 'center', color: 'var(--muted)' }}>
-            <i className="ti ti-reload" style={{ marginRight: 6 }} /> Loading…
+            <Icon className="ti ti-reload" style={{ marginRight: 6 }} /> Loading…
           </div>
         ) : code ? (
           <>
@@ -692,21 +693,21 @@ function PairingCodeModal({ screen, onClose, showToast }) {
               Open <code style={{ fontFamily: 'monospace' }}>/player/{screen.screen_code}</code> on the kiosk and enter this code to pair.
             </div>
             <ModalFooter style={{ margin: '10px -24px -24px' }}>
-              <button type="button" className="btn btn-default" onClick={copyCode}><i className="ti ti-clipboard" /> Copy</button>
-              <button type="button" className="btn btn-success" disabled={busy} onClick={regenerate}><i className="ti ti-reload" /> {busy ? 'Regenerating…' : 'Regenerate'}</button>
+              <button type="button" className="btn btn-default" onClick={copyCode}><Icon className="ti ti-clipboard" /> Copy</button>
+              <button type="button" className="btn btn-success" disabled={busy} onClick={regenerate}><Icon className="ti ti-reload" /> {busy ? 'Regenerating…' : 'Regenerate'}</button>
             </ModalFooter>
           </>
         ) : (
           <>
             <div style={{ background: '#f8fafc', border: '1px dashed var(--line)', borderRadius: 12, padding: 22, textAlign: 'center', color: 'var(--muted)', fontSize: 13 }}>
-              <i className="ti ti-check" style={{ fontSize: 22, display: 'block', marginBottom: 8, color: '#059669' }} />
+              <Icon className="ti ti-check" style={{ fontSize: 22, display: 'block', marginBottom: 8, color: '#059669' }} />
               This screen is already paired — no active pairing code.
             </div>
             <div style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.5 }}>
               Regenerating issues a new code and <strong>unpairs</strong> the current player.
             </div>
             <ModalFooter style={{ margin: '10px -24px -24px' }}>
-              <button type="button" className="btn btn-success" disabled={busy} onClick={regenerate}><i className="ti ti-reload" /> {busy ? 'Regenerating…' : 'Regenerate code'}</button>
+              <button type="button" className="btn btn-success" disabled={busy} onClick={regenerate}><Icon className="ti ti-reload" /> {busy ? 'Regenerating…' : 'Regenerate code'}</button>
             </ModalFooter>
           </>
         )}
@@ -760,13 +761,13 @@ function ScreenModal({ screen, onClose, onSave }) {
     >
       <div className="legacy-modal-dialog" style={{ maxWidth: 600 }} role="dialog" aria-modal="true">
         <div className="legacy-modal-header">
-          <h3><i className="ti ti-desktop" /> {screen ? 'Edit screen' : 'Register screen'}</h3>
-          <button type="button" className="legacy-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <h3><Icon className="ti ti-desktop" /> {screen ? 'Edit screen' : 'Register screen'}</h3>
+          <button type="button" className="legacy-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <form className="batch-modal-form form-modal" onSubmit={submit}>
           <div className="legacy-modal-body">
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-desktop" /> Screen Details</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-desktop" /> Screen Details</div>
               <div className="asset-form-grid">
                 <label className="field-cell full-span">
                   <div className="float-field">
@@ -794,7 +795,7 @@ function ScreenModal({ screen, onClose, onSave }) {
             </div>
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-settings" /> Display Settings</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-settings" /> Display Settings</div>
               <div className="asset-form-grid config-grid">
                 <label className="field-cell">
                   <div className="float-field float-always">
@@ -835,7 +836,7 @@ function ScreenModal({ screen, onClose, onSave }) {
           <div className="legacy-modal-footer">
             <button type="button" className="legacy-btn legacy-btn-default" onClick={onClose}>Cancel</button>
             <button type="submit" className="legacy-btn legacy-btn-success">
-              <i className={`ti ${screen ? 'ti-check' : 'ti-plus'}`} /> {screen ? 'Save' : 'Register'}
+              <Icon className={`ti ${screen ? 'ti-check' : 'ti-plus'}`} /> {screen ? 'Save' : 'Register'}
             </button>
           </div>
         </form>
@@ -883,7 +884,7 @@ function TimelinesTab({ branchFilter, setBranchFilter, branchFilterLabel, editin
   if (editingId && timelines.length === 0) {
     return (
       <div style={{ background: '#fff', border: '1px solid var(--line)', borderRadius: 14, padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
-        <i className="ti ti-reload" style={{ fontSize: 22, display: 'block', marginBottom: 10 }} />
+        <Icon className="ti ti-reload" style={{ fontSize: 22, display: 'block', marginBottom: 10 }} />
         Loading loop…
       </div>
     );
@@ -901,7 +902,7 @@ function TimelinesTab({ branchFilter, setBranchFilter, branchFilterLabel, editin
           />
         </div>
         <button type="button" style={{ ...btnPrimary, marginLeft: 'auto' }} onClick={() => setCreating(true)}>
-          <i className="ti ti-plus" /> New loop
+          <Icon className="ti ti-plus" /> New loop
         </button>
       </div>
 
@@ -913,7 +914,7 @@ function TimelinesTab({ branchFilter, setBranchFilter, branchFilterLabel, editin
             <div key={t.id} style={{ background: '#fff', border: '1px solid var(--line)', borderRadius: 14, padding: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
                 <div style={{ width: 36, height: 36, borderRadius: 8, background: 'var(--brand)15', color: 'var(--brand)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <i className="ti ti-layers" />
+                  <Icon className="ti ti-layers" />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -945,11 +946,11 @@ function TimelinesTab({ branchFilter, setBranchFilter, branchFilterLabel, editin
         })}
         {filtered.length === 0 && (
           <div style={{ background: '#fff', border: '1px dashed var(--line)', borderRadius: 14, padding: 40, textAlign: 'center', color: 'var(--muted)', gridColumn: '1 / -1' }}>
-            <i className="ti ti-layers" style={{ fontSize: 24, display: 'block', marginBottom: 8 }} />
+            <Icon className="ti ti-layers" style={{ fontSize: 24, display: 'block', marginBottom: 8 }} />
             <div style={{ fontWeight: 600, color: 'var(--ink)' }}>No loops yet</div>
             <div style={{ fontSize: 13, marginTop: 4 }}>Build your first loop of branding, attendance, and toppers.</div>
             <div style={{ marginTop: 14 }}>
-              <button type="button" style={btnPrimary} onClick={() => setCreating(true)}><i className="ti ti-plus" /> New loop</button>
+              <button type="button" style={btnPrimary} onClick={() => setCreating(true)}><Icon className="ti ti-plus" /> New loop</button>
             </div>
           </div>
         )}
@@ -1163,7 +1164,7 @@ function TimelineEditor({ timeline, onBack, showToast }) {
     <div style={{ display: 'grid', gap: 14 }}>
       {/* Header */}
       <div style={{ background: '#fff', border: '1px solid var(--line)', borderRadius: 14, padding: 16, display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-        <button type="button" style={btnGhost} onClick={handleBack}><i className="ti ti-arrow-left" /> Back</button>
+        <button type="button" style={btnGhost} onClick={handleBack}><Icon className="ti ti-arrow-left" /> Back</button>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <strong style={{ fontSize: 16 }}>{timeline.name}</strong>
           {timeline.is_active ? <Pill color="#059669" bg="#d1fae5">Published</Pill> : <Pill color="#475569" bg="#e2e8f0">Draft</Pill>}
@@ -1173,18 +1174,18 @@ function TimelineEditor({ timeline, onBack, showToast }) {
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
           <button type="button" style={btnGhost} disabled={items.length === 0}
             onClick={() => setPreviewModalOpen(true)}>
-            <i className="ti ti-control-play" /> Preview In Action
+            <Icon className="ti ti-control-play" /> Preview In Action
           </button>
           {dirty && (
             <>
               <span style={{ width: 1, alignSelf: 'stretch', background: 'var(--line)', margin: '0 2px' }} />
               <button type="button" style={{ ...btnGhost, opacity: saving ? 0.5 : 1, cursor: saving ? 'not-allowed' : 'pointer' }}
                 disabled={saving} onClick={discardChanges}>
-                <i className="ti ti-back-left" /> Discard
+                <Icon className="ti ti-back-left" /> Discard
               </button>
               <button type="button" style={{ ...btnPrimary, opacity: saving ? 0.5 : 1, cursor: saving ? 'not-allowed' : 'pointer' }}
                 disabled={saving} onClick={saveChanges}>
-                <i className="ti ti-check" /> {saving ? 'Saving…' : 'Save changes'}
+                <Icon className="ti ti-check" /> {saving ? 'Saving…' : 'Save changes'}
               </button>
             </>
           )}
@@ -1364,7 +1365,7 @@ function PreviewModal({ timeline, items, onClose }) {
       <div style={{ width: '95vw', height: '95vh', background: '#0f172a', borderRadius: 16, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 30px 80px rgba(0,0,0,0.55)' }}>
         {/* Controls bar */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 18px', borderBottom: '1px solid #1e293b', color: '#e2e8f0' }}>
-          <i className="ti ti-layers" style={{ color: '#67e8f9', fontSize: 18 }} />
+          <Icon className="ti ti-layers" style={{ color: '#67e8f9', fontSize: 18 }} />
           <strong style={{ fontSize: 15 }}>{timeline.name}</strong>
           <span style={{ fontSize: 12, color: '#94a3b8' }}>
             {items.length > 0 ? `Item ${preview.idx + 1} of ${items.length}` : 'Empty loop'}
@@ -1373,15 +1374,15 @@ function PreviewModal({ timeline, items, onClose }) {
           <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
             <button type="button" onClick={() => setPreview((p) => ({ ...p, playing: !p.playing }))}
               style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#1e293b', color: '#e2e8f0', border: '1px solid #334155', borderRadius: 8, padding: '7px 12px', cursor: 'pointer', fontWeight: 600, fontSize: 13 }}>
-              <i className={`ti ${preview.playing ? 'ti-control-pause' : 'ti-control-play'}`} /> {preview.playing ? 'Pause' : 'Play'}
+              <Icon className={`ti ${preview.playing ? 'ti-control-pause' : 'ti-control-play'}`} /> {preview.playing ? 'Pause' : 'Play'}
             </button>
             <button type="button" onClick={() => setPreview((p) => ({ ...p, idx: 0, elapsed: 0 }))}
               style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#1e293b', color: '#e2e8f0', border: '1px solid #334155', borderRadius: 8, padding: '7px 12px', cursor: 'pointer', fontWeight: 600, fontSize: 13 }}>
-              <i className="ti ti-control-skip-backward" /> Restart
+              <Icon className="ti ti-control-skip-backward" /> Restart
             </button>
             <button type="button" onClick={onClose}
               style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', color: '#cbd5e1', border: '1px solid #334155', borderRadius: 8, padding: '7px 12px', cursor: 'pointer', fontWeight: 600, fontSize: 13 }}>
-              <i className="ti ti-close" /> Close
+              <Icon className="ti ti-close" /> Close
             </button>
           </div>
         </div>
@@ -1391,7 +1392,7 @@ function PreviewModal({ timeline, items, onClose }) {
           {/* Running time (elapsed / total), bottom-right */}
           {totalSecs > 0 && (
             <div style={{ position: 'absolute', bottom: 30, right: 16, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '5px 12px', borderRadius: 999, background: 'rgba(15,23,42,0.75)', border: '1px solid #334155', color: '#e2e8f0', fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
-              <i className="ti ti-clock" style={{ color: '#67e8f9', fontSize: 13 }} />
+              <Icon className="ti ti-clock" style={{ color: '#67e8f9', fontSize: 13 }} />
               {fmtClock(elapsedSecs)} <span style={{ color: '#64748b' }}>/ {fmtClock(totalSecs)}</span>
             </div>
           )}
@@ -1516,10 +1517,10 @@ function TimelineTrack({
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderBottom: '1px solid #1e293b', color: '#cbd5e1' }}>
         <span style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.08em', color: '#94a3b8' }}>Timeline</span>
         <div style={{ display: 'inline-flex', gap: 6, marginLeft: 6 }}>
-          <button type="button" title="Restart" onClick={() => setPreview((p) => ({ ...p, idx: 0, elapsed: 0 }))} style={tlBtn}><i className="ti ti-control-skip-backward" /></button>
+          <button type="button" title="Restart" onClick={() => setPreview((p) => ({ ...p, idx: 0, elapsed: 0 }))} style={tlBtn}><Icon className="ti ti-control-skip-backward" /></button>
           <button type="button" title={preview.playing ? 'Pause' : 'Play'} disabled={items.length === 0}
             onClick={() => setPreview((p) => ({ ...p, playing: !p.playing }))} style={tlBtn}>
-            <i className={`ti ${preview.playing ? 'ti-control-pause' : 'ti-control-play'}`} />
+            <Icon className={`ti ${preview.playing ? 'ti-control-pause' : 'ti-control-play'}`} />
           </button>
         </div>
         <span style={{ marginLeft: 'auto', fontSize: 12, color: '#94a3b8', fontVariantNumeric: 'tabular-nums' }}>
@@ -1529,7 +1530,7 @@ function TimelineTrack({
           <button type="button" title="Set the same duration for every clip" disabled={items.length === 0}
             onClick={onSetFixedDuration}
             style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#1e293b', color: '#e2e8f0', border: '1px solid #334155', borderRadius: 7, padding: '6px 11px', cursor: items.length === 0 ? 'not-allowed' : 'pointer', fontWeight: 600, fontSize: 12, opacity: items.length === 0 ? 0.5 : 1 }}>
-            <i className="ti ti-clock" /> Set Fixed Duration
+            <Icon className="ti ti-clock" /> Set Fixed Duration
           </button>
         )}
       </div>
@@ -1591,20 +1592,20 @@ function TimelineTrack({
                       {/* clip body */}
                       <div style={{ padding: '5px 7px', height: `calc(100% - 5px)`, display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 4, minWidth: 0 }}>
-                          <i className={`ti ${ct?.icon}`} style={{ color, fontSize: 12, flexShrink: 0 }} />
+                          <Icon className={`ti ${ct?.icon}`} style={{ color, fontSize: 12, flexShrink: 0 }} />
                           <span style={{ fontSize: 11, fontWeight: 700, color: '#e2e8f0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{it.title}</span>
                         </div>
                         <div style={{ fontSize: 10, color: '#94a3b8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          <i className="ti ti-clock" style={{ fontSize: 10 }} /> {fmtDuration(it.duration_seconds)}
+                          <Icon className="ti ti-clock" style={{ fontSize: 10 }} /> {fmtDuration(it.duration_seconds)}
                           {w > 110 && <> · {it.transition_type}</>}
                         </div>
                       </div>
                       {/* hover toolbar */}
                       {hoverIdx === idx && w >= 64 && (
                         <div style={{ position: 'absolute', top: 6, right: 4, display: 'inline-flex', gap: 3 }}>
-                          <button type="button" style={tlClipBtn} onClick={(e) => { e.stopPropagation(); onEditItem(it); }}><i className="ti ti-pencil" /></button>
-                          <button type="button" style={tlClipBtn} onClick={(e) => { e.stopPropagation(); onDuplicateItem(it.id); }}><i className="ti ti-files" /></button>
-                          <button type="button" style={{ ...tlClipBtn, color: '#fca5a5' }} onClick={(e) => { e.stopPropagation(); onDeleteItem(it.id); }}><i className="ti ti-trash" /></button>
+                          <button type="button" style={tlClipBtn} onClick={(e) => { e.stopPropagation(); onEditItem(it); }}><Icon className="ti ti-pencil" /></button>
+                          <button type="button" style={tlClipBtn} onClick={(e) => { e.stopPropagation(); onDuplicateItem(it.id); }}><Icon className="ti ti-files" /></button>
+                          <button type="button" style={{ ...tlClipBtn, color: '#fca5a5' }} onClick={(e) => { e.stopPropagation(); onDeleteItem(it.id); }}><Icon className="ti ti-trash" /></button>
                         </div>
                       )}
                     </div>
@@ -1640,13 +1641,13 @@ function ContentTypeCard({ ct, enabled, onAdd }) {
       style={{ textAlign: 'left', background: enabled ? '#fff' : '#f8fafc', border: '1px solid var(--line)', borderRadius: 10, padding: 12, cursor: enabled ? 'pointer' : 'not-allowed', opacity: enabled ? 1 : 0.6, position: 'relative' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <div style={{ width: 32, height: 32, borderRadius: 8, background: `${ct.color}15`, color: ct.color, display: 'flex', alignItems: 'center', justifyContent: 'center', filter: enabled ? 'none' : 'grayscale(0.6)' }}>
-          <i className={`ti ${ct.icon}`} />
+          <Icon className={`ti ${ct.icon}`} />
         </div>
         <strong style={{ fontSize: 13, color: 'var(--ink)' }}>{ct.label}</strong>
         {enabled && (
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4 }}>
             {ct.scope === 'CENTER' && (
-              <i className="ti ti-bolt" title="Realtime data pull" style={{ color: '#b45309', fontSize: 12 }} />
+              <Icon className="ti ti-bolt" title="Realtime data pull" style={{ color: '#b45309', fontSize: 12 }} />
             )}
             <span title={sc.hint} style={{ background: sc.bg, color: sc.color, fontSize: 9, fontWeight: 800, letterSpacing: '.06em', padding: '2px 6px', borderRadius: 4 }}>{sc.label}</span>
           </div>
@@ -1682,7 +1683,7 @@ function PreviewSurface({ items, preview }) {
           : <img src={mediaUrl} alt={cur.title} style={{ maxWidth: '92%', maxHeight: '78%', objectFit: 'contain', borderRadius: 8 }} />
       ) : (
         <>
-          <i className={`ti ${ct.icon}`} style={{ fontSize: 48, color: ct.color, marginBottom: 14, filter: 'drop-shadow(0 4px 12px rgba(0,0,0,.5))' }} />
+          <Icon className={`ti ${ct.icon}`} style={{ fontSize: 48, color: ct.color, marginBottom: 14, filter: 'drop-shadow(0 4px 12px rgba(0,0,0,.5))' }} />
           <div style={{ fontSize: 11, color: '#cbd5e1', textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: 6 }}>{ct.label}</div>
           <div style={{ fontSize: 28, fontWeight: 800 }}>{cur.title}</div>
         </>
@@ -1845,7 +1846,7 @@ function ItemModal({ item, onClose, onSave }) {
                     <button key={a.id} type="button" onClick={() => setBrandingAnimationId(a.id)}
                       style={{ display: 'flex', alignItems: 'center', gap: 10, textAlign: 'left', padding: '10px 12px', borderRadius: 10, border: `1px solid ${sel ? 'var(--brand)' : 'var(--line)'}`, background: sel ? '#eaf3f5' : '#fff', cursor: 'pointer' }}>
                       <span style={{ width: 32, height: 32, borderRadius: 8, background: sel ? 'var(--brand)' : '#f1f5f9', color: sel ? '#fff' : 'var(--brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flex: '0 0 auto' }}>
-                        <i className={`ti ${a.icon}`} />
+                        <Icon className={`ti ${a.icon}`} />
                       </span>
                       <span style={{ minWidth: 0 }}>
                         <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{a.name}</div>
@@ -1942,14 +1943,14 @@ function MediaTab({ branchFilter, setBranchFilter, branchFilterLabel, showToast 
           <option value="lottie">Lottie</option>
         </select>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
-          <button type="button" style={btnGhost} onClick={reload} disabled={loading}><i className="ti ti-reload" /> Refresh</button>
-          <button type="button" style={btnPrimary} onClick={() => setUploadOpen(true)}><i className="ti ti-upload" /> Upload</button>
+          <button type="button" style={btnGhost} onClick={reload} disabled={loading}><Icon className="ti ti-reload" /> Refresh</button>
+          <button type="button" style={btnPrimary} onClick={() => setUploadOpen(true)}><Icon className="ti ti-upload" /> Upload</button>
         </div>
       </div>
 
       {error && (
         <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', color: '#991b1b', borderRadius: 10, padding: '10px 14px', fontSize: 13 }}>
-          <i className="ti ti-alert" style={{ marginRight: 6 }} />{error}
+          <Icon className="ti ti-alert" style={{ marginRight: 6 }} />{error}
         </div>
       )}
 
@@ -1961,7 +1962,7 @@ function MediaTab({ branchFilter, setBranchFilter, branchFilterLabel, showToast 
                 ? <img src={m.url} alt={m.displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 : m.type === 'video' && m.url
                   ? <video src={m.url} muted style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  : <i className={`ti ${MEDIA_TYPE_ICON[m.type] || 'ti-file'}`} style={{ fontSize: 44, color: 'var(--muted)' }} />}
+                  : <Icon className={`ti ${MEDIA_TYPE_ICON[m.type] || 'ti-file'}`} style={{ fontSize: 44, color: 'var(--muted)' }} />}
             </div>
             <div style={{ padding: 12, display: 'grid', gap: 6 }}>
               <strong style={{ fontSize: 13, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={m.displayName}>{m.displayName}</strong>
@@ -1971,9 +1972,9 @@ function MediaTab({ branchFilter, setBranchFilter, branchFilterLabel, showToast 
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
                 {m.url
-                  ? <a href={m.url} target="_blank" rel="noreferrer" style={{ ...miniBtn, textDecoration: 'none' }}><i className="ti ti-external-link" /> Open</a>
+                  ? <a href={m.url} target="_blank" rel="noreferrer" style={{ ...miniBtn, textDecoration: 'none' }}><Icon className="ti ti-external-link" /> Open</a>
                   : <span />}
-                <button type="button" style={miniBtn} onClick={() => setConfirmDelete(m)}><i className="ti ti-trash" style={{ color: '#dc2626' }} /></button>
+                <button type="button" style={miniBtn} onClick={() => setConfirmDelete(m)}><Icon className="ti ti-trash" style={{ color: '#dc2626' }} /></button>
               </div>
             </div>
           </div>
@@ -1984,7 +1985,7 @@ function MediaTab({ branchFilter, setBranchFilter, branchFilterLabel, showToast 
           </div>
         )}
         {loading && (
-          <div style={{ gridColumn: '1 / -1', padding: 40, textAlign: 'center', color: 'var(--muted)' }}><i className="ti ti-reload" style={{ marginRight: 6 }} /> Loading from Bunny.net…</div>
+          <div style={{ gridColumn: '1 / -1', padding: 40, textAlign: 'center', color: 'var(--muted)' }}><Icon className="ti ti-reload" style={{ marginRight: 6 }} /> Loading from Bunny.net…</div>
         )}
       </div>
 
@@ -2046,7 +2047,7 @@ function UploadMediaModal({ onClose, onUploaded, onError }) {
           onDrop={(e) => { e.preventDefault(); pickFile(e.dataTransfer.files?.[0]); }}>
           <input type="file" hidden onChange={(e) => pickFile(e.target.files?.[0])}
             accept="image/*,video/*,audio/*,application/json,application/lottie+json" />
-          <i className="ti ti-cloud-upload" style={{ fontSize: 32, color: 'var(--muted)' }} />
+          <Icon className="ti ti-cloud-upload" style={{ fontSize: 32, color: 'var(--muted)' }} />
           <div style={{ fontSize: 13, fontWeight: 600, marginTop: 8 }}>{file ? file.name : 'Drop a file here or click to browse'}</div>
           <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>
             {file ? fmtBytes(file.size) : 'Images, videos (mp4/webm), audio, Lottie JSON · max 200 MB'}
@@ -2054,7 +2055,7 @@ function UploadMediaModal({ onClose, onUploaded, onError }) {
         </label>
         {fileError && (
           <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', color: '#991b1b', borderRadius: 8, padding: '8px 10px', fontSize: 12 }}>
-            <i className="ti ti-alert" style={{ marginRight: 6 }} />{fileError}
+            <Icon className="ti ti-alert" style={{ marginRight: 6 }} />{fileError}
           </div>
         )}
         <div style={{ fontSize: 12, color: 'var(--muted)' }}>
@@ -2102,7 +2103,7 @@ function BrandingKitsTab({ branchFilter, setBranchFilter, branchFilterLabel, sho
             onChange={(picked) => setBranchFilter(picked ? picked.id : '')}
           />
         </div>
-        <button type="button" style={{ ...btnPrimary, marginLeft: 'auto' }} onClick={() => setCreating(true)}><i className="ti ti-plus" /> New kit</button>
+        <button type="button" style={{ ...btnPrimary, marginLeft: 'auto' }} onClick={() => setCreating(true)}><Icon className="ti ti-plus" /> New kit</button>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
@@ -2112,7 +2113,7 @@ function BrandingKitsTab({ branchFilter, setBranchFilter, branchFilterLabel, sho
               <div style={{ width: 52, height: 52, borderRadius: 10, border: '1px solid var(--line)', background: '#fbfcfd', flex: '0 0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                 {k.logo_url
                   ? <img src={k.logo_url} alt={k.display_name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                  : <i className="ti ti-stamp" style={{ fontSize: 22, color: 'var(--muted)' }} />}
+                  : <Icon className="ti ti-stamp" style={{ fontSize: 22, color: 'var(--muted)' }} />}
               </div>
               <div style={{ minWidth: 0, flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -2135,7 +2136,7 @@ function BrandingKitsTab({ branchFilter, setBranchFilter, branchFilterLabel, sho
               <div style={{ display: 'grid', gap: 4 }}>
                 {k.taglines.slice(0, 3).map((t, i) => (
                   <div key={i} style={{ fontSize: 12, color: 'var(--ink)', display: 'flex', gap: 6 }}>
-                    <i className="ti ti-quote" style={{ color: 'var(--brand)', flex: '0 0 auto' }} />
+                    <Icon className="ti ti-quote" style={{ color: 'var(--brand)', flex: '0 0 auto' }} />
                     <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t}</span>
                   </div>
                 ))}
@@ -2161,10 +2162,10 @@ function BrandingKitsTab({ branchFilter, setBranchFilter, branchFilterLabel, sho
 
         {filtered.length === 0 && (
           <div style={{ gridColumn: '1 / -1', border: '1px dashed var(--line)', borderRadius: 14, padding: 40, textAlign: 'center', color: 'var(--muted)', background: '#fff' }}>
-            <i className="ti ti-stamp" style={{ fontSize: 30, display: 'block', marginBottom: 10, color: 'var(--muted)' }} />
+            <Icon className="ti ti-stamp" style={{ fontSize: 30, display: 'block', marginBottom: 10, color: 'var(--muted)' }} />
             <div style={{ fontWeight: 600, color: 'var(--ink)' }}>No branding kits yet</div>
             <div style={{ fontSize: 12, marginTop: 6 }}>Create a kit with your logo, name, taglines and keywords. Animated Branding loop items pull from it.</div>
-            <button type="button" style={{ ...btnPrimary, marginTop: 14 }} onClick={() => setCreating(true)}><i className="ti ti-plus" /> New kit</button>
+            <button type="button" style={{ ...btnPrimary, marginTop: 14 }} onClick={() => setCreating(true)}><Icon className="ti ti-plus" /> New kit</button>
           </div>
         )}
       </div>
@@ -2265,34 +2266,34 @@ function BrandingKitModal({ kit, onClose, onSave }) {
             <div style={{ width: 72, height: 72, borderRadius: 12, border: '1px solid var(--line)', background: '#fbfcfd', flex: '0 0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
               {logoUrl
                 ? <img src={logoUrl} alt="logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                : <i className="ti ti-photo" style={{ fontSize: 24, color: 'var(--muted)' }} />}
+                : <Icon className="ti ti-photo" style={{ fontSize: 24, color: 'var(--muted)' }} />}
             </div>
             <div style={{ display: 'grid', gap: 6 }}>
               <label style={{ ...btnGhost, cursor: uploading ? 'wait' : 'pointer' }}>
-                <i className="ti ti-cloud-upload" /> {uploading ? 'Uploading…' : logoUrl ? 'Replace logo' : 'Upload logo'}
+                <Icon className="ti ti-cloud-upload" /> {uploading ? 'Uploading…' : logoUrl ? 'Replace logo' : 'Upload logo'}
                 <input type="file" hidden accept="image/*" disabled={uploading} onChange={(e) => pickLogo(e.target.files?.[0])} />
               </label>
               {logoUrl && (
                 <button type="button" style={{ ...btnGhost, color: 'var(--danger)' }} onClick={() => setLogoUrl('')}>
-                  <i className="ti ti-x" /> Remove
+                  <Icon className="ti ti-x" /> Remove
                 </button>
               )}
             </div>
           </div>
-          {uploadError && <div style={{ marginTop: 8, fontSize: 12, color: '#991b1b' }}><i className="ti ti-alert" style={{ marginRight: 6 }} />{uploadError}</div>}
+          {uploadError && <div style={{ marginTop: 8, fontSize: 12, color: '#991b1b' }}><Icon className="ti ti-alert" style={{ marginRight: 6 }} />{uploadError}</div>}
         </div>
 
         <div>
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
             <span style={{ fontSize: 12, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.04em', fontWeight: 600 }}>Tag lines</span>
-            <button type="button" style={{ ...btnGhost, marginLeft: 'auto', padding: '4px 10px' }} onClick={addTagline}><i className="ti ti-plus" /> Add line</button>
+            <button type="button" style={{ ...btnGhost, marginLeft: 'auto', padding: '4px 10px' }} onClick={addTagline}><Icon className="ti ti-plus" /> Add line</button>
           </div>
           <div style={{ display: 'grid', gap: 8 }}>
             {taglines.map((t, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <input value={t} maxLength={TAGLINE_MAX} onChange={(e) => setTagline(i, e.target.value)} style={{ ...inputStyle, flex: 1 }} placeholder="Short slogan to display…" />
                 <span style={{ fontSize: 11, color: 'var(--muted)', width: 54, textAlign: 'right' }}>{t.length}/{TAGLINE_MAX}</span>
-                <button type="button" onClick={() => removeTagline(i)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: 16 }} title="Remove"><i className="ti ti-trash" /></button>
+                <button type="button" onClick={() => removeTagline(i)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: 16 }} title="Remove"><Icon className="ti ti-trash" /></button>
               </div>
             ))}
           </div>
@@ -2305,7 +2306,7 @@ function BrandingKitModal({ kit, onClose, onSave }) {
             {keywords.map((w, i) => (
               <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: 'var(--brand)', background: '#eaf3f5', padding: '4px 8px 4px 10px', borderRadius: 999 }}>
                 {w}
-                <button type="button" onClick={() => removeKeyword(i)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--brand)', padding: 0, display: 'inline-flex' }} title="Remove"><i className="ti ti-x" style={{ fontSize: 12 }} /></button>
+                <button type="button" onClick={() => removeKeyword(i)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--brand)', padding: 0, display: 'inline-flex' }} title="Remove"><Icon className="ti ti-x" style={{ fontSize: 12 }} /></button>
               </span>
             ))}
             <input value={kwDraft} onChange={(e) => setKwDraft(e.target.value)} onKeyDown={onKwKeyDown} onBlur={() => addKeyword(kwDraft)}
@@ -2361,7 +2362,7 @@ function SchedulesTab({ branchFilter, setBranchFilter, branchFilterLabel, showTo
             onChange={(picked) => setBranchFilter(picked ? picked.id : '')}
           />
         </div>
-        <button type="button" style={{ ...btnPrimary, marginLeft: 'auto' }} onClick={() => setCreating(true)}><i className="ti ti-plus" /> New schedule</button>
+        <button type="button" style={{ ...btnPrimary, marginLeft: 'auto' }} onClick={() => setCreating(true)}><Icon className="ti ti-plus" /> New schedule</button>
       </div>
 
       <div style={{ background: '#fff', border: '1px solid var(--line)', borderRadius: 14, overflow: 'hidden' }}>
@@ -2549,7 +2550,7 @@ function AlertsTab({ branchFilter, setBranchFilter, branchFilterLabel, showToast
           />
         </div>
         <button type="button" style={{ ...btnDanger, background: '#dc2626', color: '#fff', borderColor: '#dc2626', marginLeft: 'auto' }} onClick={() => setCreating(true)}>
-          <i className="ti ti-alert" /> New alert
+          <Icon className="ti ti-alert" /> New alert
         </button>
       </div>
 
@@ -2642,32 +2643,32 @@ function AlertCard({ alert: a, branches, screens, onBroadcast, onDismiss, onEdit
   return (
     <div style={{ border: `1px solid ${a.is_active ? '#fca5a5' : 'var(--line)'}`, borderRadius: 10, padding: 14, display: 'flex', alignItems: 'flex-start', gap: 12, background: a.is_active ? '#fef2f2' : '#fff' }}>
       <div style={{ width: 38, height: 38, borderRadius: 8, background: sev.bg, color: sev.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>
-        <i className="ti ti-alert" />
+        <Icon className="ti ti-alert" />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
           <strong style={{ fontSize: 14, color: 'var(--ink)' }}>{a.title}</strong>
           <Pill color={sev.color} bg={sev.bg}>{sev.label}</Pill>
           {a.is_active && <Pill color="#fff" bg="#dc2626">● LIVE</Pill>}
-          {a.audio_enabled && <Pill color="#7c2d12" bg="#fef3c7"><i className="ti ti-volume" /> Audio</Pill>}
+          {a.audio_enabled && <Pill color="#7c2d12" bg="#fef3c7"><Icon className="ti ti-volume" /> Audio</Pill>}
         </div>
         <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink)', lineHeight: 1.5 }}>{a.message}</p>
         <div style={{ marginTop: 6, fontSize: 11, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-            <i className="ti ti-map-pin" /> {branchNames}
+            <Icon className="ti ti-map-pin" /> {branchNames}
           </span>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-            <i className="ti ti-clock" /> {fmtAlertWindow(a.start_time, a.end_time)}
+            <Icon className="ti ti-clock" /> {fmtAlertWindow(a.start_time, a.end_time)}
           </span>
         </div>
       </div>
       <div style={{ display: 'flex', gap: 6 }}>
         {a.is_active
-          ? <button type="button" style={btnGhost} onClick={onDismiss}><i className="ti ti-control-stop" /> Stop</button>
-          : (onBroadcast && <button type="button" style={{ ...btnPrimary, background: '#dc2626' }} onClick={onBroadcast}><i className="ti ti-radio" /> Broadcast</button>)
+          ? <button type="button" style={btnGhost} onClick={onDismiss}><Icon className="ti ti-control-stop" /> Stop</button>
+          : (onBroadcast && <button type="button" style={{ ...btnPrimary, background: '#dc2626' }} onClick={onBroadcast}><Icon className="ti ti-radio" /> Broadcast</button>)
         }
-        <button type="button" style={btnGhost} onClick={onEdit}><i className="ti ti-pencil" /></button>
-        <button type="button" style={btnDanger} onClick={onDelete}><i className="ti ti-trash" /></button>
+        <button type="button" style={btnGhost} onClick={onEdit}><Icon className="ti ti-pencil" /></button>
+        <button type="button" style={btnDanger} onClick={onDelete}><Icon className="ti ti-trash" /></button>
       </div>
     </div>
   );
@@ -2715,13 +2716,13 @@ function AlertModal({ alert, branches, screens, onClose, onSave }) {
     >
       <div className="legacy-modal-dialog" style={{ maxWidth: 600 }} role="dialog" aria-modal="true">
         <div className="legacy-modal-header">
-          <h3><i className="ti ti-alert" /> {alert ? 'Edit alert' : 'New alert broadcast'}</h3>
-          <button type="button" className="legacy-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <h3><Icon className="ti ti-alert" /> {alert ? 'Edit alert' : 'New alert broadcast'}</h3>
+          <button type="button" className="legacy-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <form className="batch-modal-form form-modal" onSubmit={submit}>
           <div className="legacy-modal-body">
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-alert" /> Alert Details</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-alert" /> Alert Details</div>
               <div className="asset-form-grid">
                 <label className="field-cell full-span">
                   <div className="float-field">
@@ -2753,7 +2754,7 @@ function AlertModal({ alert, branches, screens, onClose, onSave }) {
             </div>
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-map-pin" /> Targeting &amp; Schedule</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-map-pin" /> Targeting &amp; Schedule</div>
               <div className="asset-form-grid">
                 <div className="field-cell full-span">
                   <span style={captionStyle}>Target branches</span>
@@ -2781,7 +2782,7 @@ function AlertModal({ alert, branches, screens, onClose, onSave }) {
             </div>
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-settings" /> Options</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-settings" /> Options</div>
               <div style={{ display: 'grid', gap: 8 }}>
                 <Toggle label="Play siren audio" hint="Loud audio cue accompanies the visual" checked={audio} onChange={setAudio} />
                 <Toggle label="Broadcast immediately" hint="Overrides all assigned loops right now" checked={active} onChange={setActive} />
@@ -2791,7 +2792,7 @@ function AlertModal({ alert, branches, screens, onClose, onSave }) {
           <div className="legacy-modal-footer">
             <button type="button" className="legacy-btn legacy-btn-default" onClick={onClose}>Cancel</button>
             <button type="submit" className={`legacy-btn ${active ? 'legacy-btn-danger' : 'legacy-btn-success'}`}>
-              <i className={`ti ${active ? 'ti-alert' : 'ti-check'}`} /> {active ? 'Broadcast' : 'Save'}
+              <Icon className={`ti ${active ? 'ti-alert' : 'ti-check'}`} /> {active ? 'Broadcast' : 'Save'}
             </button>
           </div>
         </form>
@@ -2812,7 +2813,7 @@ function StatTile({ icon, label, value, sub, accent = 'var(--brand)', onClick })
         width: '100%', font: 'inherit',
       }}>
       <span style={{ width: 40, height: 40, borderRadius: 10, background: `${accent}1a`, color: accent, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 19, flex: '0 0 auto' }}>
-        <i className={`ti ${icon}`} />
+        <Icon className={`ti ${icon}`} />
       </span>
       <span style={{ display: 'grid', lineHeight: 1.15, minWidth: 0 }}>
         <span style={{ fontSize: 22, fontWeight: 800, color: 'var(--ink)' }}>{value}</span>
@@ -2828,7 +2829,7 @@ function Card({ title, icon, children }) {
   return (
     <div style={{ background: '#fff', border: '1px solid var(--line)', borderRadius: 14, padding: 16 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-        {icon && <i className={`ti ${icon}`} style={{ color: 'var(--brand)' }} />}
+        {icon && <Icon className={`ti ${icon}`} style={{ color: 'var(--brand)' }} />}
         <strong style={{ fontSize: 14, color: 'var(--ink)' }}>{title}</strong>
       </div>
       {children}
@@ -2843,7 +2844,7 @@ function Toolbar({ children }) {
 function SearchBox({ value, onChange, placeholder }) {
   return (
     <div style={{ position: 'relative' }}>
-      <i className="ti ti-search" style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', fontSize: 12 }} />
+      <Icon className="ti ti-search" style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', fontSize: 12 }} />
       <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} style={{ ...inputStyle, paddingLeft: 30, width: 240 }} />
     </div>
   );
@@ -2888,7 +2889,7 @@ function KebabMenu({ items = [] }) {
     <div style={{ position: 'relative', flexShrink: 0 }}>
       <button ref={btnRef} type="button" title="Actions" onClick={() => setOpen((o) => !o)}
         style={{ width: 30, height: 30, borderRadius: 8, border: '1px solid var(--line)', background: open ? '#f1f5f9' : '#fff', color: 'var(--muted)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>
-        <i className="ti ti-more-alt" />
+        <Icon className="ti ti-more-alt" />
       </button>
       {open && rect && (
         <div ref={menuRef} style={{ position: 'fixed', top: rect.bottom + 4, left: Math.max(8, rect.right - MENU_WIDTH), width: MENU_WIDTH, background: '#fff', border: '1px solid var(--line)', borderRadius: 10, boxShadow: '0 14px 38px rgba(0,0,0,0.14)', zIndex: 12100, padding: 4, overflow: 'hidden' }}>
@@ -2898,7 +2899,7 @@ function KebabMenu({ items = [] }) {
               style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', textAlign: 'left', background: 'transparent', border: 'none', cursor: 'pointer', padding: '9px 10px', borderRadius: 7, fontSize: 13, fontWeight: 600, color: it.danger ? '#dc2626' : 'var(--ink)' }}
               onMouseEnter={(e) => { e.currentTarget.style.background = it.danger ? '#fef2f2' : '#f1f5f9'; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}>
-              <i className={`ti ${it.icon}`} style={{ width: 16, textAlign: 'center' }} /> {it.label}
+              <Icon className={`ti ${it.icon}`} style={{ width: 16, textAlign: 'center' }} /> {it.label}
             </button>
           ))}
         </div>
@@ -2945,7 +2946,7 @@ function ConfirmModal({ title, message, confirmLabel, onCancel, onConfirm }) {
       <p style={{ margin: 0, color: 'var(--ink)', fontSize: 14, lineHeight: 1.5 }}>{message}</p>
       <ModalFooter>
         <button type="button" className="btn btn-default" onClick={onCancel}>Cancel</button>
-        <button type="button" className="btn btn-danger" onClick={onConfirm}><i className="ti ti-trash" /> {confirmLabel}</button>
+        <button type="button" className="btn btn-danger" onClick={onConfirm}><Icon className="ti ti-trash" /> {confirmLabel}</button>
       </ModalFooter>
     </Modal>
   );
@@ -2962,8 +2963,8 @@ function Modal({ title, children, onClose, maxWidth = 520, icon, variant }) {
       onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="crispr-modal-dialog" style={{ maxWidth }}>
         <div className={`crispr-modal-header${variant ? ` ${variant}-header` : ''}`}>
-          <h3>{icon && <i className={`ti ${icon}`} />}{title}</h3>
-          <button type="button" className="crispr-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <h3>{icon && <Icon className={`ti ${icon}`} />}{title}</h3>
+          <button type="button" className="crispr-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <div className="crispr-modal-body">{children}</div>
       </div>
@@ -3072,7 +3073,7 @@ function LocationDropdown({ rect, query, setQuery, items, loading, hasMore, load
     }}>
       <div style={{ padding: 8, borderBottom: '1px solid var(--line)', display: 'flex', gap: 6 }}>
         <div style={{ position: 'relative', flex: 1 }}>
-          <i className="ti ti-search" style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', fontSize: 12 }} />
+          <Icon className="ti ti-search" style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', fontSize: 12 }} />
           <input
             autoFocus value={query} onChange={(e) => setQuery(e.target.value)}
             placeholder="Search locations…"
@@ -3081,7 +3082,7 @@ function LocationDropdown({ rect, query, setQuery, items, loading, hasMore, load
         </div>
         {allowClear && (
           <button type="button" onMouseDown={(e) => { e.preventDefault(); onClear(); }} style={btnGhost} title="Clear selection">
-            <i className="ti ti-close" />
+            <Icon className="ti ti-close" />
           </button>
         )}
       </div>
@@ -3099,7 +3100,7 @@ function LocationDropdown({ rect, query, setQuery, items, loading, hasMore, load
                 borderTop: '1px solid #f3f5f6',
               }}
             >
-              <i className={`ti ${sel ? 'ti-check' : 'ti-building'}`} style={{ color: sel ? 'var(--brand)' : 'var(--muted)', fontSize: 13 }} />
+              <Icon className={`ti ${sel ? 'ti-check' : 'ti-building'}`} style={{ color: sel ? 'var(--brand)' : 'var(--muted)', fontSize: 13 }} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 600, color: 'var(--ink)', fontSize: 13, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{loc.name}</div>
                 {loc.address && (
@@ -3117,7 +3118,7 @@ function LocationDropdown({ rect, query, setQuery, items, loading, hasMore, load
         {hasMore && <div ref={sentinelRef} style={{ height: 1 }} />}
         {loading && (
           <div style={{ padding: '10px 12px', fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
-            <i className="ti ti-reload" style={{ marginRight: 6 }} />Loading…
+            <Icon className="ti ti-reload" style={{ marginRight: 6 }} />Loading…
           </div>
         )}
       </div>
@@ -3187,11 +3188,11 @@ function LocationPicker({ value, initialLabel, onChange, placeholder = 'Select l
           cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.6 : 1,
         }}
       >
-        <i className={`ti ${value ? 'ti-map-pin' : 'ti-building'}`} style={{ color: value ? 'var(--brand)' : 'var(--muted)' }} />
+        <Icon className={`ti ${value ? 'ti-map-pin' : 'ti-building'}`} style={{ color: value ? 'var(--brand)' : 'var(--muted)' }} />
         <span style={{ flex: 1, color: label ? 'var(--ink)' : 'var(--muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {label || (value ? `#${value}` : placeholder)}
         </span>
-        <i className={`ti ${open ? 'ti-chevron-up' : 'ti-chevron-down'}`} style={{ color: 'var(--muted)', fontSize: 12 }} />
+        <Icon className={`ti ${open ? 'ti-chevron-up' : 'ti-chevron-down'}`} style={{ color: 'var(--muted)', fontSize: 12 }} />
       </button>
       {open && rect && (
         <LocationDropdown
@@ -3261,9 +3262,9 @@ function LocationMultiPicker({ valueIds = [], initialLabels = {}, onChange, plac
         onClick={() => setOpen((o) => !o)}
         style={{ ...inputStyle, width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}
       >
-        <i className="ti ti-search" style={{ color: 'var(--muted)' }} />
+        <Icon className="ti ti-search" style={{ color: 'var(--muted)' }} />
         <span style={{ flex: 1, color: 'var(--muted)' }}>{placeholder}</span>
-        <i className={`ti ${open ? 'ti-chevron-up' : 'ti-chevron-down'}`} style={{ color: 'var(--muted)', fontSize: 12 }} />
+        <Icon className={`ti ${open ? 'ti-chevron-up' : 'ti-chevron-down'}`} style={{ color: 'var(--muted)', fontSize: 12 }} />
       </button>
       {valueIds.length > 0 && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -3271,7 +3272,7 @@ function LocationMultiPicker({ valueIds = [], initialLabels = {}, onChange, plac
             <span key={id} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 8px 4px 10px', borderRadius: 999, background: '#eaf3f5', color: 'var(--brand)', fontSize: 12, fontWeight: 600 }}>
               {labels[id] || `#${id}`}
               <button type="button" onClick={() => remove(id)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--brand)', padding: 0, display: 'inline-flex' }} title="Remove">
-                <i className="ti ti-close" style={{ fontSize: 12 }} />
+                <Icon className="ti ti-close" style={{ fontSize: 12 }} />
               </button>
             </span>
           ))}

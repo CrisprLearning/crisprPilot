@@ -4,6 +4,7 @@ import ToastRegion from '../components/ToastRegion';
 import RankPosterFlow from '../components/RankPosterDesigner';
 import { availableBatches, availableCourses, ensureAttempts } from '../data/attemptReportsDemo';
 import { draftQuizzesDemo, publishedQuizzesDemo } from '../data/quizzesDemo';
+import Icon from '../components/Icon';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function formatDateTime(value) {
@@ -121,7 +122,7 @@ function BatchMultiSelect({ batches, selected, onChange, disabled }) {
         <span>{getLabel()}</span>
         <span style={{ display: 'flex', alignItems: 'center' }}>
           {selected.length > 0 && <span className="qar-batch-count">{selected.length}</span>}
-          <i className="ti ti-angle-down" style={{ marginLeft: 8 }} />
+          <Icon className="ti ti-angle-down" style={{ marginLeft: 8 }} />
         </span>
       </div>
       {open && !disabled && (
@@ -389,34 +390,34 @@ export default function QuizAttemptReportPage() {
       <div className="qar-header-card">
         <div className="qar-header-top">
           <div className="qar-header-main">
-            <h2><i className="ti ti-bar-chart" /> {quiz.title}</h2>
+            <h2><Icon className="ti ti-bar-chart" /> {quiz.title}</h2>
             <p className="qar-description">{quiz.description}</p>
           </div>
 
           <div className="qar-header-info-group">
             <div className="qar-info-item">
-              <div className="qar-info-icon"><i className="ti ti-help-alt" /></div>
+              <div className="qar-info-icon"><Icon className="ti ti-help-alt" /></div>
               <div className="qar-info-content">
                 <div className="qar-info-label">Questions</div>
                 <div className="qar-info-value">{quiz.totalQuestions}</div>
               </div>
             </div>
             <div className="qar-info-item">
-              <div className="qar-info-icon"><i className="ti ti-timer" /></div>
+              <div className="qar-info-icon"><Icon className="ti ti-timer" /></div>
               <div className="qar-info-content">
                 <div className="qar-info-label">Duration</div>
                 <div className="qar-info-value">{quiz.duration} min</div>
               </div>
             </div>
             <div className="qar-info-item">
-              <div className="qar-info-icon"><i className="ti ti-cup" /></div>
+              <div className="qar-info-icon"><Icon className="ti ti-cup" /></div>
               <div className="qar-info-content">
                 <div className="qar-info-label">Max Marks</div>
                 <div className="qar-info-value">{quiz.maximumMarks}</div>
               </div>
             </div>
             <div className="qar-info-item">
-              <div className="qar-info-icon"><i className="ti ti-info-alt" /></div>
+              <div className="qar-info-icon"><Icon className="ti ti-info-alt" /></div>
               <div className="qar-info-content">
                 <div className="qar-info-label">Status</div>
                 <div className="qar-info-value" style={{ textTransform: 'capitalize' }}>{quiz.status}</div>
@@ -426,7 +427,7 @@ export default function QuizAttemptReportPage() {
 
           <div className="qar-header-actions">
             <button type="button" className="qar-back-btn" onClick={() => navigate('/quiz-listing')}>
-              <i className="ti ti-arrow-left" /> Back
+              <Icon className="ti ti-arrow-left" /> Back
             </button>
           </div>
         </div>
@@ -435,28 +436,28 @@ export default function QuizAttemptReportPage() {
         <div className="qar-header-body">
           <div className="qar-stats-row">
             <div className="qar-stat-card">
-              <div className="qar-stat-icon indigo"><i className="ti ti-user" /></div>
+              <div className="qar-stat-icon indigo"><Icon className="ti ti-user" /></div>
               <div className="qar-stat-info">
                 <h3>{quiz.attempts?.length || 0}</h3>
                 <p>Total Attempts</p>
               </div>
             </div>
             <div className="qar-stat-card">
-              <div className="qar-stat-icon green"><i className="ti ti-check" /></div>
+              <div className="qar-stat-icon green"><Icon className="ti ti-check" /></div>
               <div className="qar-stat-info">
                 <h3>{completedCount}</h3>
                 <p>Completed</p>
               </div>
             </div>
             <div className="qar-stat-card">
-              <div className="qar-stat-icon orange"><i className="ti ti-timer" /></div>
+              <div className="qar-stat-icon orange"><Icon className="ti ti-timer" /></div>
               <div className="qar-stat-info">
                 <h3>{inProgressCount}</h3>
                 <p>In Progress</p>
               </div>
             </div>
             <div className="qar-stat-card">
-              <div className="qar-stat-icon teal"><i className="ti ti-bar-chart" /></div>
+              <div className="qar-stat-icon teal"><Icon className="ti ti-bar-chart" /></div>
               <div className="qar-stat-info">
                 <h3>{avgScore}%</h3>
                 <p>Avg Score</p>
@@ -469,7 +470,7 @@ export default function QuizAttemptReportPage() {
       {/* ── Filter Bar (standard) ── */}
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => { setSearchQuery(''); setCurrentPage(1); }} aria-hidden="true" />
+          <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => { setSearchQuery(''); setCurrentPage(1); }} aria-hidden="true" />
           <input
             type="text"
             className="search-input"
@@ -484,13 +485,13 @@ export default function QuizAttemptReportPage() {
           className={`filter-toggle-btn${hasModalFilters ? ' active' : ''}`}
           onClick={() => setShowFilterModal(true)}
         >
-          <i className="ti ti-filter" /> Filters
+          <Icon className="ti ti-filter" /> Filters
           {hasModalFilters && <span className="filter-count">{modalFilterCount}</span>}
         </button>
 
         {hasActiveFilters && (
           <button type="button" className="filter-clear-btn" onClick={clearFilters}>
-            <i className="ti ti-close" /> Clear
+            <Icon className="ti ti-close" /> Clear
           </button>
         )}
 
@@ -501,7 +502,7 @@ export default function QuizAttemptReportPage() {
             disabled={filteredRankings.length === 0}
             onClick={() => setShowReEvaluateModal(true)}
           >
-            <i className="ti ti-reload" /> Re-evaluate Responses
+            <Icon className="ti ti-reload" /> Re-evaluate Responses
           </button>
           <button
             type="button"
@@ -509,7 +510,7 @@ export default function QuizAttemptReportPage() {
             disabled={filteredRankings.length === 0}
             onClick={() => setShowExportModal(true)}
           >
-            <i className="ti ti-download" /> Export Rank List to PDF
+            <Icon className="ti ti-download" /> Export Rank List to PDF
           </button>
           <button
             type="button"
@@ -519,7 +520,7 @@ export default function QuizAttemptReportPage() {
             disabled={filteredRankings.length === 0}
             onClick={() => setShowPosterFlow(true)}
           >
-            <i className="ti ti-cup" />
+            <Icon className="ti ti-cup" />
           </button>
         </div>
       </div>
@@ -546,19 +547,19 @@ export default function QuizAttemptReportPage() {
             <thead>
               <tr>
                 <th className={`sortable${sortColumn === 'rank' ? ' active' : ''}`} style={{ width: 80 }} onClick={() => toggleSort('rank')}>
-                  Rank <i className={`ti ${getSortIcon('rank', sortColumn, sortDirection)} sort-icon`} />
+                  Rank <Icon className={`ti ${getSortIcon('rank', sortColumn, sortDirection)} sort-icon`} />
                 </th>
                 <th className={`sortable${sortColumn === 'studentName' ? ' active' : ''}`} onClick={() => toggleSort('studentName')}>
-                  Student Name <i className={`ti ${getSortIcon('studentName', sortColumn, sortDirection)} sort-icon`} />
+                  Student Name <Icon className={`ti ${getSortIcon('studentName', sortColumn, sortDirection)} sort-icon`} />
                 </th>
                 <th className={`sortable${sortColumn === 'rollNumber' ? ' active' : ''}`} onClick={() => toggleSort('rollNumber')}>
-                  Roll Number <i className={`ti ${getSortIcon('rollNumber', sortColumn, sortDirection)} sort-icon`} />
+                  Roll Number <Icon className={`ti ${getSortIcon('rollNumber', sortColumn, sortDirection)} sort-icon`} />
                 </th>
                 <th>Email</th>
                 <th>Status</th>
                 <th>Score</th>
                 <th className={`sortable${sortColumn === 'percentage' ? ' active' : ''}`} onClick={() => toggleSort('percentage')}>
-                  Percentage <i className={`ti ${getSortIcon('percentage', sortColumn, sortDirection)} sort-icon`} />
+                  Percentage <Icon className={`ti ${getSortIcon('percentage', sortColumn, sortDirection)} sort-icon`} />
                 </th>
                 <th>Time Taken</th>
                 <th>Started At</th>
@@ -611,7 +612,7 @@ export default function QuizAttemptReportPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={safePage === 1} onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {getPageNumbers(safePage, totalPages).map((page, idx) =>
                 page === '...' ? (
@@ -628,14 +629,14 @@ export default function QuizAttemptReportPage() {
                 ),
               )}
               <button type="button" className="pagination-btn" disabled={safePage === totalPages} onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
         </div>
       ) : (
         <div className="qar-empty-state">
-          <i className="ti ti-search" />
+          <Icon className="ti ti-search" />
           <h4>No Results Found</h4>
           {hasActiveFilters
             ? <p>Try adjusting your search or filters.</p>
@@ -659,14 +660,14 @@ export default function QuizAttemptReportPage() {
         <div className="crispr-modal-backdrop active" onClick={() => setShowFilterModal(false)}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 560 }} onClick={(e) => e.stopPropagation()}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-filter" /> Filter Attempts</h3>
+              <h3><Icon className="ti ti-filter" /> Filter Attempts</h3>
               <button className="crispr-modal-close" onClick={() => setShowFilterModal(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="crispr-modal-body form-modal">
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Status</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Status</div>
                 <div className="asset-form-grid">
                   <label className="field-cell full-span">
                     <div className="float-field float-always">
@@ -682,7 +683,7 @@ export default function QuizAttemptReportPage() {
               </div>
 
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-calendar" /> Date Range</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-calendar" /> Date Range</div>
                 <div className="asset-form-grid">
                   <label className="field-cell">
                     <div className="float-field float-always date-custom">
@@ -702,7 +703,7 @@ export default function QuizAttemptReportPage() {
               </div>
 
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-book" /> Course &amp; Batch</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-book" /> Course &amp; Batch</div>
                 <div className="asset-form-grid">
                   <label className="field-cell full-span">
                     <div className="float-field float-always">
@@ -733,10 +734,10 @@ export default function QuizAttemptReportPage() {
             </div>
             <div className="crispr-modal-footer">
               <button type="button" className="crispr-btn crispr-btn-default" onClick={clearFilters}>
-                <i className="ti ti-reload" /> Clear Filters
+                <Icon className="ti ti-reload" /> Clear Filters
               </button>
               <button type="button" className="crispr-btn crispr-btn-primary" onClick={() => setShowFilterModal(false)}>
-                <i className="ti ti-check" /> Apply Filters
+                <Icon className="ti ti-check" /> Apply Filters
               </button>
             </div>
           </div>
@@ -748,15 +749,15 @@ export default function QuizAttemptReportPage() {
         <div className="crispr-modal-backdrop active" onClick={() => setShowReEvaluateModal(false)}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 500 }} onClick={(e) => e.stopPropagation()}>
             <div className="crispr-modal-header" style={{ background: 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)' }}>
-              <h3><i className="ti ti-reload" /> Confirm Re-evaluation</h3>
+              <h3><Icon className="ti ti-reload" /> Confirm Re-evaluation</h3>
               <button className="crispr-modal-close" onClick={() => setShowReEvaluateModal(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="crispr-modal-body">
               <div className="qar-modal-center">
                 <div className="qar-modal-icon warning">
-                  <i className="ti ti-alert" style={{ fontSize: 32, color: '#856404' }} />
+                  <Icon className="ti ti-alert" style={{ fontSize: 32, color: '#856404' }} />
                 </div>
                 <h4 className="qar-modal-title">Re-evaluate all student attempts?</h4>
                 <p className="qar-modal-desc">
@@ -765,7 +766,7 @@ export default function QuizAttemptReportPage() {
                 </p>
                 <div className="qar-info-box">
                   <div className="qar-info-box-title">
-                    <i className="ti ti-info-circle" style={{ color: '#006073' }} />
+                    <Icon className="ti ti-info-circle" style={{ color: '#006073' }} />
                     <strong>What this does:</strong>
                   </div>
                   <ul>
@@ -775,7 +776,7 @@ export default function QuizAttemptReportPage() {
                   </ul>
                 </div>
                 <div className="qar-warning-box">
-                  <i className="ti ti-alert-circle" style={{ color: '#856404', fontSize: 18, marginTop: 2 }} />
+                  <Icon className="ti ti-alert-circle" style={{ color: '#856404', fontSize: 18, marginTop: 2 }} />
                   <div>
                     <strong>Note:</strong> This action cannot be undone. Student notifications may be sent if scores change significantly.
                   </div>
@@ -792,7 +793,7 @@ export default function QuizAttemptReportPage() {
                   showToast('success', 'Re-evaluation Started', 'Student responses are being re-evaluated.');
                 }}
               >
-                <i className="ti ti-check" /> Yes, Re-evaluate
+                <Icon className="ti ti-check" /> Yes, Re-evaluate
               </button>
             </div>
           </div>
@@ -804,15 +805,15 @@ export default function QuizAttemptReportPage() {
         <div className="crispr-modal-backdrop active" onClick={() => setShowExportModal(false)}>
           <div className="crispr-modal-dialog" style={{ maxWidth: 500 }} onClick={(e) => e.stopPropagation()}>
             <div className="crispr-modal-header" style={{ background: 'linear-gradient(135deg, #006073 0%, #005a6b 100%)' }}>
-              <h3><i className="ti ti-download" /> Export Rank List</h3>
+              <h3><Icon className="ti ti-download" /> Export Rank List</h3>
               <button className="crispr-modal-close" onClick={() => setShowExportModal(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="crispr-modal-body">
               <div className="qar-modal-center">
                 <div className="qar-modal-icon teal">
-                  <i className="ti ti-file-pdf" style={{ fontSize: 32, color: '#006073' }} />
+                  <Icon className="ti ti-file-pdf" style={{ fontSize: 32, color: '#006073' }} />
                 </div>
                 <h4 className="qar-modal-title">Confirm PDF Export</h4>
                 <p className="qar-modal-desc">
@@ -821,7 +822,7 @@ export default function QuizAttemptReportPage() {
                 <div className="qar-info-box">
                   <div className="qar-export-col-header">
                     <span>
-                      <i className="ti ti-layout-list" style={{ color: '#006073', marginRight: 5 }} />
+                      <Icon className="ti ti-layout-list" style={{ color: '#006073', marginRight: 5 }} />
                       <strong>Select columns to include:</strong>
                     </span>
                     <button type="button" className="qar-select-all-btn" onClick={selectAllExportColumns}>Select All</button>
@@ -841,19 +842,19 @@ export default function QuizAttemptReportPage() {
                             disabled={locked}
                           />
                           <span>{label}</span>
-                          {locked && <i className="ti ti-lock" title="Required — see note below" />}
+                          {locked && <Icon className="ti ti-lock" title="Required — see note below" />}
                         </label>
                       );
                     })}
                   </div>
                   <div className="qar-export-note">
-                    <i className="ti ti-info-circle" />
+                    <Icon className="ti ti-info-circle" />
                     <span>Either Student Name or Roll Number must be selected. Either Rank or Total Score must be selected.</span>
                   </div>
                 </div>
                 {hasActiveFilters && (
                   <div className="qar-filter-notice">
-                    <i className="ti ti-filter" style={{ color: '#006073', fontSize: 18, marginTop: 2 }} />
+                    <Icon className="ti ti-filter" style={{ color: '#006073', fontSize: 18, marginTop: 2 }} />
                     <div><strong>Note:</strong> Active filters are applied. Only filtered records will be exported.</div>
                   </div>
                 )}
@@ -872,7 +873,7 @@ export default function QuizAttemptReportPage() {
                   }
                 }}
               >
-                <i className="ti ti-download" /> Export PDF
+                <Icon className="ti ti-download" /> Export PDF
               </button>
             </div>
           </div>

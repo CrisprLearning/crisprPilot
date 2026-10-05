@@ -4,12 +4,20 @@ import { clearToken } from '../lib/auth';
 import { changePassword } from '../lib/userProfileApi';
 import { apiErrorMessage, handleUnauthorized } from '../lib/api';
 import { protectedScreens, NAV_GROUPS } from '../lib/legacyScreens';
-import { useUser } from '../lib/userStore';
+import { getInitials, useUser } from '../lib/userStore';
 import { canAccess, isSuperAdmin } from '../lib/roles';
 import { has as permHas } from '../lib/permissions';
 import { consumeFlash } from '../lib/flash';
 import ToastRegion from './ToastRegion';
 import SpotlightSearch from './SpotlightSearch';
+import Icon from './Icon';
+
+// Font Awesome icons are stored without the `fa ` prefix; Tabler ones carry `ti`.
+function iconClass(icon) {
+  return `${icon.startsWith('ti') ? '' : 'fa '}${icon}`;
+}
+
+const SEARCH_SHORTCUT = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘K' : 'Ctrl K';
 
 export default function Layout({ children, currentScreen }) {
   const navigate  = useNavigate();
@@ -53,6 +61,20 @@ export default function Layout({ children, currentScreen }) {
   // ── Global Tooltip State (For collapsed hover) ─────────────────────
   const [hoverTooltip, setHoverTooltip] = useState(null);
 
+  function showTooltip(e, text) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setHoverTooltip({ text, top: rect.top + rect.height / 2, left: rect.right + 10 });
+  }
+
+  // Collapsed rail tooltips: only wired up while the sidebar is collapsed.
+  function railTooltip(text) {
+    if (!collapsed) return {};
+    return {
+      onMouseEnter: (e) => showTooltip(e, text),
+      onMouseLeave: () => setHoverTooltip(null),
+    };
+  }
+
   // ── Group open/close state ─────────────────────────────────────────
   const activeGroupId = useMemo(() => {
     const s = protectedScreens.find((s) => s.path === location.pathname);
@@ -66,14 +88,25 @@ export default function Layout({ children, currentScreen }) {
 
   useEffect(() => {
     if (activeGroupId) {
-      setOpenGroups({ [activeGroupId]: true }); // close all others, open only active
+      setOpenGroups((prev) => ({ ...prev, [activeGroupId]: true }));
     }
   }, [activeGroupId]);
 
   function toggleGroup(id) {
-    setOpenGroups((prev) => ({
-      [id]: !prev[id], // only keep the clicked group, close all others
-    }));
+    setOpenGroups((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
+
+  // Clicking a group icon on the collapsed rail reopens the sidebar on that group.
+  function expandToGroup(id) {
+    setHoverTooltip(null);
+    setOpenGroups((prev) => ({ ...prev, [id]: true }));
+    setCollapsed(false);
+    localStorage.setItem('sb_collapsed', 'false');
+  }
+
+  function openSpotlight() {
+    setHoverTooltip(null);
+    window.dispatchEvent(new CustomEvent('spotlight:open'));
   }
 
   // ── Allowed screens (role-filtered) ───────────────────────────────
@@ -350,21 +383,36 @@ export default function Layout({ children, currentScreen }) {
             onError={(e) => { e.target.style.display = 'none'; }}
           />
           {!collapsed && (
-            <i
-              className="fa fa-angle-double-left sb-collapse-arrow"
-              role="button"
-              tabIndex={0}
+            <button
+              type="button"
+              className="sb-collapse-btn"
               title="Collapse sidebar"
+              aria-label="Collapse sidebar"
               onClick={(e) => { e.stopPropagation(); toggleSidebar(); }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.stopPropagation();
-                  toggleSidebar();
-                }
-              }}
-            />
+              onKeyDown={(e) => e.stopPropagation()}
+            >
+              <Icon className="ti ti-angle-double-left" />
+            </button>
           )}
         </div>
+
+        {/* ── Search (opens Spotlight) ──────────────────────────── */}
+        <button
+          type="button"
+          className="sb-search"
+          onClick={openSpotlight}
+          aria-label="Search pages and people"
+          aria-keyshortcuts="Meta+K Control+K"
+          {...railTooltip(`Search  ${SEARCH_SHORTCUT}`)}
+        >
+          <Icon className="ti ti-search" />
+          {!collapsed && (
+            <>
+              <span className="sb-search-label">Search</span>
+              <kbd>{SEARCH_SHORTCUT}</kbd>
+            </>
+          )}
+        </button>
 
         {/* ── Nav ───────────────────────────────────────────────── */}
         <nav className="sb-nav" aria-label="Primary">
@@ -372,13 +420,8 @@ export default function Layout({ children, currentScreen }) {
           {/* Pinned section — hidden on the landing page (shown there as tiles) */}
           {location.pathname !== '/landing' && pinnedScreens.length > 0 && (
             <div className="sb-group">
-              {!collapsed && (
-                <div className="sb-group-hdr sb-group-hdr--pinned">
-                  <i className="fa fa-thumb-tack sb-icon" />
-                  <span className="sb-label">Pinned</span>
-                </div>
-              )}
-              <div className={`sb-group-items sb-group-items--open${isDraggingPin ? ' sb-pins-dragging' : ''}`}>
+              {!collapsed && <div className="sb-section-label">Pinned</div>}
+              <div className={`sb-group-items sb-group-items--open sb-group-items--flat${isDraggingPin ? ' sb-pins-dragging' : ''}`}>
                 {pinnedScreens.map((screen) => {
                   const ind = dropIndicator?.path === screen.path ? dropIndicator.position : null;
                   const isDragging = draggingPath === screen.path;
@@ -396,6 +439,7 @@ export default function Layout({ children, currentScreen }) {
                       <NavItem
                         screen={screen}
                         collapsed={collapsed}
+                        showIcon
                         pinned
                         onTogglePin={togglePin}
                         setHoverTooltip={setHoverTooltip}
@@ -405,41 +449,51 @@ export default function Layout({ children, currentScreen }) {
                   );
                 })}
               </div>
-              {!collapsed && <div className="sb-group-divider" />}
+              <div className="sb-group-divider" />
             </div>
           )}
 
           {/* Role-filtered groups */}
           {grouped.map((group) => {
-            const isOpen    = collapsed || openGroups[group.id];
+            const isOpen    = !collapsed && Boolean(openGroups[group.id]);
             const hasActive = group.screens.some((s) => s.path === location.pathname);
 
             return (
               <div key={group.id} className="sb-group">
-                {!collapsed && (
-                  <button
-                    type="button"
-                    className={`sb-group-hdr${hasActive ? ' has-active' : ''}${isOpen ? ' open' : ''}`}
-                    onClick={() => toggleGroup(group.id)}
-                  >
-                    <i className={`${group.icon.startsWith('ti') ? '' : 'fa '}${group.icon} sb-icon`} />
-                    <span className="sb-label">{group.label}</span>
-                    <i className="fa fa-chevron-down sb-chevron" />
-                  </button>
-                )}
+                <button
+                  type="button"
+                  className={`sb-group-hdr${hasActive ? ' has-active' : ''}${isOpen ? ' open' : ''}`}
+                  aria-expanded={collapsed ? undefined : isOpen}
+                  aria-label={collapsed ? group.label : undefined}
+                  onClick={() => (collapsed ? expandToGroup(group.id) : toggleGroup(group.id))}
+                  {...railTooltip(group.label)}
+                >
+                  <Icon className={`${iconClass(group.icon)} sb-icon`} />
+                  {!collapsed && (
+                    <>
+                      <span className="sb-label">{group.label}</span>
+                      <Icon className="ti ti-angle-down sb-chevron" />
+                    </>
+                  )}
+                </button>
 
-                <div className={`sb-group-items${isOpen ? ' sb-group-items--open' : ''}`}>
+                {!collapsed && (
+                  <div
+                    className={`sb-group-items${isOpen ? ' sb-group-items--open' : ''}`}
+                    inert={!isOpen}
+                  >
                     {group.screens.map((screen) => (
                       <NavItem
                         key={screen.path}
                         screen={screen}
-                        collapsed={collapsed}
+                        collapsed={false}
                         pinned={pinnedPaths.includes(screen.path)}
                         onTogglePin={togglePin}
                         setHoverTooltip={setHoverTooltip}
                       />
                     ))}
                   </div>
+                )}
               </div>
             );
           })}
@@ -453,7 +507,7 @@ export default function Layout({ children, currentScreen }) {
             onClick={() => setShowProfileMenu((v) => !v)}
             title={collapsed ? `${displayName}${displayRole ? ` — ${displayRole}` : ''}` : undefined}
           >
-            <div className="sb-avatar">{user?.initials || 'U'}</div>
+            <div className="sb-avatar">{user?.initials || getInitials(displayName)}</div>
             {!collapsed && (
               <>
                 <div className="sb-user-info">
@@ -468,7 +522,7 @@ export default function Layout({ children, currentScreen }) {
                     </span>
                   )}
                 </div>
-                <i className="fa fa-ellipsis-v sb-profile-dots" />
+                <Icon className="ti ti-more-alt sb-profile-dots" />
               </>
             )}
           </button>
@@ -478,12 +532,12 @@ export default function Layout({ children, currentScreen }) {
             <div className="sb-profile-menu">
               <button type="button" className="sb-profile-menu-item"
                 onClick={openProfileModal}>
-                <i className="fa fa-user-circle-o" />
+                <Icon className="ti ti-user" />
                 <span>My Profile</span>
               </button>
               <button type="button" className="sb-profile-menu-item"
                 onClick={openPasswordModal}>
-                <i className="fa fa-lock" />
+                <Icon className="ti ti-lock" />
                 <span>Change Password</span>
               </button>
               {showSuperAdmin && (
@@ -492,7 +546,7 @@ export default function Layout({ children, currentScreen }) {
                   className="sb-profile-menu-item"
                   onClick={() => { setShowProfileMenu(false); navigate('/permission?tab=roles'); }}
                 >
-                  <i className="fa fa-shield" />
+                  <Icon className="ti ti-shield" />
                   <span>Roles &amp; Permissions</span>
                 </button>
               )}
@@ -502,7 +556,7 @@ export default function Layout({ children, currentScreen }) {
                   className="sb-profile-menu-item"
                   onClick={() => { setShowProfileMenu(false); navigate('/user-accounts'); }}
                 >
-                  <i className="fa fa-users" />
+                  <Icon className="ti ti-id-badge" />
                   <span>User Accounts</span>
                 </button>
               )}
@@ -512,14 +566,14 @@ export default function Layout({ children, currentScreen }) {
                   className="sb-profile-menu-item"
                   onClick={() => { setShowProfileMenu(false); navigate('/locations'); }}
                 >
-                  <i className="fa fa-map-marker" />
+                  <Icon className="ti ti-location-pin" />
                   <span>Locations</span>
                 </button>
               )}
               <div className="sb-profile-menu-divider" />
               <button type="button" className="sb-profile-menu-item danger"
                 onClick={requestLogout}>
-                <i className="fa fa-sign-out" />
+                <Icon className="ti ti-power-off" />
                 <span>Logout</span>
               </button>
             </div>
@@ -556,20 +610,20 @@ export default function Layout({ children, currentScreen }) {
           onClick={(event) => event.stopPropagation()}
         >
           <div className="legacy-modal-header">
-            <h3><i className="fa fa-user-circle-o" /> My Profile</h3>
+            <h3><Icon className="fa fa-user-circle-o" /> My Profile</h3>
             <button
               type="button"
               className="legacy-modal-close"
               onClick={closeProfileModal}
               aria-label="Close"
             >
-              <i className="fa fa-times" />
+              <Icon className="fa fa-times" />
             </button>
           </div>
           <div className="legacy-modal-body">
             <div className="sb-profile-modal-body">
               <div className="sb-profile-modal-icon">
-                <i className="fa fa-user-circle" />
+                <Icon className="fa fa-user-circle" />
               </div>
 
               <div className="sb-profile-modal-identity">
@@ -613,7 +667,7 @@ export default function Layout({ children, currentScreen }) {
                       onClick={() => { setNameDraft(user?.name || ''); setEditingName(true); setNameError(''); }}
                       title="Edit name"
                     >
-                      <i className="fa fa-pencil" />
+                      <Icon className="fa fa-pencil" />
                     </button>
                   </div>
                 )}
@@ -662,7 +716,7 @@ export default function Layout({ children, currentScreen }) {
           onClick={(event) => event.stopPropagation()}
         >
           <div className="legacy-modal-header">
-            <h3><i className="fa fa-lock" /> Change Password</h3>
+            <h3><Icon className="fa fa-lock" /> Change Password</h3>
             <button
               type="button"
               className="legacy-modal-close"
@@ -670,7 +724,7 @@ export default function Layout({ children, currentScreen }) {
               aria-label="Close"
               disabled={pwdSaving}
             >
-              <i className="fa fa-times" />
+              <Icon className="fa fa-times" />
             </button>
           </div>
           <form className="password-modal-form form-modal" onSubmit={submitPasswordChange}>
@@ -776,13 +830,13 @@ export default function Layout({ children, currentScreen }) {
           onClick={(event) => event.stopPropagation()}
         >
           <div className="legacy-modal-header legacy-danger-header">
-            <h3><i className="fa fa-sign-out" /> Confirm Logout</h3>
+            <h3><Icon className="fa fa-sign-out" /> Confirm Logout</h3>
             <button
               type="button"
               className="legacy-modal-close"
               onClick={() => setShowLogoutConfirm(false)}
             >
-              <i className="fa fa-times" />
+              <Icon className="fa fa-times" />
             </button>
           </div>
           <div className="legacy-modal-body">
@@ -801,7 +855,7 @@ export default function Layout({ children, currentScreen }) {
               className="legacy-btn legacy-btn-danger"
               onClick={confirmLogout}
             >
-              <i className="fa fa-sign-out" /> Logout
+              <Icon className="fa fa-sign-out" /> Logout
             </button>
           </div>
         </div>
@@ -813,7 +867,7 @@ export default function Layout({ children, currentScreen }) {
 }
 
 // ─── Individual nav item with pin button ──────────────────────────────────────
-function NavItem({ screen, collapsed, pinned, onTogglePin, setHoverTooltip }) {
+function NavItem({ screen, collapsed, showIcon = false, pinned, onTogglePin, setHoverTooltip }) {
   return (
     <div 
       className="sb-item-wrap"
@@ -830,12 +884,9 @@ function NavItem({ screen, collapsed, pinned, onTogglePin, setHoverTooltip }) {
       <NavLink
         to={screen.path}
         className={({ isActive }) => `sb-item${isActive ? ' active' : ''}`}
+        aria-label={collapsed ? screen.title : undefined}
       >
-        {collapsed ? (
-          <span className="sb-icon sb-short-code">{screen.shortCode || screen.title.substring(0, 2).toUpperCase()}</span>
-        ) : (
-          <i className={`${screen.icon.startsWith('ti') ? '' : 'fa '}${screen.icon} sb-icon`} />
-        )}
+        {(showIcon || collapsed) && <Icon className={`${iconClass(screen.icon)} sb-icon`} />}
         {!collapsed && <span className="sb-label">{screen.title}</span>}
       </NavLink>
       {!collapsed && (
@@ -843,9 +894,10 @@ function NavItem({ screen, collapsed, pinned, onTogglePin, setHoverTooltip }) {
           type="button"
           className={`sb-pin-btn${pinned ? ' pinned' : ''}`}
           title={pinned ? 'Unpin' : 'Pin to top'}
+          aria-label={pinned ? `Unpin ${screen.title}` : `Pin ${screen.title}`}
           onClick={() => onTogglePin(screen.path)}
         >
-          <i className="fa fa-thumb-tack" />
+          <Icon className="ti ti-pin2" />
         </button>
       )}
     </div>

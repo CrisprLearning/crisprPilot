@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ToastRegion from '../components/ToastRegion';
+import Icon from '../components/Icon';
 
 /* ── Chapter Data (mirrors legacy practice-questions.html) ── */
 const chaptersBySubject = {
@@ -359,7 +360,7 @@ export default function PracticeQuestionsPage() {
 
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-file-text-o" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-file-text-o" /></span>
           <div>
             <h2>Practice Questions</h2>
             <p>Upload question bundles, organize them into practice sets, and manage the practice repository.</p>
@@ -367,7 +368,7 @@ export default function PracticeQuestionsPage() {
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button type="button" className="page-action-button" onClick={openUploadModal}>
-            <i className="ti ti-cloud-up" /> Upload Question Bundle
+            <Icon className="ti ti-cloud-up" /> Upload Question Bundle
           </button>
         </div>
       </div>
@@ -379,7 +380,7 @@ export default function PracticeQuestionsPage() {
         {batchesList.length > 0 && (
           <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ position: 'relative', flex: 1, maxWidth: '300px' }}>
-              <i className="ti ti-search" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#6c757d' }}></i>
+              <Icon className="ti ti-search" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#6c757d' }} />
               <input type="text" value={batchSearch} onChange={e => { setBatchSearch(e.target.value); setBatchPage(1); }} className="form-control" placeholder="Search Bundles..." style={{ fontSize: '13px', padding: '8px 12px 8px 35px' }} />
             </div>
             {batchSearch && <span style={{ fontSize: '12px', color: '#6c757d' }}>Found {filteredBatches.length} batch{filteredBatches.length !== 1 ? 'es' : ''}</span>}
@@ -399,12 +400,12 @@ export default function PracticeQuestionsPage() {
                       <strong style={{ fontSize: '15px', color: '#333' }}>{batch.id}</strong>
                     </div>
                     <button onClick={e => { e.stopPropagation(); deleteBatch(batch.id); }} style={{ padding: '4px 8px', fontSize: '11px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                      <i className="ti ti-trash"></i> Delete
+                      <Icon className="ti ti-trash" /> Delete
                     </button>
                   </div>
                   <div style={{ fontSize: '13px', color: '#6c757d' }}>
-                    <div><i className="ti ti-files"></i> {batch.count} question(s)</div>
-                    <div style={{ marginTop: '5px' }}><i className="ti ti-calendar"></i> {fmtDate(batch.createdAt)}</div>
+                    <div><Icon className="ti ti-files" /> {batch.count} question(s)</div>
+                    <div style={{ marginTop: '5px' }}><Icon className="ti ti-calendar" /> {fmtDate(batch.createdAt)}</div>
                   </div>
                 </div>
               );
@@ -412,7 +413,7 @@ export default function PracticeQuestionsPage() {
           </div>
         ) : (
           <div style={{ textAlign: 'center', padding: '30px 20px', color: '#6c757d' }}>
-            <i className="ti ti-package" style={{ fontSize: '40px', opacity: 0.5, display: 'block', marginBottom: '10px' }}></i>
+            <Icon className="ti ti-package" style={{ fontSize: '40px', opacity: 0.5, display: 'block', marginBottom: '10px' }} />
             <div style={{ fontSize: '14px' }}>No bundles yet. Upload a PDF to create your first bundle.</div>
           </div>
         )}
@@ -422,25 +423,25 @@ export default function PracticeQuestionsPage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px', paddingTop: '15px', borderTop: '1px solid #e9ecef' }}>
             {batchTotalPages > 1 ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <button onClick={() => setBatchPage(p => Math.max(1, p - 1))} disabled={batchPage === 1} className="btn btn-sm" style={{ padding: '6px 12px', fontSize: '12px' }}><i className="ti ti-angle-left"></i> Prev</button>
+                <button onClick={() => setBatchPage(p => Math.max(1, p - 1))} disabled={batchPage === 1} className="btn btn-sm" style={{ padding: '6px 12px', fontSize: '12px' }}><Icon className="ti ti-angle-left" /> Prev</button>
                 <span style={{ fontSize: '13px', color: '#495057' }}>Page {batchPage} of {batchTotalPages}</span>
-                <button onClick={() => setBatchPage(p => Math.min(batchTotalPages, p + 1))} disabled={batchPage >= batchTotalPages} className="btn btn-sm" style={{ padding: '6px 12px', fontSize: '12px' }}>Next <i className="ti ti-angle-right"></i></button>
+                <button onClick={() => setBatchPage(p => Math.min(batchTotalPages, p + 1))} disabled={batchPage >= batchTotalPages} className="btn btn-sm" style={{ padding: '6px 12px', fontSize: '12px' }}>Next <Icon className="ti ti-angle-right" /></button>
               </div>
             ) : <div />}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '5px' }}>
               <button onClick={createQuiz} disabled={selectedBatchCount === 0 || !allVerified} style={{ padding: '10px 20px', fontSize: '14px', fontWeight: 600, background: '#006073', color: 'white', border: 'none', borderRadius: '6px', cursor: selectedBatchCount > 0 && allVerified ? 'pointer' : 'not-allowed', opacity: selectedBatchCount > 0 && allVerified ? 1 : 0.6, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <i className="ti ti-plus"></i> Create Quiz from Selected Bundles
+                <Icon className="ti ti-plus" /> Create Quiz from Selected Bundles
                 {selectedBatchCount > 0 && <span style={{ background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '10px', fontSize: '12px' }}>{selectedBatchCount}</span>}
               </button>
               {selectedBatchCount > 0 && unverifiedCount > 0 && (
                 <span style={{ fontSize: '11px', color: '#856404', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <i className="ti ti-alert-triangle"></i>
+                  <Icon className="ti ti-alert-triangle" />
                   {unverifiedCount} of {filteredQuestions.length} questions not verified. Verify them to continue.
                 </span>
               )}
               {selectedBatchCount > 0 && allVerified && (
                 <span style={{ fontSize: '11px', color: '#155724', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <i className="ti ti-check"></i> All {filteredQuestions.length} questions verified
+                  <Icon className="ti ti-check" /> All {filteredQuestions.length} questions verified
                 </span>
               )}
             </div>
@@ -468,9 +469,9 @@ export default function PracticeQuestionsPage() {
               </select>
               {filteredQuestions.length > 1 && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <button onClick={() => setCurrentQIdx(i => Math.max(0, i - 1))} disabled={currentQIdx === 0} className="btn btn-sm" style={{ padding: '6px 12px', fontSize: '12px' }}><i className="ti ti-angle-left"></i> Prev</button>
+                  <button onClick={() => setCurrentQIdx(i => Math.max(0, i - 1))} disabled={currentQIdx === 0} className="btn btn-sm" style={{ padding: '6px 12px', fontSize: '12px' }}><Icon className="ti ti-angle-left" /> Prev</button>
                   <span style={{ fontSize: '13px', color: '#495057', fontWeight: 600 }}>{currentQIdx + 1} / {filteredQuestions.length}</span>
-                  <button onClick={() => setCurrentQIdx(i => Math.min(filteredQuestions.length - 1, i + 1))} disabled={currentQIdx >= filteredQuestions.length - 1} className="btn btn-sm" style={{ padding: '6px 12px', fontSize: '12px' }}>Next <i className="ti ti-angle-right"></i></button>
+                  <button onClick={() => setCurrentQIdx(i => Math.min(filteredQuestions.length - 1, i + 1))} disabled={currentQIdx >= filteredQuestions.length - 1} className="btn btn-sm" style={{ padding: '6px 12px', fontSize: '12px' }}>Next <Icon className="ti ti-angle-right" /></button>
                 </div>
               )}
             </div>
@@ -484,7 +485,7 @@ export default function PracticeQuestionsPage() {
                 <div style={{ fontWeight: 600, color: '#006073', fontSize: '14px' }}>
                   Question #{currentQIdx + 1} • ID: {currentQ.id}
                   <span style={{ fontSize: '12px', color: '#6c757d', fontWeight: 'normal', marginLeft: '8px' }}>• by Abhijith on {fmtDate(currentQ.createdAt)}</span>
-                  {currentQ.batchId && <span style={{ fontSize: '12px', color: '#006073', fontWeight: 600, marginLeft: '8px', background: '#e3f2f5', padding: '2px 8px', borderRadius: '4px' }}><i className="ti ti-package"></i> {currentQ.batchId}</span>}
+                  {currentQ.batchId && <span style={{ fontSize: '12px', color: '#006073', fontWeight: 600, marginLeft: '8px', background: '#e3f2f5', padding: '2px 8px', borderRadius: '4px' }}><Icon className="ti ti-package" /> {currentQ.batchId}</span>}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span style={{ padding: '4px 10px', borderRadius: '12px', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', background: '#e7f5f7', color: '#006073' }}>{currentQ.answerType}</span>
@@ -568,7 +569,7 @@ export default function PracticeQuestionsPage() {
             </div>
           ) : (
             <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <i className="ti ti-clipboard" style={{ fontSize: '64px', color: '#dee2e6', marginBottom: '20px', display: 'block' }}></i>
+              <Icon className="ti ti-clipboard" style={{ fontSize: '64px', color: '#dee2e6', marginBottom: '20px', display: 'block' }} />
               <h4 style={{ color: '#495057', marginBottom: '8px' }}>No Practice Questions Yet</h4>
               <p style={{ color: '#6c757d' }}>Upload a PDF file to create practice questions from each page.</p>
             </div>
@@ -581,8 +582,8 @@ export default function PracticeQuestionsPage() {
         <div className="crispr-modal-backdrop active" onClick={() => setEditModalOpen(false)}>
           <div className="crispr-modal-dialog" style={{ maxWidth: '600px' }} onClick={e => e.stopPropagation()}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-pencil"></i> Edit Question</h3>
-              <button className="crispr-modal-close" onClick={() => setEditModalOpen(false)}><i className="ti ti-close"></i></button>
+              <h3><Icon className="ti ti-pencil" /> Edit Question</h3>
+              <button className="crispr-modal-close" onClick={() => setEditModalOpen(false)}><Icon className="ti ti-close" /></button>
             </div>
             <div className="crispr-modal-body">
               <div className="form-group" style={{ marginBottom: '20px' }}>
@@ -611,10 +612,10 @@ export default function PracticeQuestionsPage() {
             </div>
             <div className="crispr-modal-footer">
               <button onClick={saveEdit} style={{ background: '#006073', color: 'white', border: 'none', padding: '10px 24px', borderRadius: '6px', fontSize: '14px', cursor: 'pointer', fontWeight: 600 }}>
-                <i className="ti ti-check"></i> Save Changes
+                <Icon className="ti ti-check" /> Save Changes
               </button>
               <button onClick={() => setEditModalOpen(false)} style={{ background: '#6c757d', color: 'white', border: 'none', padding: '10px 24px', borderRadius: '6px', fontSize: '14px', cursor: 'pointer' }}>
-                <i className="ti ti-close"></i> Cancel
+                <Icon className="ti ti-close" /> Cancel
               </button>
             </div>
           </div>
@@ -625,23 +626,23 @@ export default function PracticeQuestionsPage() {
         <div className="legacy-modal-backdrop active" onClick={closeUploadModal}>
           <div className="legacy-modal-dialog" onClick={e => e.stopPropagation()}>
             <div className="legacy-modal-header">
-              <h3><i className="ti ti-cloud-up" /> Upload Question Bundle</h3>
+              <h3><Icon className="ti ti-cloud-up" /> Upload Question Bundle</h3>
               {!uploadModalProcessing && (
-                <button className="legacy-modal-close" onClick={closeUploadModal}><i className="ti ti-close" /></button>
+                <button className="legacy-modal-close" onClick={closeUploadModal}><Icon className="ti ti-close" /></button>
               )}
             </div>
             <div className="legacy-modal-body">
               {uploadModalDone ? (
                 <div style={{ textAlign: 'center', padding: '20px 10px' }}>
                   <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#dcfce7', color: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: '28px' }}>
-                    <i className="ti ti-check" />
+                    <Icon className="ti ti-check" />
                   </div>
                   <div style={{ fontSize: '16px', fontWeight: 600, color: '#333' }}>Questions are processed, you can close the window</div>
                 </div>
               ) : uploadModalProcessing ? (
                 <div style={{ padding: '10px 0' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', color: '#006073' }}>
-                    <i className="ti ti-reload" style={{ fontSize: '18px', animation: 'spin 1s linear infinite' }} />
+                    <Icon className="ti ti-reload" style={{ fontSize: '18px', animation: 'spin 1s linear infinite' }} />
                     <strong>{processingMessage || 'Processing...'}</strong>
                   </div>
                   <div style={{ width: '100%', height: '24px', background: '#e9ecef', borderRadius: '12px', overflow: 'hidden' }}>
@@ -660,11 +661,11 @@ export default function PracticeQuestionsPage() {
                     <label style={{ display: 'block', fontWeight: 600, color: '#333', marginBottom: '8px', fontSize: '14px' }}>PDF File</label>
                     <input ref={modalFileInputRef} type="file" accept="application/pdf" style={{ display: 'none' }} onChange={handleModalFileSelect} />
                     <button type="button" onClick={() => modalFileInputRef.current?.click()} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 18px', fontSize: '14px', fontWeight: 500, background: '#f1f5f9', color: '#006073', border: '1px solid #cbd5e1', borderRadius: '6px', cursor: 'pointer' }}>
-                      <i className="ti ti-file" /> Choose File
+                      <Icon className="ti ti-file" /> Choose File
                     </button>
                     {uploadModalFile && (
                       <span style={{ marginLeft: '12px', fontSize: '13px', color: '#333' }}>
-                        <i className="ti ti-check" style={{ color: '#16a34a', marginRight: '4px' }} />{uploadModalFile.name}
+                        <Icon className="ti ti-check" style={{ color: '#16a34a', marginRight: '4px' }} />{uploadModalFile.name}
                       </span>
                     )}
                     <div style={{ fontSize: '12px', color: '#6c757d', marginTop: '8px' }}>Each page in the PDF becomes a question.</div>
@@ -675,7 +676,7 @@ export default function PracticeQuestionsPage() {
             <div className="legacy-modal-footer">
               {uploadModalDone ? (
                 <button className="legacy-btn legacy-btn-success" onClick={closeUploadModal}>
-                  <i className="ti ti-close" /> Close
+                  <Icon className="ti ti-close" /> Close
                 </button>
               ) : uploadModalProcessing ? (
                 <button className="legacy-btn legacy-btn-default" disabled>Processing…</button>
@@ -683,7 +684,7 @@ export default function PracticeQuestionsPage() {
                 <>
                   <button className="legacy-btn legacy-btn-default" onClick={closeUploadModal}>Cancel</button>
                   <button className="legacy-btn legacy-btn-success" onClick={proceedUploadModal} disabled={!uploadModalFile || !uploadModalName.trim()}>
-                    <i className="ti ti-check" /> Proceed
+                    <Icon className="ti ti-check" /> Proceed
                   </button>
                 </>
               )}

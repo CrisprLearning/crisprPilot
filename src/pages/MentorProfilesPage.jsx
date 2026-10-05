@@ -7,6 +7,7 @@ import Avatar from '../components/Avatar';
 import { Can, usePermission } from '../lib/userStore';
 import { PERMS } from '../lib/permissions';
 import { mentorsDemo } from '../data/adminRemainingDemo';
+import Icon from '../components/Icon';
 
 
 function getPageNumbers(currentPage, totalPages) {
@@ -680,7 +681,7 @@ export default function MentorProfilesPage() {
 
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-smile-o" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-smile-o" /></span>
           <div>
             <h2>Mentor Management</h2>
             <p>Create mentor profiles, review assignments, and manage mentee mapping without changing the legacy workflow.</p>
@@ -688,14 +689,14 @@ export default function MentorProfilesPage() {
         </div>
         <Can permission={PERMS.MENTORS_EDIT}>
           <button type="button" className="create-mentor-button" onClick={openCreateModal}>
-            <i className="ti ti-plus" /> New Mentor Profile
+            <Icon className="ti ti-plus" /> New Mentor Profile
           </button>
         </Can>
       </div>
 
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} />
+          <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} />
           <input
             type="text"
             className="search-input"
@@ -725,12 +726,12 @@ export default function MentorProfilesPage() {
               <tr>
                 <th className={`sortable ${sortColumn === 'name' ? 'active' : ''}`} onClick={() => handleSort('name')}>
                   Mentor
-                  <i className={`sort-icon ti ${sortIcon('name')}`} />
+                  <Icon className={`sort-icon ti ${sortIcon('name')}`} />
                 </th>
                 <th>Brief</th>
                 <th className={`sortable ${sortColumn === 'institution' ? 'active' : ''}`} onClick={() => handleSort('institution')}>
                   Alma Mater
-                  <i className={`sort-icon ti ${sortIcon('institution')}`} />
+                  <Icon className={`sort-icon ti ${sortIcon('institution')}`} />
                 </th>
                 <th>Students</th>
                 <th className="actions-column" />
@@ -787,7 +788,7 @@ export default function MentorProfilesPage() {
                     <td>
                       {(mentor.studentCount || 0) > 0 ? (
                         <button type="button" className="students-count-badge" onClick={() => viewMentoringStudents(mentor)} title="View Mapped Students">
-                          <i className="ti ti-user" />
+                          <Icon className="ti ti-user" />
                           <span>{mentor.studentCount} Students</span>
                         </button>
                       ) : (
@@ -797,28 +798,28 @@ export default function MentorProfilesPage() {
                     <td className="mentor-actions-cell">
                       <div className="kebab-menu-container">
                         <button type="button" className="kebab-button" onClick={(event) => toggleKebab(mentor.id, event)}>
-                          <i className="ti ti-more-alt" />
+                          <Icon className="ti ti-more-alt" />
                         </button>
                         <div className={`kebab-dropdown ${activeKebabId === mentor.id ? 'active' : ''}`}>
                           <button type="button" className="kebab-dropdown-item" onClick={() => viewMentor(mentor)}>
-                            <i className="ti ti-user" />
+                            <Icon className="ti ti-user" />
                             <span>View Profile</span>
                           </button>
                           {can(PERMS.MENTORS_MENTEES_EDIT) && (
                             <button type="button" className="kebab-dropdown-item manage-students" onClick={() => manageMentees(mentor)}>
-                              <i className="ti ti-user" />
+                              <Icon className="ti ti-user" />
                               <span>Manage Mentees</span>
                             </button>
                           )}
                           {can(PERMS.MENTORS_EDIT) && (
                             <button type="button" className="kebab-dropdown-item edit-action" onClick={() => openEditModal(mentor)}>
-                              <i className="ti ti-pencil" />
+                              <Icon className="ti ti-pencil" />
                               <span>Edit Mentor</span>
                             </button>
                           )}
                           {can(PERMS.MENTORS_DELETE) && (
                             <button type="button" className="kebab-dropdown-item delete-action" onClick={() => confirmDelete(mentor)}>
-                              <i className="ti ti-trash" />
+                              <Icon className="ti ti-trash" />
                               <span>Delete Mentor</span>
                             </button>
                           )}
@@ -849,7 +850,7 @@ export default function MentorProfilesPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} disabled={safeCurrentPage === 1}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {pageNumbers.map((page) => (
                 <button key={page} type="button" className={`pagination-btn ${page === safeCurrentPage ? 'active' : ''}`} onClick={() => setCurrentPage(page)}>
@@ -857,7 +858,7 @@ export default function MentorProfilesPage() {
                 </button>
               ))}
               <button type="button" className="pagination-btn" onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} disabled={safeCurrentPage === totalPages}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
@@ -867,7 +868,7 @@ export default function MentorProfilesPage() {
       {!isLoading && totalMentors === 0 ? (
         <div className="mentors-table-container">
           <div className="empty-state">
-            <i className="ti ti-id-badge" />
+            <Icon className="ti ti-id-badge" />
             <h3>No Mentors Found</h3>
             <p>{searchQuery || filterSpecialization ? 'No mentors match your search criteria.' : 'Get started by adding your first mentor.'}</p>
           </div>
@@ -877,20 +878,20 @@ export default function MentorProfilesPage() {
       <div className={`legacy-modal-backdrop ${manageMenteesModalOpen ? 'active' : ''}`} onClick={() => setManageMenteesModalOpen(false)}>
         <div className="legacy-modal-dialog legacy-xl" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
           <div className="legacy-modal-header">
-            <h3><i className="ti ti-user" /> Manage Mentees - {selectedMentorForManagement?.name}</h3>
+            <h3><Icon className="ti ti-user" /> Manage Mentees - {selectedMentorForManagement?.name}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setManageMenteesModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
             {Object.keys(selectedMenteesToAdd).length > 0 ? (
               <div className="mentor-selection-summary">
-                <span><i className="ti ti-check" /> {Object.keys(selectedMenteesToAdd).length} student(s) selected</span>
+                <span><Icon className="ti ti-check" /> {Object.keys(selectedMenteesToAdd).length} student(s) selected</span>
               </div>
             ) : null}
             <div className="mentor-modal-search">
               <div className="search-wrapper">
-                <i className="ti ti-search" />
+                <Icon className="ti ti-search" />
                 <input type="text" className="search-input" placeholder="Search by name, email, or phone..." value={menteeSearchQuery} onChange={(event) => setMenteeSearchQuery(event.target.value)} />
               </div>
             </div>
@@ -935,7 +936,7 @@ export default function MentorProfilesPage() {
                     </div>
                     <div className="pagination-controls">
                       <button type="button" className="pagination-btn" onClick={() => setMenteeCurrentPage((page) => Math.max(1, page - 1))} disabled={safeMenteePage === 1}>
-                        <i className="ti ti-angle-left" /> Previous
+                        <Icon className="ti ti-angle-left" /> Previous
                       </button>
                       {menteePageNumbers.map((page) => (
                         <button key={page} type="button" className={`pagination-btn ${page === safeMenteePage ? 'active' : ''}`} onClick={() => setMenteeCurrentPage(page)}>
@@ -943,7 +944,7 @@ export default function MentorProfilesPage() {
                         </button>
                       ))}
                       <button type="button" className="pagination-btn" onClick={() => setMenteeCurrentPage((page) => Math.min(menteeTotalPages, page + 1))} disabled={safeMenteePage === menteeTotalPages}>
-                        Next <i className="ti ti-angle-right" />
+                        Next <Icon className="ti ti-angle-right" />
                       </button>
                     </div>
                   </div>
@@ -951,7 +952,7 @@ export default function MentorProfilesPage() {
               </>
             ) : (
               <div className="batch-empty-panel">
-                <i className="ti ti-user" />
+                <Icon className="ti ti-user" />
                 <h3>No Students Found</h3>
                 <p>{menteeSearchQuery ? 'Try adjusting your search criteria' : 'No available students found'}</p>
               </div>
@@ -962,7 +963,7 @@ export default function MentorProfilesPage() {
             <div className="mentor-footer-actions">
               <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setManageMenteesModalOpen(false)}>Cancel</button>
               <button type="button" className="legacy-btn legacy-btn-success" onClick={confirmAddMentees} disabled={Object.keys(selectedMenteesToAdd).length === 0}>
-                <i className="ti ti-plus" /> Add {Object.keys(selectedMenteesToAdd).length} Mentee(s)
+                <Icon className="ti ti-plus" /> Add {Object.keys(selectedMenteesToAdd).length} Mentee(s)
               </button>
             </div>
           </div>
@@ -975,13 +976,13 @@ export default function MentorProfilesPage() {
           <div className="legacy-modal-header">
             <h3>{editMode ? 'Edit Mentor' : 'Add New Mentor'}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setEditModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <form className="batch-modal-form form-modal" onSubmit={(event) => { event.preventDefault(); saveMentor(); }}>
           <div className="legacy-modal-body">
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Basic Information</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Basic Information</div>
               <div className="asset-form-grid basic-grid">
                 <label className="field-cell full-span">
                   <div className="float-field">
@@ -1001,10 +1002,10 @@ export default function MentorProfilesPage() {
                     {currentMentor?.photo || currentMentor?.photoPreview ? (
                       <img src={currentMentor.photoPreview || currentMentor.photo} alt="Preview" className="mentor-photo-preview" />
                     ) : (
-                      <div className="mentor-photo-placeholder"><i className="ti ti-camera" /></div>
+                      <div className="mentor-photo-placeholder"><Icon className="ti ti-camera" /></div>
                     )}
                     <div className="mentor-photo-meta">
-                      <span className="file-name"><i className="ti ti-info-alt" /> JPG, PNG (Max 2MB)</span>
+                      <span className="file-name"><Icon className="ti ti-info-alt" /> JPG, PNG (Max 2MB)</span>
                     </div>
                   </div>
                 </div>
@@ -1012,7 +1013,7 @@ export default function MentorProfilesPage() {
             </div>
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-school" /> Academic Details</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-school" /> Academic Details</div>
               <div className="asset-form-grid">
                 <label className="field-cell">
                   <div className="float-field">
@@ -1036,7 +1037,7 @@ export default function MentorProfilesPage() {
             </div>
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-address-book" /> Contact Information <span className="field-hint-inline">(Optional)</span></div>
+              <div className="asset-form-section-title"><Icon className="ti ti-address-book" /> Contact Information <span className="field-hint-inline">(Optional)</span></div>
               <div className="asset-form-grid">
                 <label className="field-cell">
                   <div className="float-field">
@@ -1072,9 +1073,9 @@ export default function MentorProfilesPage() {
       <div className="crispr-modal-backdrop active" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setDeleteModalOpen(false); }}>
         <div className="crispr-modal-dialog confirm-dialog" style={{ maxWidth: 460 }} role="dialog" aria-modal="true">
           <div className="crispr-modal-header danger-header">
-            <h3><i className="ti ti-alert" /> Confirm Delete</h3>
+            <h3><Icon className="ti ti-alert" /> Confirm Delete</h3>
             <button type="button" className="crispr-modal-close" onClick={() => setDeleteModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="crispr-modal-body">
@@ -1084,7 +1085,7 @@ export default function MentorProfilesPage() {
           <div className="crispr-modal-footer">
             <button type="button" className="btn btn-default" onClick={() => setDeleteModalOpen(false)}>Cancel</button>
             <button type="button" className="btn btn-danger" onClick={deleteMentor}>
-              <i className="ti ti-trash" /> Delete Mentor
+              <Icon className="ti ti-trash" /> Delete Mentor
             </button>
           </div>
         </div>
@@ -1095,15 +1096,15 @@ export default function MentorProfilesPage() {
       <div className="crispr-modal-backdrop active" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeViewModal(); }}>
         <div className="crispr-modal-dialog" style={{ maxWidth: 720 }} role="dialog" aria-modal="true">
           <div className="crispr-modal-header">
-            <h3><i className="ti ti-user" /> Mentor Profile</h3>
+            <h3><Icon className="ti ti-user" /> Mentor Profile</h3>
             <button type="button" className="crispr-modal-close" onClick={closeViewModal}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className={`crispr-modal-body mentor-view-body ${isMentorProfileLoading ? 'is-loading' : ''}`} style={{ padding: 0 }}>
             {isMentorProfileLoading && (
               <div className="mentor-view-loading">
-                <i className="ti ti-reload rotate" /> Loading detailed profile...
+                <Icon className="ti ti-reload rotate" /> Loading detailed profile...
               </div>
             )}
             {selectedMentor ? (
@@ -1123,39 +1124,39 @@ export default function MentorProfilesPage() {
                     <p>{selectedMentor.brief}</p>
                     <div className="mentor-profile-rating">
                       <div className="mentor-rating-group">
-                        <i className="fa fa-star" />
+                        <Icon className="fa fa-star" />
                         <span className="mentor-rating-value">{selectedMentor.rating}</span>
                         <span className="mentor-rating-max">/5.0</span>
                       </div>
                       <div className="mentor-rating-divider" />
                       <div className="mentor-rating-students">
-                        <i className="ti ti-users" /> {selectedMentor.totalStudents} Students
+                        <Icon className="ti ti-users" /> {selectedMentor.totalStudents} Students
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="mentor-profile-grid">
                   <div className="profile-info-card">
-                    <div className="profile-info-icon blue"><i className="ti ti-bookmark" /></div>
+                    <div className="profile-info-icon blue"><Icon className="ti ti-bookmark" /></div>
                     <div><div className="profile-info-label">Specialization</div><div className="profile-info-value">{selectedMentor.specialisation}</div></div>
                   </div>
                   <div className="profile-info-card">
-                    <div className="profile-info-icon amber"><i className="ti ti-home" /></div>
+                    <div className="profile-info-icon amber"><Icon className="ti ti-home" /></div>
                     <div><div className="profile-info-label">Alma Mater</div><div className="profile-info-value">{selectedMentor.almaMater}</div></div>
                   </div>
                   <div className="profile-info-card">
-                    <div className="profile-info-icon indigo"><i className="ti ti-calendar" /></div>
+                    <div className="profile-info-icon indigo"><Icon className="ti ti-calendar" /></div>
                     <div><div className="profile-info-label">Graduation Year</div><div className="profile-info-value">{selectedMentor.graduationYear}</div></div>
                   </div>
                   {selectedMentor.email ? (
                     <div className="profile-info-card">
-                      <div className="profile-info-icon indigo"><i className="ti ti-email" /></div>
+                      <div className="profile-info-icon indigo"><Icon className="ti ti-email" /></div>
                       <div><div className="profile-info-label">Email Address</div><div className="profile-info-value truncatable">{selectedMentor.email}</div></div>
                     </div>
                   ) : null}
                   {selectedMentor.mobile ? (
                     <div className="profile-info-card">
-                      <div className="profile-info-icon green"><i className="ti ti-mobile" /></div>
+                      <div className="profile-info-icon green"><Icon className="ti ti-mobile" /></div>
                       <div><div className="profile-info-label">Mobile Number</div><div className="profile-info-value">{selectedMentor.mobile}</div></div>
                     </div>
                   ) : null}
@@ -1166,7 +1167,7 @@ export default function MentorProfilesPage() {
           <div className="legacy-modal-footer">
             <button type="button" className="legacy-btn legacy-btn-default" onClick={closeViewModal}>Close</button>
             <button type="button" className="legacy-btn legacy-btn-success" onClick={editFromView}>
-              <i className="ti ti-pencil" /> Edit Mentor
+              <Icon className="ti ti-pencil" /> Edit Mentor
             </button>
           </div>
         </div>
@@ -1176,14 +1177,14 @@ export default function MentorProfilesPage() {
       <div className={`legacy-modal-backdrop ${studentsModalOpen ? 'active' : ''}`} onClick={() => setStudentsModalOpen(false)}>
         <div className="legacy-modal-dialog legacy-xl" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
           <div className="legacy-modal-header">
-            <h3><i className="ti ti-user" /> Students Mentored by {selectedMentorForStudents?.name}</h3>
+            <h3><Icon className="ti ti-user" /> Students Mentored by {selectedMentorForStudents?.name}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setStudentsModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="mentor-students-search-wrap">
             <div className="search-wrapper">
-              <i className="ti ti-search" />
+              <Icon className="ti ti-search" />
               <input type="text" className="search-input" placeholder="Search students by name or email..." value={studentsSearchKey} onChange={(event) => { setStudentsSearchKey(event.target.value); setStudentsCurrentPage(1); }} />
             </div>
           </div>
@@ -1230,7 +1231,7 @@ export default function MentorProfilesPage() {
                     </div>
                     <div className="pagination-controls">
                       <button type="button" className="pagination-btn" onClick={() => setStudentsCurrentPage((page) => Math.max(1, page - 1))} disabled={safeStudentsPage === 1}>
-                        <i className="ti ti-angle-left" /> Previous
+                        <Icon className="ti ti-angle-left" /> Previous
                       </button>
                       {studentPageNumbers.map((page) => (
                         <button key={page} type="button" className={`pagination-btn ${page === safeStudentsPage ? 'active' : ''}`} onClick={() => setStudentsCurrentPage(page)}>
@@ -1238,14 +1239,14 @@ export default function MentorProfilesPage() {
                         </button>
                       ))}
                       <button type="button" className="pagination-btn" onClick={() => setStudentsCurrentPage((page) => Math.min(studentsTotalPages, page + 1))} disabled={safeStudentsPage === studentsTotalPages}>
-                        Next <i className="ti ti-angle-right" />
+                        Next <Icon className="ti ti-angle-right" />
                       </button>
                     </div>
                   </div>
                 </>
               ) : (
                 <div className="empty-state compact">
-                  <i className="ti ti-users" />
+                  <Icon className="ti ti-users" />
                   <h3>No Students Assigned Yet</h3>
                   <p>This mentor hasn't been assigned any students yet.</p>
                 </div>
@@ -1254,12 +1255,12 @@ export default function MentorProfilesPage() {
           </div>
           <div className="legacy-modal-footer mentor-footer-spread large">
             {Object.keys(selectedMappedStudents).length > 0 ? (
-              <div className="mentor-selected-chip"><i className="ti ti-check" /> {Object.keys(selectedMappedStudents).length} student(s) selected</div>
+              <div className="mentor-selected-chip"><Icon className="ti ti-check" /> {Object.keys(selectedMappedStudents).length} student(s) selected</div>
             ) : <div />}
             <div className="mentor-footer-actions">
               {Object.keys(selectedMappedStudents).length > 0 ? (
                 <button type="button" className="legacy-btn legacy-btn-danger" onClick={removeSelectedStudents}>
-                  <i className="ti ti-trash" /> Remove Mentee(s)
+                  <Icon className="ti ti-trash" /> Remove Mentee(s)
                 </button>
               ) : null}
               <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setStudentsModalOpen(false)}>Close</button>

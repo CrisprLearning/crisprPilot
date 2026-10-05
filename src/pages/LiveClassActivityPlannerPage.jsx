@@ -7,6 +7,7 @@ import {
   deleteActivity,
   liveClassError,
 } from '../lib/liveClassApi';
+import Icon from '../components/Icon';
 
 export default function LiveClassActivityPlannerPage() {
   const navigate = useNavigate();
@@ -203,8 +204,8 @@ export default function LiveClassActivityPlannerPage() {
           </div>
         ) : (
           <div style={{ fontSize: '13px', color: '#59757b' }}>
-            <span style={{ marginRight: '16px' }}><i className="ti ti-timer" /> {act.duration_minutes} Minutes Timer</span>
-            <span><i className="ti ti-hand-drag" /> {questions.length} Questions</span>
+            <span style={{ marginRight: '16px' }}><Icon className="ti ti-timer" /> {act.duration_minutes} Minutes Timer</span>
+            <span><Icon className="ti ti-hand-drag" /> {questions.length} Questions</span>
           </div>
         )}
 
@@ -230,27 +231,27 @@ export default function LiveClassActivityPlannerPage() {
       {/* ── Page Header ── */}
       <div className="page-header-section" style={{ flexWrap: 'wrap' }}>
         <div>
-          <h2><i className="ti ti-layout-media-overlay" /> Activity Planner</h2>
+          <h2><Icon className="ti ti-layout-media-overlay" /> Activity Planner</h2>
           <p>
             Pre-configure Polls and Quizzes for <strong>{classId || 'this class'}</strong>. These drafts will be available in the Studio to publish during the live stream.
           </p>
         </div>
         <button type="button" className="page-action-button" onClick={() => navigate(-1)}>
-          <i className="ti ti-arrow-left" /> Back to Scheduler
+          <Icon className="ti ti-arrow-left" /> Back to Scheduler
         </button>
       </div>
 
       <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
         <button type="button" onClick={() => setShowPollModal(true)} style={{ background: '#f1f5f9', border: '1px dashed #cbd5e1', padding: '20px', borderRadius: '12px', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', cursor: 'pointer', transition: 'background 0.2s', color: 'var(--ink)' }}>
           <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#006073', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>
-            <i className="ti ti-bar-chart" />
+            <Icon className="ti ti-bar-chart" />
           </div>
           <strong style={{ fontSize: '16px' }}>Add a New Poll</strong>
           <span style={{ fontSize: '13px', color: '#59757b', textAlign: 'center' }}>Quick single-question check-in with multiple options. Ideal for gauging audience sentiment instantly.</span>
         </button>
         <button type="button" onClick={() => setShowQuizModal(true)} style={{ background: '#f1f5f9', border: '1px dashed #cbd5e1', padding: '20px', borderRadius: '12px', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', cursor: 'pointer', transition: 'background 0.2s', color: 'var(--ink)' }}>
           <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#fbbf24', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>
-            <i className="ti ti-hand-point-up" />
+            <Icon className="ti ti-hand-point-up" />
           </div>
           <strong style={{ fontSize: '16px' }}>Configure a Quiz</strong>
           <span style={{ fontSize: '13px', color: '#59757b', textAlign: 'center' }}>Set up multi-question timed assessments. The studio automates marking and leaderboard delivery.</span>
@@ -258,20 +259,20 @@ export default function LiveClassActivityPlannerPage() {
       </div>
 
       <div style={{ background: 'white', border: '1px solid var(--line)', borderRadius: '18px', padding: '24px' }}>
-        <h3 style={{ margin: '0 0 20px 0', display: 'flex', alignItems: 'center', gap: '8px' }}><i className="ti ti-layers" /> Planned Drafts ({activities.length})</h3>
+        <h3 style={{ margin: '0 0 20px 0', display: 'flex', alignItems: 'center', gap: '8px' }}><Icon className="ti ti-layers" /> Planned Drafts ({activities.length})</h3>
 
         {loading ? (
           <div style={{ textAlign: 'center', padding: '40px 20px', color: '#59757b' }}>
-            <i className="ti ti-loader" style={{ fontSize: '36px', opacity: 0.4, marginBottom: '12px', display: 'block' }} />
+            <Icon className="ti ti-loader" style={{ fontSize: '36px', opacity: 0.4, marginBottom: '12px', display: 'block' }} />
             Loading activities…
           </div>
         ) : loadError ? (
           <div style={{ textAlign: 'center', padding: '40px 20px', color: '#dc2626' }}>
-            <i className="ti ti-alert-triangle" style={{ fontSize: '36px', opacity: 0.5, marginBottom: '12px', display: 'block' }} />
+            <Icon className="ti ti-alert-triangle" style={{ fontSize: '36px', opacity: 0.5, marginBottom: '12px', display: 'block' }} />
             {loadError}
             <div>
               <button type="button" onClick={loadActivities} style={{ marginTop: '12px', background: '#006073', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-                <i className="ti ti-reload" /> Retry
+                <Icon className="ti ti-reload" /> Retry
               </button>
             </div>
           </div>
@@ -281,7 +282,7 @@ export default function LiveClassActivityPlannerPage() {
           </div>
         ) : (
           <div style={{ textAlign: 'center', padding: '40px 20px', color: '#59757b' }}>
-            <i className="ti ti-layout-media-overlay" style={{ fontSize: '48px', opacity: 0.3, marginBottom: '12px', display: 'block' }} />
+            <Icon className="ti ti-layout-media-overlay" style={{ fontSize: '48px', opacity: 0.3, marginBottom: '12px', display: 'block' }} />
             No activities have been planned for this live class yet. Pre-configure polls or quizzes above.
           </div>
         )}
@@ -292,8 +293,8 @@ export default function LiveClassActivityPlannerPage() {
         <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ background: 'white', width: '100%', maxWidth: '500px', borderRadius: '18px', overflow: 'hidden' }}>
             <div style={{ padding: '20px 24px', background: '#006073', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ margin: 0, fontSize: '18px' }}><i className="ti ti-bar-chart" /> Configure Poll</h3>
-              <button type="button" onClick={() => setShowPollModal(false)} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><i className="ti ti-close" /></button>
+              <h3 style={{ margin: 0, fontSize: '18px' }}><Icon className="ti ti-bar-chart" /> Configure Poll</h3>
+              <button type="button" onClick={() => setShowPollModal(false)} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><Icon className="ti ti-close" /></button>
             </div>
 
             <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '70vh', overflowY: 'auto' }}>
@@ -322,14 +323,14 @@ export default function LiveClassActivityPlannerPage() {
                     />
                     {pollOptions.length > 2 && (
                       <button type="button" onClick={() => removePollOption(index)} style={{ background: '#fef2f2', border: '1px solid #fca5a5', color: '#dc2626', padding: '0 12px', borderRadius: '8px', cursor: 'pointer' }}>
-                        <i className="ti ti-trash" />
+                        <Icon className="ti ti-trash" />
                       </button>
                     )}
                   </div>
                 ))}
                 {pollOptions.length < 8 && (
                   <button type="button" onClick={addPollOption} style={{ marginTop: '8px', background: 'transparent', border: '1px dashed #006073', color: '#006073', padding: '8px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-                    <i className="ti ti-plus" /> Add Option
+                    <Icon className="ti ti-plus" /> Add Option
                   </button>
                 )}
               </div>
@@ -348,8 +349,8 @@ export default function LiveClassActivityPlannerPage() {
         <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ background: 'white', width: '100%', maxWidth: '800px', borderRadius: '18px', overflow: 'hidden' }}>
             <div style={{ padding: '20px 24px', background: '#006073', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ margin: 0, fontSize: '18px' }}><i className="ti ti-hand-point-up" /> Configure Quiz</h3>
-              <button type="button" onClick={() => setShowQuizModal(false)} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><i className="ti ti-close" /></button>
+              <h3 style={{ margin: 0, fontSize: '18px' }}><Icon className="ti ti-hand-point-up" /> Configure Quiz</h3>
+              <button type="button" onClick={() => setShowQuizModal(false)} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><Icon className="ti ti-close" /></button>
             </div>
 
             <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px', maxHeight: '75vh', overflowY: 'auto' }}>
@@ -387,7 +388,7 @@ export default function LiveClassActivityPlannerPage() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                       <strong style={{ color: '#006073' }}>Question {qIndex + 1}</strong>
                       <button type="button" onClick={() => removeQuizQuestion(qIndex)} style={{ background: 'transparent', border: 'none', color: '#dc2626', cursor: 'pointer', fontSize: '16px' }} title="Remove Question">
-                        <i className="ti ti-trash" />
+                        <Icon className="ti ti-trash" />
                       </button>
                     </div>
 
@@ -423,7 +424,7 @@ export default function LiveClassActivityPlannerPage() {
                               style={{ flex: 1, border: 'none', background: 'transparent', outline: 'none', fontSize: '14px' }}
                               placeholder={`Option ${['A','B','C','D'][oIndex]}`}
                             />
-                            {q.correctIndex === oIndex && <i className="ti ti-check" style={{ color: '#10b981' }} />}
+                            {q.correctIndex === oIndex && <Icon className="ti ti-check" style={{ color: '#10b981' }} />}
                           </div>
                         ))}
                       </div>
@@ -433,7 +434,7 @@ export default function LiveClassActivityPlannerPage() {
                 ))}
 
                 <button type="button" onClick={addQuizQuestion} style={{ alignSelf: 'flex-start', background: '#eef4f5', border: '1px solid #006073', color: '#006073', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-                  <i className="ti ti-plus" /> Add Next Question
+                  <Icon className="ti ti-plus" /> Add Next Question
                 </button>
 
               </div>
@@ -452,8 +453,8 @@ export default function LiveClassActivityPlannerPage() {
         <div style={{ position: 'fixed', inset: 0, zIndex: 1050, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ background: 'white', width: '100%', maxWidth: '600px', borderRadius: '18px', overflow: 'hidden' }}>
             <div style={{ padding: '20px 24px', background: '#006073', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ margin: 0, fontSize: '18px' }}><i className="ti ti-eye" /> Quick View: {viewingActivity.type === 'poll' ? 'Poll' : 'Quiz'}</h3>
-              <button type="button" onClick={() => setViewingActivity(null)} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><i className="ti ti-close" /></button>
+              <h3 style={{ margin: 0, fontSize: '18px' }}><Icon className="ti ti-eye" /> Quick View: {viewingActivity.type === 'poll' ? 'Poll' : 'Quiz'}</h3>
+              <button type="button" onClick={() => setViewingActivity(null)} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><Icon className="ti ti-close" /></button>
             </div>
 
             <div style={{ padding: '24px', maxHeight: '75vh', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -461,7 +462,7 @@ export default function LiveClassActivityPlannerPage() {
                 <h4 style={{ margin: '0 0 8px 0', color: 'var(--ink)' }}>{viewingActivity.title}</h4>
                 {viewingActivity.type === 'quiz' && (
                   <div style={{ fontSize: '13px', color: '#59757b' }}>
-                    <i className="ti ti-timer" /> Duration: {viewingActivity.duration_minutes} Minutes
+                    <Icon className="ti ti-timer" /> Duration: {viewingActivity.duration_minutes} Minutes
                   </div>
                 )}
               </div>
@@ -497,7 +498,7 @@ export default function LiveClassActivityPlannerPage() {
                             <div key={oItx} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', borderRadius: '8px', background: correctIdx === oItx ? '#ecfdf5' : '#f8fafc', border: `1px solid ${correctIdx === oItx ? '#10b981' : 'var(--line)'}` }}>
                               <span style={{ fontWeight: 'bold', width: '20px', color: '#59757b' }}>{['A','B','C','D'][oItx]}</span>
                               <span style={{ fontSize: '14px', flex: 1 }}>{opt}</span>
-                              {correctIdx === oItx && <i className="ti ti-check" style={{ color: '#10b981' }} />}
+                              {correctIdx === oItx && <Icon className="ti ti-check" style={{ color: '#10b981' }} />}
                             </div>
                           ))}
                         </div>

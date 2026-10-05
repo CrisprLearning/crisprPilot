@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import ToastRegion from '../components/ToastRegion';
+import Icon from '../components/Icon';
 
 function getPageNumbers(currentPage, totalPages) {
   const pages = [];
@@ -242,7 +243,7 @@ export default function InstructorPayoutsPage() {
         {/* ── Standard Page Header ── */}
         <div className="page-header-section">
             <div className="page-header-title-group">
-               <span className="page-header-icon-box"><i className="fa fa-money" /></span>
+               <span className="page-header-icon-box"><Icon className="fa fa-money" /></span>
                <div>
                   <h2>Instructor Payouts</h2>
                   <p>Track payments made and pending settlements for instructors.</p>
@@ -253,7 +254,7 @@ export default function InstructorPayoutsPage() {
         {/* ── Search bar (standard) ── */}
         <div className="filter-bar">
             <div className="search-wrapper">
-                <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'} search-icon`} onClick={() => setSearchQuery('')} aria-hidden="true" />
+                <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'} search-icon`} onClick={() => setSearchQuery('')} aria-hidden="true" />
                 <input
                     type="text"
                     className="search-input"
@@ -319,17 +320,17 @@ export default function InstructorPayoutsPage() {
                             <td style={{ textAlign: 'center' }}>
                                 <div className="kebab-menu-container">
                                     <button type="button" className="kebab-button" onClick={(e) => handleKebabClick(e, index)}>
-                                        <i className="ti ti-more-alt" />
+                                        <Icon className="ti ti-more-alt" />
                                     </button>
                                     <div className={`kebab-dropdown${activeDropdown === index ? ' active' : ''}`} onClick={e => e.stopPropagation()}>
                                         <button type="button" className="kebab-dropdown-item" onClick={() => openLedgerModal(inst.id)}>
-                                            <i className="ti ti-eye" /> View Details
+                                            <Icon className="ti ti-eye" /> View Details
                                         </button>
                                         <button type="button" className="kebab-dropdown-item" onClick={() => openRecordHoursModal(inst.id)}>
-                                            <i className="ti ti-time" /> Record Hours
+                                            <Icon className="ti ti-time" /> Record Hours
                                         </button>
                                         <button type="button" className="kebab-dropdown-item" onClick={() => openPaymentModal(inst.id)}>
-                                            <i className="ti ti-money" /> Record Payment
+                                            <Icon className="ti ti-money" /> Record Payment
                                         </button>
                                     </div>
                                 </div>
@@ -358,7 +359,7 @@ export default function InstructorPayoutsPage() {
                     </div>
                     <div className="pagination-controls">
                         <button type="button" className="pagination-btn" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>
-                            <i className="ti ti-angle-left"></i> Previous
+                            <Icon className="ti ti-angle-left" /> Previous
                         </button>
                         {getPageNumbers(currentPage, totalPages).map((page, idx) => (
                             page === '...'
@@ -366,7 +367,7 @@ export default function InstructorPayoutsPage() {
                                 : <button key={page} type="button" className={`pagination-btn ${currentPage === page ? 'active' : ''}`} onClick={() => setCurrentPage(page)}>{page}</button>
                         ))}
                         <button type="button" className="pagination-btn" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage >= totalPages}>
-                            Next <i className="ti ti-angle-right"></i>
+                            Next <Icon className="ti ti-angle-right" />
                         </button>
                     </div>
                 </div>
@@ -378,9 +379,9 @@ export default function InstructorPayoutsPage() {
             <div className="crispr-modal-backdrop active" onClick={() => setLedgerModalOpen(false)}>
                 <div className="crispr-modal-dialog" style={{ maxWidth: '900px', width: '100%' }} onClick={e => e.stopPropagation()}>
                     <div className="crispr-modal-header">
-                        <h3><i className="ti ti-agenda" /> Payout Ledger: {selectedInstructorInfo.name}</h3>
+                        <h3><Icon className="ti ti-agenda" /> Payout Ledger: {selectedInstructorInfo.name}</h3>
                         <button type="button" className="crispr-modal-close" onClick={() => setLedgerModalOpen(false)}>
-                            <i className="ti ti-close"></i>
+                            <Icon className="ti ti-close" />
                         </button>
                     </div>
 
@@ -416,7 +417,7 @@ export default function InstructorPayoutsPage() {
                                         <tr key={i} style={{ background: r.type === 'PAYMENT' ? '#f0fdfa' : 'white' }}>
                                             <td style={{ color: '#334155' }}>{r.date}</td>
                                             <td style={{ color: r.type === 'PAYMENT' ? '#0f766e' : '#334155', fontWeight: r.type === 'PAYMENT' ? 600 : 400 }}>
-                                                 {r.type === 'PAYMENT' && <i className="ti ti-money" style={{ marginRight: '5px' }}></i>}
+                                                 {r.type === 'PAYMENT' && <Icon className="ti ti-money" style={{ marginRight: '5px' }} />}
                                                  {r.description}
                                             </td>
                                             <td style={{ color: '#64748b' }}>{r.hours}</td>
@@ -448,10 +449,10 @@ export default function InstructorPayoutsPage() {
                     <div className="crispr-modal-footer">
                         <button type="button" className="btn btn-default" onClick={() => setLedgerModalOpen(false)}>Close Ledger</button>
                         <button type="button" className="btn btn-default" onClick={() => { setLedgerModalOpen(false); openRecordHoursModal(selectedInstructorInfo.id); }}>
-                             <i className="ti ti-time"></i> Record Hours
+                             <Icon className="ti ti-time" /> Record Hours
                         </button>
                         <button type="button" className="btn btn-success" onClick={() => { setLedgerModalOpen(false); openPaymentModal(selectedInstructorInfo.id); }}>
-                             <i className="ti ti-plus"></i> Record New Payment
+                             <Icon className="ti ti-plus" /> Record New Payment
                         </button>
                     </div>
                 </div>
@@ -463,9 +464,9 @@ export default function InstructorPayoutsPage() {
             <div className="crispr-modal-backdrop active" onClick={() => setMakePaymentModalOpen(false)}>
                 <div className="crispr-modal-dialog" style={{ maxWidth: '450px' }} onClick={e => e.stopPropagation()}>
                     <div className="crispr-modal-header" style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', color: 'white' }}>
-                        <h3 style={{ margin: 0, fontWeight: 600 }}><i className="ti ti-money"></i> Record Payment</h3>
+                        <h3 style={{ margin: 0, fontWeight: 600 }}><Icon className="ti ti-money" /> Record Payment</h3>
                         <button className="crispr-modal-close" style={{ color: 'white' }} onClick={() => setMakePaymentModalOpen(false)}>
-                            <i className="ti ti-close"></i>
+                            <Icon className="ti ti-close" />
                         </button>
                     </div>
                     <form onSubmit={handleMakePayment}>
@@ -502,9 +503,9 @@ export default function InstructorPayoutsPage() {
             <div className="crispr-modal-backdrop active" onClick={() => setRecordHoursModalOpen(false)}>
                 <div className="crispr-modal-dialog" style={{ maxWidth: '450px' }} onClick={e => e.stopPropagation()}>
                     <div className="crispr-modal-header" style={{ background: 'linear-gradient(135deg, #006073 0%, #00424f 100%)', color: 'white' }}>
-                        <h3 style={{ margin: 0, fontWeight: 600 }}><i className="ti ti-time"></i> Record Hours</h3>
+                        <h3 style={{ margin: 0, fontWeight: 600 }}><Icon className="ti ti-time" /> Record Hours</h3>
                         <button className="crispr-modal-close" style={{ color: 'white' }} onClick={() => setRecordHoursModalOpen(false)}>
-                            <i className="ti ti-close"></i>
+                            <Icon className="ti ti-close" />
                         </button>
                     </div>
                     <form onSubmit={handleRecordHours}>

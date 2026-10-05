@@ -14,6 +14,7 @@ import {
   isYoutubeError,
 } from '../lib/liveClassApi';
 import useDebouncedValue from '../hooks/useDebouncedValue';
+import Icon from '../components/Icon';
 
 const studentPool = ['All Registered', 'Unrestricted', 'Batch A', 'Batch B', 'Course: IAT 2026', 'Course: NEET 2026'];
 const hostPool = ['Rajesh Kumar', 'Priya Sharma', 'Vikram Singh', 'Anjali Gupta'];
@@ -73,7 +74,7 @@ function StarRating({ rating }) {
   return (
     <div style={{ display: 'flex', color: '#fbbf24', fontSize: '15px', gap: '2px', alignItems: 'center' }}>
       <strong>{rating}</strong>
-      <i className="ti ti-star" style={{ fontWeight: 'bold' }} />
+      <Icon className="ti ti-star" style={{ fontWeight: 'bold' }} />
     </div>
   );
 }
@@ -97,7 +98,7 @@ function KebabMenu({ cls, onAction }) {
         className="kebab-button"
         onClick={(event) => { event.stopPropagation(); setOpen((v) => !v); }}
       >
-        <i className="ti ti-more-alt" />
+        <Icon className="ti ti-more-alt" />
       </button>
         <div className={`kebab-dropdown${open ? ' active' : ''}`}>
           <button
@@ -105,7 +106,7 @@ function KebabMenu({ cls, onAction }) {
             className="kebab-dropdown-item"
             onClick={() => { setOpen(false); onAction(cls, 'attendance'); }}
           >
-            <i className="ti ti-user" /> View Attendance Report
+            <Icon className="ti ti-user" /> View Attendance Report
           </button>
 
           {cls.mode === 'youtube' && cls.status !== 'completed' && (
@@ -114,7 +115,7 @@ function KebabMenu({ cls, onAction }) {
               className="kebab-dropdown-item"
               onClick={() => { setOpen(false); onAction(cls, 'stream-setup'); }}
             >
-              <i className="ti ti-brand-youtube" /> Stream Setup (OBS)
+              <Icon className="ti ti-brand-youtube" /> Stream Setup (OBS)
             </button>
           )}
 
@@ -124,7 +125,7 @@ function KebabMenu({ cls, onAction }) {
               className="kebab-dropdown-item"
               onClick={() => { setOpen(false); onAction(cls, 'plan-activity'); }}
             >
-              <i className="ti ti-layout-media-overlay" /> Plan Activity
+              <Icon className="ti ti-layout-media-overlay" /> Plan Activity
             </button>
           )}
 
@@ -134,7 +135,7 @@ function KebabMenu({ cls, onAction }) {
               className="kebab-dropdown-item"
               onClick={() => { setOpen(false); onAction(cls, 'feedback'); }}
             >
-              <i className="ti ti-comments" /> Feedback Summary
+              <Icon className="ti ti-comments" /> Feedback Summary
             </button>
           )}
 
@@ -144,7 +145,7 @@ function KebabMenu({ cls, onAction }) {
               className="kebab-dropdown-item"
               onClick={() => { setOpen(false); onAction(cls, 'end'); }}
             >
-              <i className="ti ti-player-stop" /> End Class
+              <Icon className="ti ti-player-stop" /> End Class
             </button>
           )}
 
@@ -155,21 +156,21 @@ function KebabMenu({ cls, onAction }) {
                 className="kebab-dropdown-item"
                 onClick={() => { setOpen(false); onAction(cls, 'launch'); }}
               >
-                <i className="ti ti-player-play" /> Go Live Now
+                <Icon className="ti ti-player-play" /> Go Live Now
               </button>
               <button
                 type="button"
                 className="kebab-dropdown-item"
                 onClick={() => { setOpen(false); onAction(cls, 'reschedule'); }}
               >
-                <i className="ti ti-calendar" /> Reschedule
+                <Icon className="ti ti-calendar" /> Reschedule
               </button>
               <button
                 type="button"
                 className="kebab-dropdown-item danger-action"
                 onClick={() => { setOpen(false); onAction(cls, 'cancel'); }}
               >
-                <i className="ti ti-close" /> Cancel Class
+                <Icon className="ti ti-close" /> Cancel Class
               </button>
             </>
           )}
@@ -443,21 +444,21 @@ export default function LiveClassSchedulerPage() {
       {/* ── Standard Page Header ── */}
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="fa fa-video-camera" /></span>
+          <span className="page-header-icon-box"><Icon className="fa fa-video-camera" /></span>
           <div>
             <h2>Live Class Scheduler</h2>
             <p>Schedule, manage, and monitor live streaming classes and interactive webinars.</p>
           </div>
         </div>
         <button type="button" className="page-action-button" onClick={() => setShowCreateModal(true)}>
-          <i className="ti ti-video-clapper" /> Schedule Live
+          <Icon className="ti ti-video-clapper" /> Schedule Live
         </button>
       </div>
 
       {/* ── Search bar + quick filters (standard) ── */}
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'} search-icon`} onClick={() => setSearchQuery('')} aria-hidden="true" />
+          <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'} search-icon`} onClick={() => setSearchQuery('')} aria-hidden="true" />
           <input
             type="text"
             className="search-input"
@@ -491,7 +492,7 @@ export default function LiveClassSchedulerPage() {
         />
         {hasActiveFilters && (
           <button type="button" className="filter-clear-btn" onClick={clearFilters}>
-            <i className="ti ti-reload" /> Clear
+            <Icon className="ti ti-reload" /> Clear
           </button>
         )}
       </div>
@@ -499,11 +500,11 @@ export default function LiveClassSchedulerPage() {
       {/* ── Table (Exam-attempt-report style) ── */}
       {loadError ? (
         <div className="ear-empty-state" style={{ background: 'white', border: '1px solid var(--line)', marginTop: '24px' }}>
-          <i className="ti ti-alert-triangle" style={{ color: '#dc2626' }} />
+          <Icon className="ti ti-alert-triangle" style={{ color: '#dc2626' }} />
           <h4>Couldn't load live classes</h4>
           <p>{loadError}</p>
           <button type="button" onClick={loadClasses} style={{ marginTop: '8px', background: '#006073', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-            <i className="ti ti-reload" /> Retry
+            <Icon className="ti ti-reload" /> Retry
           </button>
         </div>
       ) : (loading || filteredClasses.length > 0) ? (
@@ -563,7 +564,7 @@ export default function LiveClassSchedulerPage() {
                   <td>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'flex-start' }}>
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                        {cls.mode === 'youtube' && <i className="ti ti-brand-youtube" style={{ color: '#dc2626' }} />}
+                        {cls.mode === 'youtube' && <Icon className="ti ti-brand-youtube" style={{ color: '#dc2626' }} />}
                         {MODE_LABEL[cls.mode] || cls.mode}
                       </span>
                       {cls.mode === 'youtube' && (
@@ -603,7 +604,7 @@ export default function LiveClassSchedulerPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={safePage === 1} onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {getPageNumbers(safePage, totalPages).map((page, index) => (
                 page === '...'
@@ -620,14 +621,14 @@ export default function LiveClassSchedulerPage() {
                   )
               ))}
               <button type="button" className="pagination-btn" disabled={safePage === totalPages} onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}>
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
         </div>
       ) : (
         <div className="ear-empty-state" style={{ background: 'white', border: '1px solid var(--line)', marginTop: '24px' }}>
-          <i className="ti ti-search" />
+          <Icon className="ti ti-search" />
           <h4>No Live Classes Found</h4>
           <p>No classes match your current filters. Schedule one to get started!</p>
         </div>
@@ -638,9 +639,9 @@ export default function LiveClassSchedulerPage() {
         <div className="crispr-modal-backdrop active" role="presentation" onClick={() => setShowCreateModal(false)}>
           <div className="crispr-modal-dialog" style={{ maxWidth: '560px' }} role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-video-clapper" /> Schedule Live Class</h3>
+              <h3><Icon className="ti ti-video-clapper" /> Schedule Live Class</h3>
               <button type="button" className="crispr-modal-close" onClick={() => setShowCreateModal(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <form onSubmit={handleCreateSubmit} style={{ display: 'contents' }}>
@@ -745,10 +746,10 @@ export default function LiveClassSchedulerPage() {
               </div>
               <div className="crispr-modal-footer">
                 <button type="button" className="btn btn-default" onClick={() => setShowCreateModal(false)}>
-                  <i className="ti ti-close" /> Cancel
+                  <Icon className="ti ti-close" /> Cancel
                 </button>
                 <button type="submit" className="btn btn-success" disabled={submitting}>
-                  <i className="ti ti-check" /> {submitting ? 'Saving…' : (formIsInstant ? 'Launch Live Now' : 'Schedule Class')}
+                  <Icon className="ti ti-check" /> {submitting ? 'Saving…' : (formIsInstant ? 'Launch Live Now' : 'Schedule Class')}
                 </button>
               </div>
             </form>
@@ -761,9 +762,9 @@ export default function LiveClassSchedulerPage() {
         <div className="ear-modal-scrim" style={{ zIndex: 9999, background: 'rgba(0,0,0,0.6)' }} role="presentation" onClick={() => setObsClassId(null)}>
           <div className="ear-modal" style={{ maxWidth: '620px' }} role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <div className="ear-modal-header" style={{ background: '#1f2937', color: 'white' }}>
-              <h3><i className="ti ti-brand-youtube" style={{ color: '#f87171' }} /> Stream Setup &mdash; {obsClass.title}</h3>
+              <h3><Icon className="ti ti-brand-youtube" style={{ color: '#f87171' }} /> Stream Setup &mdash; {obsClass.title}</h3>
               <button type="button" className="ear-modal-close" style={{ color: 'white' }} onClick={() => setObsClassId(null)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="ear-modal-body" style={{ padding: '24px' }}>
@@ -771,14 +772,14 @@ export default function LiveClassSchedulerPage() {
                 /* Not provisioned → Provision / Retry (§6.4) */
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px', textAlign: 'center', padding: '20px' }}>
                   <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#fef3c7', color: '#b45309', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '26px' }}>
-                    <i className="ti ti-alert-triangle" />
+                    <Icon className="ti ti-alert-triangle" />
                   </div>
                   <div style={{ fontWeight: 'bold', fontSize: '16px' }}>Stream not provisioned</div>
                   <div style={{ fontSize: '13px', color: '#59757b', maxWidth: '380px' }}>
                     This YouTube class has no broadcast yet. Provision the stream to generate the OBS server URL and stream key the teacher needs.
                   </div>
                   <button type="button" onClick={() => handleProvision(obsClass)} style={{ background: '#006073', color: 'white', border: 'none', padding: '12px 22px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <i className="ti ti-bolt" /> Provision Stream
+                    <Icon className="ti ti-bolt" /> Provision Stream
                   </button>
                 </div>
               ) : (
@@ -786,7 +787,7 @@ export default function LiveClassSchedulerPage() {
                   {/* Status row */}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '10px 14px' }}>
                     <span style={{ fontSize: '13px', color: '#166534', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <i className="ti ti-circle-check" /> Provisioned &middot; Privacy: <strong>Unlisted</strong>
+                      <Icon className="ti ti-circle-check" /> Provisioned &middot; Privacy: <strong>Unlisted</strong>
                     </span>
                     <span style={{ fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', color: '#0369a1', background: '#e0f2fe', padding: '3px 8px', borderRadius: '4px' }}>
                       {YT_LIFECYCLE_LABEL[obsClass.youtube.lifecycle_status] || 'Ready'}
@@ -800,7 +801,7 @@ export default function LiveClassSchedulerPage() {
                     <label style={{ fontWeight: 'bold', fontSize: '12px', color: '#59757b' }}>Server (RTMP URL)</label>
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <input readOnly value={obsClass.youtube.rtmp_url || ''} style={{ flex: 1, border: '1px solid var(--line)', borderRadius: '8px', padding: '10px 12px', fontFamily: 'monospace', fontSize: '13px', background: '#f8fafc' }} />
-                      <button type="button" onClick={() => copyToClipboard(obsClass.youtube.rtmp_url, 'RTMP URL')} style={{ border: '1px solid var(--line)', background: 'white', padding: '0 14px', borderRadius: '8px', cursor: 'pointer' }} title="Copy"><i className="ti ti-copy" /></button>
+                      <button type="button" onClick={() => copyToClipboard(obsClass.youtube.rtmp_url, 'RTMP URL')} style={{ border: '1px solid var(--line)', background: 'white', padding: '0 14px', borderRadius: '8px', cursor: 'pointer' }} title="Copy"><Icon className="ti ti-copy" /></button>
                     </div>
                   </div>
 
@@ -810,9 +811,9 @@ export default function LiveClassSchedulerPage() {
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <input readOnly value={showStreamKey ? (obsClass.youtube.stream_key || '') : maskKey(obsClass.youtube.stream_key)} style={{ flex: 1, border: '1px solid var(--line)', borderRadius: '8px', padding: '10px 12px', fontFamily: 'monospace', fontSize: '13px', background: '#f8fafc', letterSpacing: showStreamKey ? 'normal' : '1px' }} />
                       <button type="button" onClick={() => setShowStreamKey((v) => !v)} style={{ border: '1px solid var(--line)', background: 'white', padding: '0 14px', borderRadius: '8px', cursor: 'pointer' }} title={showStreamKey ? 'Hide' : 'Reveal'}>
-                        <i className={showStreamKey ? 'ti ti-eye-off' : 'ti ti-eye'} />
+                        <Icon className={showStreamKey ? 'ti ti-eye-off' : 'ti ti-eye'} />
                       </button>
-                      <button type="button" onClick={() => copyToClipboard(obsClass.youtube.stream_key, 'Stream key')} style={{ border: '1px solid var(--line)', background: 'white', padding: '0 14px', borderRadius: '8px', cursor: 'pointer' }} title="Copy"><i className="ti ti-copy" /></button>
+                      <button type="button" onClick={() => copyToClipboard(obsClass.youtube.stream_key, 'Stream key')} style={{ border: '1px solid var(--line)', background: 'white', padding: '0 14px', borderRadius: '8px', cursor: 'pointer' }} title="Copy"><Icon className="ti ti-copy" /></button>
                     </div>
                   </div>
 
@@ -823,12 +824,12 @@ export default function LiveClassSchedulerPage() {
                     <label style={{ fontWeight: 'bold', fontSize: '12px', color: '#59757b' }}>Embed URL (students)</label>
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <input readOnly value={obsClass.youtube.embed_url || ''} style={{ flex: 1, border: '1px solid var(--line)', borderRadius: '8px', padding: '10px 12px', fontFamily: 'monospace', fontSize: '13px', background: '#f8fafc' }} />
-                      <button type="button" onClick={() => copyToClipboard(obsClass.youtube.embed_url, 'Embed URL')} style={{ border: '1px solid var(--line)', background: 'white', padding: '0 14px', borderRadius: '8px', cursor: 'pointer' }} title="Copy"><i className="ti ti-copy" /></button>
+                      <button type="button" onClick={() => copyToClipboard(obsClass.youtube.embed_url, 'Embed URL')} style={{ border: '1px solid var(--line)', background: 'white', padding: '0 14px', borderRadius: '8px', cursor: 'pointer' }} title="Copy"><Icon className="ti ti-copy" /></button>
                     </div>
                   </div>
 
                   <div style={{ fontSize: '11px', color: '#92400e', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '8px', padding: '10px 12px', display: 'flex', gap: '8px' }}>
-                    <i className="ti ti-shield-lock" style={{ marginTop: '1px' }} />
+                    <Icon className="ti ti-shield-lock" style={{ marginTop: '1px' }} />
                     <span>The RTMP URL and stream key are secrets &mdash; share them only with the host. The Unlisted broadcast is link-accessible, so never expose the embed URL outside the class audience.</span>
                   </div>
                 </div>
@@ -838,10 +839,10 @@ export default function LiveClassSchedulerPage() {
               {obsClass.youtube && obsClass.youtube.provisioned_at && (
                 <>
                   <button type="button" className="ear-btn-default" onClick={() => handleRotateKey(obsClass)}>
-                    <i className="ti ti-refresh" /> Rotate Key
+                    <Icon className="ti ti-refresh" /> Rotate Key
                   </button>
                   <button type="button" className="ear-btn-default" onClick={() => { setShowStreamKey(false); handleProvision(obsClass, true); }}>
-                    <i className="ti ti-reload" /> Re-provision
+                    <Icon className="ti ti-reload" /> Re-provision
                   </button>
                 </>
               )}

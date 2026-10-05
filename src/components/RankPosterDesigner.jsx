@@ -5,6 +5,7 @@ import {
   hitTest, loadImage, nextId, normalizeEntries, pickTop, renderPoster, resizeHandleHit, safeFileName,
 } from '../lib/rankPoster';
 import { POSTER_ASSETS } from '../lib/posterAssets';
+import Icon from './Icon';
 
 // ─── Type chooser ────────────────────────────────────────────────────────────
 export function RankPosterTypeModal({ entries, hasActiveFilters, onClose, onConfirm }) {
@@ -22,8 +23,8 @@ export function RankPosterTypeModal({ entries, hasActiveFilters, onClose, onConf
     <div className="crispr-modal-backdrop active" onClick={onClose}>
       <div className="crispr-modal-dialog" style={{ maxWidth: 560 }} onClick={(e) => e.stopPropagation()}>
         <div className="crispr-modal-header" style={{ background: 'linear-gradient(135deg, #b45309 0%, #f59e0b 100%)' }}>
-          <h3><i className="ti ti-cup" /> Create Rank Poster</h3>
-          <button type="button" className="crispr-modal-close" onClick={onClose}><i className="ti ti-close" /></button>
+          <h3><Icon className="ti ti-cup" /> Create Rank Poster</h3>
+          <button type="button" className="crispr-modal-close" onClick={onClose}><Icon className="ti ti-close" /></button>
         </div>
         <div className="crispr-modal-body">
           <p className="rp-type-intro">Choose the kind of poster to design. You can tweak colours, text and placement in the next step.</p>
@@ -31,25 +32,25 @@ export function RankPosterTypeModal({ entries, hasActiveFilters, onClose, onConf
             {POSTER_TYPES.map((def) => (
               <label key={def.id} className={`rp-type-card${selected === def.id ? ' selected' : ''}`}>
                 <input type="radio" name="rp-type" checked={selected === def.id} onChange={() => setSelected(def.id)} />
-                <span className="rp-type-icon"><i className={`ti ${def.icon}`} /></span>
+                <span className="rp-type-icon"><Icon className={`ti ${def.icon}`} /></span>
                 <span className="rp-type-text">
                   <strong>{def.label}</strong>
                   <span>{def.desc}</span>
                   <em>{countFor(def)}</em>
                 </span>
-                <i className="ti ti-check rp-type-check" />
+                <Icon className="ti ti-check rp-type-check" />
               </label>
             ))}
           </div>
           {hasActiveFilters && (
             <div className="qar-filter-notice" style={{ marginTop: 14 }}>
-              <i className="ti ti-filter" style={{ color: '#006073', fontSize: 18, marginTop: 2 }} />
+              <Icon className="ti ti-filter" style={{ color: '#006073', fontSize: 18, marginTop: 2 }} />
               <div><strong>Note:</strong> Active filters are applied. Only filtered students are considered for the poster.</div>
             </div>
           )}
           {entries.length === 0 && (
             <div className="qar-warning-box" style={{ marginTop: 14 }}>
-              <i className="ti ti-alert-circle" style={{ color: '#856404', fontSize: 18, marginTop: 2 }} />
+              <Icon className="ti ti-alert-circle" style={{ color: '#856404', fontSize: 18, marginTop: 2 }} />
               <div>No completed attempts to rank yet.</div>
             </div>
           )}
@@ -57,7 +58,7 @@ export function RankPosterTypeModal({ entries, hasActiveFilters, onClose, onConf
         <div className="crispr-modal-footer">
           <button type="button" className="crispr-btn crispr-btn-default" onClick={onClose}>Cancel</button>
           <button type="button" className="crispr-btn crispr-btn-primary" disabled={entries.length === 0} onClick={() => onConfirm(selected)}>
-            <i className="ti ti-brush" /> Design Poster
+            <Icon className="ti ti-brush" /> Design Poster
           </button>
         </div>
       </div>
@@ -394,38 +395,38 @@ export function RankPosterDesignerModal({ type, entries: allEntries, title, onCl
       <div className="rp-dialog" onClick={(e) => e.stopPropagation()}>
         <div className="rp-header">
           <div className="rp-header-title">
-            <i className="ti ti-cup" />
+            <Icon className="ti ti-cup" />
             <div>
               <h3>Poster Designer <span className="rp-chip">{typeDef.label}</span></h3>
               <p>{POSTER_W} × {POSTER_H} px · drag elements to place them · arrow keys nudge · Delete removes</p>
             </div>
           </div>
           <div className="rp-header-actions">
-            <button type="button" className="rp-icon-btn" title="Undo (Ctrl+Z)" disabled={!canUndo} onClick={undo}><i className="ti ti-back-left" /></button>
-            <button type="button" className="rp-icon-btn" title="Redo (Ctrl+Shift+Z)" disabled={!canRedo} onClick={redo}><i className="ti ti-back-right" /></button>
-            <button type="button" className="rp-icon-btn" title="Reset to auto layout" onClick={resetLayout}><i className="ti ti-wand" /></button>
-            <button type="button" className="rp-icon-btn" title="Close" onClick={onClose}><i className="ti ti-close" /></button>
+            <button type="button" className="rp-icon-btn" title="Undo (Ctrl+Z)" disabled={!canUndo} onClick={undo}><Icon className="ti ti-back-left" /></button>
+            <button type="button" className="rp-icon-btn" title="Redo (Ctrl+Shift+Z)" disabled={!canRedo} onClick={redo}><Icon className="ti ti-back-right" /></button>
+            <button type="button" className="rp-icon-btn" title="Reset to auto layout" onClick={resetLayout}><Icon className="ti ti-wand" /></button>
+            <button type="button" className="rp-icon-btn" title="Close" onClick={onClose}><Icon className="ti ti-close" /></button>
           </div>
         </div>
 
         <div className="rp-body">
           <aside className="rp-sidebar">
             <div className="rp-tabs">
-              <button type="button" className={tab === 'elements' ? 'active' : ''} onClick={() => setTab('elements')}><i className="ti ti-layout-grid2" /> Elements</button>
-              <button type="button" className={tab === 'background' ? 'active' : ''} onClick={() => setTab('background')}><i className="ti ti-paint-bucket" /> Background</button>
-              <button type="button" className={tab === 'properties' ? 'active' : ''} onClick={() => setTab('properties')} disabled={!selected}><i className="ti ti-settings" /> Selected</button>
+              <button type="button" className={tab === 'elements' ? 'active' : ''} onClick={() => setTab('elements')}><Icon className="ti ti-layout-grid2" /> Elements</button>
+              <button type="button" className={tab === 'background' ? 'active' : ''} onClick={() => setTab('background')}><Icon className="ti ti-paint-bucket" /> Background</button>
+              <button type="button" className={tab === 'properties' ? 'active' : ''} onClick={() => setTab('properties')} disabled={!selected}><Icon className="ti ti-settings" /> Selected</button>
             </div>
 
             {tab === 'elements' && (
               <div className="rp-panel">
                 <div className="rp-panel-title">Add to canvas</div>
-                <button type="button" className="rp-add-btn" onClick={addText}><i className="ti ti-text" /> Text line</button>
+                <button type="button" className="rp-add-btn" onClick={addText}><Icon className="ti ti-text" /> Text line</button>
                 <label className="rp-add-btn">
-                  <i className="ti ti-image" /> Logo / image
+                  <Icon className="ti ti-image" /> Logo / image
                   <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => { addImageFromFile(e.target.files?.[0]); e.target.value = ''; }} />
                 </label>
-                <button type="button" className="rp-add-btn" onClick={() => addList(10)}><i className="ti ti-list" /> Top 10 list block</button>
-                <button type="button" className="rp-add-btn" onClick={() => addList(20)}><i className="ti ti-layout-column2" /> Top 20 list block</button>
+                <button type="button" className="rp-add-btn" onClick={() => addList(10)}><Icon className="ti ti-list" /> Top 10 list block</button>
+                <button type="button" className="rp-add-btn" onClick={() => addList(20)}><Icon className="ti ti-layout-column2" /> Top 20 list block</button>
 
                 {POSTER_ASSETS.length > 0 && (
                   <>
@@ -449,7 +450,7 @@ export function RankPosterDesignerModal({ type, entries: allEntries, title, onCl
                         <span className="rp-rank-dot" style={{ background: (RANK_COLORS[e.rank] || { fill: '#e2e8f0' }).fill }}>{e.rank}</span>
                         <span className="rp-student-name" title={e.name}>{e.name}</span>
                         <span className="rp-muted">{e.score}/{e.maxMarks}</span>
-                        <button type="button" className="rp-mini-btn" title={onCanvas ? 'Add another card' : 'Add to canvas'} onClick={() => addWinner(e.id)}><i className="ti ti-plus" /></button>
+                        <button type="button" className="rp-mini-btn" title={onCanvas ? 'Add another card' : 'Add to canvas'} onClick={() => addWinner(e.id)}><Icon className="ti ti-plus" /></button>
                       </div>
                     );
                   })}
@@ -459,7 +460,7 @@ export function RankPosterDesignerModal({ type, entries: allEntries, title, onCl
                 <div className="rp-layer-list">
                   {poster.elements.slice().reverse().map((el) => (
                     <button type="button" key={el.id} className={`rp-layer${selectedId === el.id ? ' active' : ''}`} onClick={() => { setSelectedId(el.id); setTab('properties'); }}>
-                      <i className={`ti ${el.type === 'text' ? 'ti-text' : el.type === 'winner' ? 'ti-user' : el.type === 'list' ? 'ti-list' : 'ti-image'}`} />
+                      <Icon className={`ti ${el.type === 'text' ? 'ti-text' : el.type === 'winner' ? 'ti-user' : el.type === 'list' ? 'ti-list' : 'ti-image'}`} />
                       <span>{layerLabel(el, entryMap)}</span>
                     </button>
                   ))}
@@ -544,7 +545,7 @@ export function RankPosterDesignerModal({ type, entries: allEntries, title, onCl
                         <span>Align</span>
                         <div className="rp-seg">
                           {['left', 'center', 'right'].map((a) => (
-                            <button type="button" key={a} className={selected.align === a ? 'active' : ''} onClick={() => updateElement(selected.id, { align: a })}><i className={`ti ti-align-${a}`} /></button>
+                            <button type="button" key={a} className={selected.align === a ? 'active' : ''} onClick={() => updateElement(selected.id, { align: a })}><Icon className={`ti ti-align-${a}`} /></button>
                           ))}
                         </div>
                       </div>
@@ -579,7 +580,7 @@ export function RankPosterDesignerModal({ type, entries: allEntries, title, onCl
                       </label>
                     </div>
                     <label className="rp-add-btn">
-                      <i className="ti ti-upload" /> {entryMap.get(selected.entryId)?.photoUrl ? 'Replace photo' : 'Upload photo'}
+                      <Icon className="ti ti-upload" /> {entryMap.get(selected.entryId)?.photoUrl ? 'Replace photo' : 'Upload photo'}
                       <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => { setPhotoForEntry(selected.entryId, e.target.files?.[0]); e.target.value = ''; }} />
                     </label>
                     {!entryMap.get(selected.entryId)?.photoUrl && (
@@ -638,9 +639,9 @@ export function RankPosterDesignerModal({ type, entries: allEntries, title, onCl
                   <label className="rp-field"><span>Y</span><input type="number" value={Math.round(selected.y)} onChange={(e) => updateElement(selected.id, { y: Number(e.target.value) || 0 }, `y:${selected.id}`)} /></label>
                 </div>
                 <div className="rp-field-row rp-layer-actions">
-                  <button type="button" className="rp-mini-btn wide" title="Send backward" onClick={() => moveLayer(selected.id, -1)}><i className="ti ti-arrow-down" /> Back</button>
-                  <button type="button" className="rp-mini-btn wide" title="Bring forward" onClick={() => moveLayer(selected.id, 1)}><i className="ti ti-arrow-up" /> Front</button>
-                  <button type="button" className="rp-mini-btn wide danger" onClick={() => removeElement(selected.id)}><i className="ti ti-trash" /> Remove</button>
+                  <button type="button" className="rp-mini-btn wide" title="Send backward" onClick={() => moveLayer(selected.id, -1)}><Icon className="ti ti-arrow-down" /> Back</button>
+                  <button type="button" className="rp-mini-btn wide" title="Bring forward" onClick={() => moveLayer(selected.id, 1)}><Icon className="ti ti-arrow-up" /> Front</button>
+                  <button type="button" className="rp-mini-btn wide danger" onClick={() => removeElement(selected.id)}><Icon className="ti ti-trash" /> Remove</button>
                 </div>
               </div>
             )}
@@ -669,8 +670,8 @@ export function RankPosterDesignerModal({ type, entries: allEntries, title, onCl
           <span className="rp-muted">Tip: hold <kbd>Alt</kbd> while dragging to disable snapping.</span>
           <div className="rp-footer-actions">
             <button type="button" className="crispr-btn crispr-btn-default" onClick={onClose}>Close</button>
-            <button type="button" className="crispr-btn crispr-btn-default" disabled={busy} onClick={copyToClipboard}><i className="ti ti-files" /> Copy image</button>
-            <button type="button" className="crispr-btn crispr-btn-primary" disabled={busy} onClick={download}><i className="ti ti-download" /> Download PNG</button>
+            <button type="button" className="crispr-btn crispr-btn-default" disabled={busy} onClick={copyToClipboard}><Icon className="ti ti-files" /> Copy image</button>
+            <button type="button" className="crispr-btn crispr-btn-primary" disabled={busy} onClick={download}><Icon className="ti ti-download" /> Download PNG</button>
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import ToastRegion from '../components/ToastRegion';
 import { courseViewDemo } from '../data/courseViewDemo';
 import { demoCourses } from '../data/coursesListDemo';
+import Icon from '../components/Icon';
 
 function getPageNumbers(currentPage, totalPages) {
   const pages = [];
@@ -170,7 +171,7 @@ export default function CourseViewPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', padding: '20px', background: 'linear-gradient(135deg, #006073 0%, #005a6b 100%)', borderRadius: '8px', color: 'white' }}>
          <div style={{ flex: 1 }}>
             <h2 style={{ margin: '0 0 8px 0', fontSize: '28px', fontWeight: 600, color: 'white' }}>
-               <i className="ti ti-book"></i> {courseData.code}: {courseData.title}
+               <Icon className="ti ti-book" /> {courseData.code}: {courseData.title}
             </h2>
             <p style={{ margin: '0 0 15px 0', opacity: 0.9, fontSize: '14px' }}>
                {courseData.description}
@@ -198,7 +199,7 @@ export default function CourseViewPage() {
             </div>
          </div>
          <button className="cv-btn cv-btn-lg" style={{ background: '#ffb706', color: '#006073', border: 'none', fontWeight: 600, padding: '12px 24px', borderRadius: '6px', cursor: 'pointer', alignSelf: 'flex-start' }} onClick={() => setSelectCourseModalOpen(true)}>
-            <i className="ti ti-layers"></i> Select Course
+            <Icon className="ti ti-layers" /> Select Course
          </button>
       </div>
 
@@ -207,7 +208,7 @@ export default function CourseViewPage() {
          {/* Empty State: No Content Added */}
          {chapterData && parts.length === 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', minHeight: '600px', textAlign: 'center', padding: '40px' }}>
-                <i className="ti ti-folder-open" style={{ fontSize: '80px', color: '#dee2e6', marginBottom: '24px' }}></i>
+                <Icon className="ti ti-folder-open" style={{ fontSize: '80px', color: '#dee2e6', marginBottom: '24px' }} />
                 <h3 style={{ color: '#495057', marginBottom: '12px', fontWeight: 500 }}>No Content Added</h3>
                 <p style={{ color: '#6c757d', fontSize: '15px', maxWidth: '400px' }}>
                    No content has been added for "{chapterData.name}" yet.
@@ -259,21 +260,21 @@ export default function CourseViewPage() {
                                 <h3>{selectedPart.title}</h3>
                                 <p className="cv-subtext">{selectedPart.summary}</p>
                                 <div style={{ display: 'flex', gap: '20px', marginTop: '12px', fontSize: '13px', color: '#6c757d' }}>
-                                   <span><i className="ti ti-time" style={{ marginRight: '5px' }}></i>{formatDuration(selectedPart.duration)}</span>
-                                   <span><i className="ti ti-eye" style={{ marginRight: '5px' }}></i>12k views</span>
-                                   <span><i className="ti ti-download" style={{ marginRight: '5px' }}></i>143 downloads</span>
-                                   <span><i className="ti ti-star" style={{ color: '#ffb706', marginRight: '5px' }}></i>5/5</span>
+                                   <span><Icon className="ti ti-time" style={{ marginRight: '5px' }} />{formatDuration(selectedPart.duration)}</span>
+                                   <span><Icon className="ti ti-eye" style={{ marginRight: '5px' }} />12k views</span>
+                                   <span><Icon className="ti ti-download" style={{ marginRight: '5px' }} />143 downloads</span>
+                                   <span><Icon className="ti ti-star" style={{ color: '#ffb706', marginRight: '5px' }} />5/5</span>
                                 </div>
                              </div>
                              {/* Navigation Controls */}
                              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                                 <button className="cv-btn" onClick={previousPart} disabled={!hasPreviousPart}
                                         style={{ padding: '8px 14px', borderRadius: '6px', fontSize: '13px', border: '1px solid #e5e8ef', background: 'white', color: '#6c757d', cursor: hasPreviousPart ? 'pointer' : 'not-allowed', opacity: hasPreviousPart ? 1 : 0.5 }}>
-                                   <i className="ti ti-angle-left"></i> Previous
+                                   <Icon className="ti ti-angle-left" /> Previous
                                 </button>
                                 <button className="cv-btn" onClick={nextPart} disabled={!hasNextPart}
                                         style={{ padding: '8px 14px', borderRadius: '6px', fontSize: '13px', border: '1px solid #e5e8ef', background: 'white', color: '#6c757d', cursor: hasNextPart ? 'pointer' : 'not-allowed', opacity: hasNextPart ? 1 : 0.5 }}>
-                                   Next <i className="ti ti-angle-right"></i>
+                                   Next <Icon className="ti ti-angle-right" />
                                 </button>
                              </div>
                           </div>
@@ -289,10 +290,10 @@ export default function CourseViewPage() {
                              ) : (
                                 <div style={{ padding: '35px' }}>
                                     <div className="cv-part-info">
-                                        <div className="cv-part-title"><i className={`ti ti-${selectedPart.type === 'QUIZ' ? 'pencil' : 'download'}`}></i> {selectedPart.title}</div>
+                                        <div className="cv-part-title"><Icon className={`ti ti-${selectedPart.type === 'QUIZ' ? 'pencil' : 'download'}`} /> {selectedPart.title}</div>
                                         <div className="cv-part-description">{selectedPart.summary}</div>
                                         <div className="cv-part-meta">
-                                            <div className="cv-meta-item"><i className="ti ti-files"></i> Type: {selectedPart.type}</div>
+                                            <div className="cv-meta-item"><Icon className="ti ti-files" /> Type: {selectedPart.type}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -312,15 +313,15 @@ export default function CourseViewPage() {
             <div className="legacy-modal-header">
               <h3>Select Course</h3>
               <button type="button" className="legacy-modal-close" onClick={() => setSelectCourseModalOpen(false)}>
-                <i className="ti ti-close" />
+                <Icon className="ti ti-close" />
               </button>
             </div>
             <div className="legacy-modal-body">
               <div className="asset-form-section">
-                <div className="asset-form-section-title"><i className="ti ti-layers" /> Available Courses</div>
+                <div className="asset-form-section-title"><Icon className="ti ti-layers" /> Available Courses</div>
                 <div className="data-table-page" style={{ padding: 0 }}>
                   <div className="search-wrapper" style={{ marginBottom: 16 }}>
-                    <i className="ti ti-search" />
+                    <Icon className="ti ti-search" />
                     <input
                       type="text"
                       className="search-input"
@@ -334,7 +335,7 @@ export default function CourseViewPage() {
                     <table className="students-table">
                       <thead>
                         <tr>
-                          <th style={{ width: 64 }}><i className="ti ti-hash" /></th>
+                          <th style={{ width: 64 }}><Icon className="ti ti-hash" /></th>
                           <th>Course</th>
                           <th className="cv-center">Modules</th>
                           <th className="cv-center">Chapters</th>
@@ -345,7 +346,7 @@ export default function CourseViewPage() {
                         {pagedCourses.map(course => (
                           <tr key={course.code} className="cv-course-row" onClick={() => selectCourseFromModal(course.code)}>
                             <td>
-                              <div className="cv-course-avatar"><i className="ti ti-book" /></div>
+                              <div className="cv-course-avatar"><Icon className="ti ti-book" /></div>
                             </td>
                             <td>
                               <div className="cv-course-name">{course.title}</div>
@@ -360,7 +361,7 @@ export default function CourseViewPage() {
                           <tr>
                             <td colSpan={5}>
                               <div className="cv-empty">
-                                <i className="ti ti-info-alt" />
+                                <Icon className="ti ti-info-alt" />
                                 <p>No courses available</p>
                               </div>
                             </td>
@@ -386,7 +387,7 @@ export default function CourseViewPage() {
                       </div>
                       <div className="pagination-controls">
                         <button type="button" className="pagination-btn" disabled={safeCoursePage === 1} onClick={() => setCoursePage(p => Math.max(1, p - 1))}>
-                          <i className="ti ti-angle-left" /> Previous
+                          <Icon className="ti ti-angle-left" /> Previous
                         </button>
                         {coursePageNumbers.map(page => (
                           <button
@@ -399,7 +400,7 @@ export default function CourseViewPage() {
                           </button>
                         ))}
                         <button type="button" className="pagination-btn" disabled={safeCoursePage === courseTotalPages} onClick={() => setCoursePage(p => Math.min(courseTotalPages, p + 1))}>
-                          Next <i className="ti ti-angle-right" />
+                          Next <Icon className="ti ti-angle-right" />
                         </button>
                       </div>
                     </div>

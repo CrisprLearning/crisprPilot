@@ -25,6 +25,7 @@ import {
   copyEventsBetweenSchedules as storeCopyEvents,
   asApiError,
 } from '../lib/schedulesStore';
+import Icon from '../components/Icon';
 
 const DAY_START_HOUR = 7;
 const DAY_END_HOUR = 23;
@@ -943,11 +944,11 @@ function PageHeader({ onBack }) {
           onClick={onBack}
           style={{ background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 8, padding: '8px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, flexShrink: 0 }}
         >
-          <i className="ti ti-angle-left" /> Back to list
+          <Icon className="ti ti-angle-left" /> Back to list
         </button>
         <div style={{ minWidth: 0 }}>
           <h2 style={{ margin: '0 0 4px', fontSize: 20, fontWeight: 600, color: '#fff', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <i className="ti ti-calendar" style={{ opacity: 0.9, fontSize: 18 }} /> Schedule Calendar
+            <Icon className="ti ti-calendar" style={{ opacity: 0.9, fontSize: 18 }} /> Schedule Calendar
           </h2>
           <p style={{ margin: 0, opacity: 0.85, fontSize: 13 }}>
             Build day plans, publish them, and link them to batches.
@@ -965,7 +966,7 @@ function FocusedBanner({ schedule, onExit, onEditMeta, onPublish, onDuplicate, o
   return (
     <div style={{ background: tone.bg, border: `1px solid ${tone.border}`, borderRadius: 12, padding: '12px 16px', marginBottom: 14, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
-        <i className={schedule.published ? 'ti ti-check' : 'ti ti-pencil'} style={{ color: tone.ink, fontSize: 18 }} />
+        <Icon className={schedule.published ? 'ti ti-check' : 'ti ti-pencil'} style={{ color: tone.ink, fontSize: 18 }} />
         <div style={{ minWidth: 0 }}>
           <div style={{ fontWeight: 700, color: tone.ink, fontSize: 15 }}>
             {schedule.name} <span style={{ fontWeight: 400, opacity: 0.7 }}>· {prettyDate(schedule.date)}</span>
@@ -977,13 +978,13 @@ function FocusedBanner({ schedule, onExit, onEditMeta, onPublish, onDuplicate, o
         </div>
       </div>
       <div style={{ display: 'flex', gap: 6, flexShrink: 0, flexWrap: 'wrap' }}>
-        <button type="button" style={btnGhost} onClick={onEditMeta}><i className="ti ti-settings" /> Edit details</button>
-        <button type="button" style={btnGhost} onClick={onDuplicate}><i className="ti ti-files" /> Duplicate</button>
+        <button type="button" style={btnGhost} onClick={onEditMeta}><Icon className="ti ti-settings" /> Edit details</button>
+        <button type="button" style={btnGhost} onClick={onDuplicate}><Icon className="ti ti-files" /> Duplicate</button>
         {schedule.published
-          ? <button type="button" style={btnGhost} onClick={onPublish}><i className="ti ti-pencil" /> Unpublish</button>
-          : <button type="button" style={btnPrimary} onClick={onPublish}><i className="ti ti-check" /> Publish</button>}
-        {!schedule.published && <button type="button" style={btnDanger} onClick={onDelete}><i className="ti ti-trash" /></button>}
-        <button type="button" style={btnGhost} onClick={onExit}><i className="ti ti-close" /> Exit</button>
+          ? <button type="button" style={btnGhost} onClick={onPublish}><Icon className="ti ti-pencil" /> Unpublish</button>
+          : <button type="button" style={btnPrimary} onClick={onPublish}><Icon className="ti ti-check" /> Publish</button>}
+        {!schedule.published && <button type="button" style={btnDanger} onClick={onDelete}><Icon className="ti ti-trash" /></button>}
+        <button type="button" style={btnGhost} onClick={onExit}><Icon className="ti ti-close" /> Exit</button>
       </div>
     </div>
   );
@@ -1022,8 +1023,8 @@ function Toolbar({ label, allDayPublished, viewMode, setViewMode, onPrev, onNext
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <button type="button" onClick={onToday} style={btnGhost} disabled={isFocused}>Today</button>
         <div style={{ display: 'flex' }}>
-          <button type="button" onClick={onPrev} disabled={isFocused} style={{ ...btnIcon, borderTopRightRadius: 0, borderBottomRightRadius: 0, opacity: isFocused ? 0.5 : 1, cursor: isFocused ? 'not-allowed' : 'pointer' }}><i className="ti ti-angle-left" /></button>
-          <button type="button" onClick={onNext} disabled={isFocused} style={{ ...btnIcon, borderLeft: 'none', borderTopLeftRadius: 0, borderBottomLeftRadius: 0, opacity: isFocused ? 0.5 : 1, cursor: isFocused ? 'not-allowed' : 'pointer' }}><i className="ti ti-angle-right" /></button>
+          <button type="button" onClick={onPrev} disabled={isFocused} style={{ ...btnIcon, borderTopRightRadius: 0, borderBottomRightRadius: 0, opacity: isFocused ? 0.5 : 1, cursor: isFocused ? 'not-allowed' : 'pointer' }}><Icon className="ti ti-angle-left" /></button>
+          <button type="button" onClick={onNext} disabled={isFocused} style={{ ...btnIcon, borderLeft: 'none', borderTopLeftRadius: 0, borderBottomLeftRadius: 0, opacity: isFocused ? 0.5 : 1, cursor: isFocused ? 'not-allowed' : 'pointer' }}><Icon className="ti ti-angle-right" /></button>
         </div>
         <div style={{ marginLeft: 8, fontWeight: 600, color: 'var(--ink)', fontSize: 15, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
           <span>{label}</span>
@@ -1068,17 +1069,17 @@ function Toolbar({ label, allDayPublished, viewMode, setViewMode, onPrev, onNext
         )}
         {!isFocused && (
           <button type="button" onClick={onNewSchedule} style={btnPrimary}>
-            <i className="ti ti-plus" /> New schedule
+            <Icon className="ti ti-plus" /> New schedule
           </button>
         )}
         {isFocused && onPublishFocused && (
           focusedPublished ? (
             <button type="button" onClick={onPublishFocused} style={btnGhost}>
-              <i className="ti ti-pencil-alt" /> Convert to Draft
+              <Icon className="ti ti-pencil-alt" /> Convert to Draft
             </button>
           ) : (
             <button type="button" onClick={onPublishFocused} style={btnPrimary}>
-              <i className="ti ti-check" /> Publish Now
+              <Icon className="ti ti-check" /> Publish Now
             </button>
           )
         )}
@@ -1147,7 +1148,7 @@ function StringMultiSelect({ value, onChange, options, disabled, allLabel = 'All
         }}
       >
         <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{label}</span>
-        <i className={`ti ${open ? 'ti-angle-up' : 'ti-angle-down'}`} style={{ color: 'var(--muted)' }} />
+        <Icon className={`ti ${open ? 'ti-angle-up' : 'ti-angle-down'}`} style={{ color: 'var(--muted)' }} />
       </button>
       {open && rect && (() => {
         // Flip the panel above the trigger when there isn't enough room below,
@@ -1178,7 +1179,7 @@ function StringMultiSelect({ value, onChange, options, disabled, allLabel = 'All
                 borderBottom: '1px solid var(--line)',
               }}
             >
-              <i className="ti ti-close" /> Clear all ({value.length})
+              <Icon className="ti ti-close" /> Clear all ({value.length})
             </button>
           )}
           {options.map((b) => {
@@ -1215,8 +1216,8 @@ function MiniCalendar({ anchor, today, schedulesByDate, onPick, disabled = false
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
         <div style={{ fontWeight: 700, color: 'var(--ink)' }}>{MONTH_NAMES[month.getMonth()]} {month.getFullYear()}</div>
         <div style={{ display: 'flex', gap: 4 }}>
-          <button type="button" style={btnMicro} disabled={disabled} onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() - 1, 1))}><i className="ti ti-angle-up" /></button>
-          <button type="button" style={btnMicro} disabled={disabled} onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))}><i className="ti ti-angle-down" /></button>
+          <button type="button" style={btnMicro} disabled={disabled} onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() - 1, 1))}><Icon className="ti ti-angle-up" /></button>
+          <button type="button" style={btnMicro} disabled={disabled} onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))}><Icon className="ti ti-angle-down" /></button>
         </div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2, fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
@@ -1297,7 +1298,7 @@ function SchedulesMultiSelect({ value, onChange, options }) {
         }}
       >
         <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{label}</span>
-        <i className={`ti ${open ? 'ti-angle-up' : 'ti-angle-down'}`} style={{ color: 'var(--muted)' }} />
+        <Icon className={`ti ${open ? 'ti-angle-up' : 'ti-angle-down'}`} style={{ color: 'var(--muted)' }} />
       </button>
       {open && (
         <div style={{
@@ -1316,7 +1317,7 @@ function SchedulesMultiSelect({ value, onChange, options }) {
                 borderBottom: '1px solid var(--line)',
               }}
             >
-              <i className="ti ti-close" /> Clear all ({value.length})
+              <Icon className="ti ti-close" /> Clear all ({value.length})
             </button>
           )}
           {options.map((s) => {
@@ -1442,7 +1443,7 @@ function SplitDayGrid({ day, today, schedules, siblingTotal, headerReadOnly, pas
                     flexShrink: 0, cursor: 'pointer',
                   }}
                 >
-                  {siblingTotal}<i className="ti ti-angle-down" style={{ fontSize: 9 }} />
+                  {siblingTotal}<Icon className="ti ti-angle-down" style={{ fontSize: 9 }} />
                 </button>
               )}
             </div>
@@ -1489,7 +1490,7 @@ function SplitDayGrid({ day, today, schedules, siblingTotal, headerReadOnly, pas
       </div>
       {conflictTotal > 0 && (
         <div style={{ padding: '8px 16px', background: '#fef2f2', borderBottom: '1px solid #fecaca', fontSize: 12, color: '#7f1d1d', display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-          <i className="ti ti-alert" />
+          <Icon className="ti ti-alert" />
           <span><strong>{conflictTotal} conflict{conflictTotal === 1 ? '' : 's'} detected</strong> — with </span>
           {conflictEntities.map((ent) => (
             <button
@@ -1504,7 +1505,7 @@ function SplitDayGrid({ day, today, schedules, siblingTotal, headerReadOnly, pas
                 cursor: 'pointer',
               }}
             >
-              <i className={`ti ${ent.kind === 'teacher' ? 'ti-mortar-board' : 'ti-pin'}`} />
+              <Icon className={`ti ${ent.kind === 'teacher' ? 'ti-mortar-board' : 'ti-pin'}`} />
               {ent.label}
               {ent.count > 1 && <span style={{ color: '#dc2626' }}>×{ent.count}</span>}
             </button>
@@ -1543,7 +1544,7 @@ function SplitDayGrid({ day, today, schedules, siblingTotal, headerReadOnly, pas
               padding: '2px 8px', borderRadius: 999, fontSize: 10, fontWeight: 700,
               boxShadow: '0 2px 6px rgba(220, 38, 38, 0.4)',
             }}>
-              <i className="ti ti-alert" />
+              <Icon className="ti ti-alert" />
               {b.kind === 'teacher' ? 'Teacher' : 'Venue'}: {b.label} · {minutesToLabel(b.start)}–{minutesToLabel(b.end)}
             </div>
           </div>
@@ -1603,7 +1604,7 @@ function MultiBatchConflictPanel({ conflict, batchFilters, onClearBatches, onSwi
             width: 40, height: 40, borderRadius: 999, background: '#fed7aa', color: '#7c2d12',
             display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 18,
           }}>
-            <i className="ti ti-alert" />
+            <Icon className="ti ti-alert" />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontWeight: 700, color: '#7c2d12', fontSize: 16, marginBottom: 6 }}>
@@ -1621,7 +1622,7 @@ function MultiBatchConflictPanel({ conflict, batchFilters, onClearBatches, onSwi
                   const matched = s.batches.filter((b) => batchFilters.some((bId) => String(bId) === String(b.id)));
                   return (
                     <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--ink)' }}>
-                      <i className="ti ti-layers" style={{ color: 'var(--brand)' }} />
+                      <Icon className="ti ti-layers" style={{ color: 'var(--brand)' }} />
                       <span style={{ fontWeight: 700 }}>{s.name}</span>
                       <span style={{ color: 'var(--muted)' }}>· covers {matched.map((b) => b.name).join(', ')}</span>
                     </div>
@@ -1631,10 +1632,10 @@ function MultiBatchConflictPanel({ conflict, batchFilters, onClearBatches, onSwi
             </div>
             <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap' }}>
               <button type="button" onClick={onSwitchToDay} style={btnGhost}>
-                <i className="ti ti-calendar" /> View {conflict.dateKey} as day
+                <Icon className="ti ti-calendar" /> View {conflict.dateKey} as day
               </button>
               <button type="button" onClick={onClearBatches} style={btnGhost}>
-                <i className="ti ti-close" /> Clear batch filter
+                <Icon className="ti ti-close" /> Clear batch filter
               </button>
             </div>
           </div>
@@ -1721,11 +1722,10 @@ function WeekGrid({ days, today, pickedDateKey, schedulesForDay, daySchedulesAll
                 )}
                 {shown && !focusedSchedule && (
                   <div style={{ fontSize: 11, color: 'var(--brand)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6, maxWidth: '100%' }}>
-                    <i
+                    <Icon
                       className={`ti ${shown.published ? 'ti-check' : 'ti-time'}`}
                       title={shown.published ? 'Published' : 'Draft'}
-                      style={{ color: shown.published ? '#047857' : 'var(--muted)' }}
-                    />
+                      style={{ color: shown.published ? '#047857' : 'var(--muted)' }} />
                     <ScheduleNameMenu
                       schedule={shown}
                       onEdit={() => onEditSchedule && onEditSchedule(shown)}
@@ -1747,7 +1747,7 @@ function WeekGrid({ days, today, pickedDateKey, schedulesForDay, daySchedulesAll
                           flexShrink: 0, marginLeft: 'auto', cursor: 'pointer',
                         }}
                       >
-                        {totalAll}<i className="ti ti-angle-down" style={{ fontSize: 9 }} />
+                        {totalAll}<Icon className="ti ti-angle-down" style={{ fontSize: 9 }} />
                       </button>
                     )}
                   </div>
@@ -1907,7 +1907,7 @@ function EventBlock({ ev, schedule, onClick, onUpdateTime, readOnly }) {
       }}
     >
       <div style={{ fontWeight: 700, fontSize: 12, color: meta.color, lineHeight: 1.2, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-        <i className={`ti ${meta.icon}`} style={{ marginRight: 4 }} />{ev.title}
+        <Icon className={`ti ${meta.icon}`} style={{ marginRight: 4 }} />{ev.title}
       </div>
       {!compact && (
         <div style={{ fontSize: 11, color: 'var(--ink)', lineHeight: 1.2, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
@@ -1920,22 +1920,21 @@ function EventBlock({ ev, schedule, onClick, onUpdateTime, readOnly }) {
           {detailParts.map((p, i) => (
             <span key={i}>
               {i > 0 && <span style={{ margin: '0 4px', opacity: 0.5 }}>·</span>}
-              {p.icon && <i className={`ti ${p.icon}`} style={{ marginRight: 3 }} />}
+              {p.icon && <Icon className={`ti ${p.icon}`} style={{ marginRight: 3 }} />}
               {p.text}
             </span>
           ))}
         </div>
       )}
       {ONLINE_EVENT_TYPES.has(ev.type) && (
-        <i
+        <Icon
           className="ti ti-desktop"
           title="Online Event"
           style={{
             position: 'absolute', top: 4, right: 5,
             fontSize: 12, color: '#444', lineHeight: 1,
             pointerEvents: 'auto',
-          }}
-        />
+          }} />
       )}
       {!readOnly && (
         <div
@@ -2006,7 +2005,7 @@ function DaySchedulesPopover({ dateKey: dk, anchorRect, schedules, onClose, onPi
     <div ref={ref} style={{ position: 'fixed', top, left, width: 340, background: '#fff', border: '1px solid var(--line)', borderRadius: 12, boxShadow: '0 14px 38px rgba(0,0,0,0.12)', zIndex: 900, overflow: 'hidden' }}>
       <div style={{ padding: '12px 14px', borderBottom: '1px solid var(--line)', background: '#fbfcfd', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ fontWeight: 700, color: 'var(--ink)', fontSize: 14 }}>Schedules on {prettyDate(dk)}</div>
-        <button type="button" onClick={onClose} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}><i className="ti ti-close" /></button>
+        <button type="button" onClick={onClose} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}><Icon className="ti ti-close" /></button>
       </div>
       <div style={{ maxHeight: 360, overflow: 'auto', padding: 8 }}>
         {schedules.map((s) => {
@@ -2025,8 +2024,8 @@ function DaySchedulesPopover({ dateKey: dk, anchorRect, schedules, onClose, onPi
                 {s.name}
               </div>
               {s.published
-                ? <span style={{ background: '#d1fae5', color: '#047857', borderRadius: 999, padding: '2px 8px', fontSize: 10, fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 4, flexShrink: 0 }}><i className="ti ti-check" /> PUBLISHED</span>
-                : <span style={{ background: '#eef0f2', color: 'var(--muted)', borderRadius: 999, padding: '2px 8px', fontSize: 10, fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 4, flexShrink: 0 }}><i className="ti ti-time" /> DRAFT</span>}
+                ? <span style={{ background: '#d1fae5', color: '#047857', borderRadius: 999, padding: '2px 8px', fontSize: 10, fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 4, flexShrink: 0 }}><Icon className="ti ti-check" /> PUBLISHED</span>
+                : <span style={{ background: '#eef0f2', color: 'var(--muted)', borderRadius: 999, padding: '2px 8px', fontSize: 10, fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 4, flexShrink: 0 }}><Icon className="ti ti-time" /> DRAFT</span>}
             </div>
             <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>
               {s.batches.length === 0 ? <em>No batches linked</em> : `(${s.batches.map((b) => b.name).join(", ")})`}
@@ -2049,7 +2048,7 @@ function DaySchedulesPopover({ dateKey: dk, anchorRect, schedules, onClose, onPi
               fontWeight: 600, fontSize: 13,
             }}
           >
-            Open all {schedules.length} side-by-side <i className="ti ti-angle-double-right" />
+            Open all {schedules.length} side-by-side <Icon className="ti ti-angle-double-right" />
           </button>
         </div>
       )}
@@ -2129,13 +2128,13 @@ function ScheduleModal({ state, allSchedules, onClose, onCreate, onUpdate, onDel
               const confirmed = { ...pendingCopy, confirmContentDuplication: true };
               editing ? onUpdate(confirmed) : onCreate(confirmed);
             }}>
-              <i className="ti ti-files" /> Yes, copy anyway
+              <Icon className="ti ti-files" /> Yes, copy anyway
             </button>
           </>
         }
       >
         <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 10, padding: 14, marginBottom: 14, display: 'flex', gap: 12 }}>
-          <i className="ti ti-alert" style={{ color: '#c2410c', fontSize: 22, lineHeight: 1, marginTop: 2 }} />
+          <Icon className="ti ti-alert" style={{ color: '#c2410c', fontSize: 22, lineHeight: 1, marginTop: 2 }} />
           <div style={{ color: '#7c2d12', fontSize: 13, lineHeight: 1.5 }}>
             You're copying events from <strong>{source.name}</strong> ({source.date}). Some of them reference shared content — the new schedule will point to the <strong>same exam/quiz/recording</strong>, so students would see identical material.
           </div>
@@ -2149,7 +2148,7 @@ function ScheduleModal({ state, allSchedules, onClose, onCreate, onUpdate, onDel
             const ref = describeBoundContent({ type: e.type, examId: e.examId, quizId: e.quizId, courseId: e.courseId, moduleId: e.moduleId, chapterId: e.chapterId });
             return (
               <li key={e.id} style={{ padding: '4px 0' }}>
-                <span style={{ color: meta.color, fontWeight: 700 }}><i className={`ti ${meta.icon}`} style={{ marginRight: 4 }} />{meta.label}</span>
+                <span style={{ color: meta.color, fontWeight: 700 }}><Icon className={`ti ${meta.icon}`} style={{ marginRight: 4 }} />{meta.label}</span>
                 {' — '}{e.title}
                 {ref && <span style={{ color: 'var(--muted)' }}> · {ref}</span>}
               </li>
@@ -2168,7 +2167,7 @@ function ScheduleModal({ state, allSchedules, onClose, onCreate, onUpdate, onDel
       <div style={{ marginRight: 'auto' }}>
         {editing && !published && (
           <button type="button" className="legacy-btn legacy-btn-danger" onClick={() => onDelete(s.id)}>
-            <i className="ti ti-trash" /> Delete
+            <Icon className="ti ti-trash" /> Delete
           </button>
         )}
       </div>
@@ -2177,7 +2176,7 @@ function ScheduleModal({ state, allSchedules, onClose, onCreate, onUpdate, onDel
       </button>
       {!published && (
         <button type="submit" form="schedule-meta-form" className="legacy-btn legacy-btn-success">
-          <i className={`ti ${editing ? 'ti-check' : 'ti-plus'}`} /> {editing ? 'Save changes' : 'Create schedule'}
+          <Icon className={`ti ${editing ? 'ti-check' : 'ti-plus'}`} /> {editing ? 'Save changes' : 'Create schedule'}
         </button>
       )}
     </>
@@ -2202,12 +2201,12 @@ function ScheduleModal({ state, allSchedules, onClose, onCreate, onUpdate, onDel
           fontSize: 13, fontWeight: 600,
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
         }}>
-          <i className="ti ti-check" /> This schedule is already Published, un-publish first to modify
+          <Icon className="ti ti-check" /> This schedule is already Published, un-publish first to modify
         </div>
       )}
       <form id="schedule-meta-form" className="form-modal" onSubmit={submit}>
         <div className="asset-form-section">
-          <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Basic Details</div>
+          <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Basic Details</div>
           <div className="asset-form-grid basic-grid">
             <label className="field-cell">
               <div className="float-field">
@@ -2237,7 +2236,7 @@ function ScheduleModal({ state, allSchedules, onClose, onCreate, onUpdate, onDel
         </div>
 
         <div className="asset-form-section">
-          <div className="asset-form-section-title"><i className="ti ti-users" /> Linked Batches</div>
+          <div className="asset-form-section-title"><Icon className="ti ti-users" /> Linked Batches</div>
           <BatchPicker
             batchIds={batchIds}
             onToggle={toggle}
@@ -2251,7 +2250,7 @@ function ScheduleModal({ state, allSchedules, onClose, onCreate, onUpdate, onDel
         {!published && (
           <div className="asset-form-section">
             <div className="asset-form-section-title">
-              <i className="ti ti-files" /> Copy Events From
+              <Icon className="ti ti-files" /> Copy Events From
               <span style={{ textTransform: 'none', letterSpacing: 0, color: '#94a3b8', fontWeight: 500 }}>(optional)</span>
             </div>
             <div className="asset-form-grid">
@@ -2277,7 +2276,7 @@ function ScheduleModal({ state, allSchedules, onClose, onCreate, onUpdate, onDel
             </div>
             {source && sourceBound.length > 0 && (
               <div style={{ marginTop: 10, color: '#7c2d12', background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 8, padding: '8px 12px', fontSize: 12 }}>
-                <i className="ti ti-alert" /> {sourceBound.length} event(s) reference shared content (exam/quiz/recording) — you'll be asked to confirm before copying.
+                <Icon className="ti ti-alert" /> {sourceBound.length} event(s) reference shared content (exam/quiz/recording) — you'll be asked to confirm before copying.
               </div>
             )}
           </div>
@@ -2436,7 +2435,7 @@ function MenuItem({ icon, iconColor, label, onPick, disabled, danger, border, di
         opacity: disabled ? 0.65 : 1,
       }}
     >
-      <i className={`ti ${icon}`} style={{ marginRight: 8, color: disabled ? '#c2cfd2' : iconColor }} />
+      <Icon className={`ti ${icon}`} style={{ marginRight: 8, color: disabled ? '#c2cfd2' : iconColor }} />
       {label}
     </button>
   );
@@ -2474,7 +2473,7 @@ function NewScheduleCircle({ onClick }) {
         transition: 'border-color 120ms, color 120ms',
       }}
     >
-      <i className="ti ti-plus" />
+      <Icon className="ti ti-plus" />
     </span>
   );
 }
@@ -2566,10 +2565,10 @@ function VenueSelect({ value, onChange, type = 1 }) {
               type="button" onClick={clear} tabIndex={-1}
               title="Clear"
               style={{ position: 'absolute', right: 6, top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--muted)', padding: 4 }}
-            ><i className="ti ti-close" /></button>
+            ><Icon className="ti ti-close" /></button>
           )
           : (
-            <i className="ti ti-search" style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', fontSize: 12 }} />
+            <Icon className="ti ti-search" style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', fontSize: 12 }} />
           )
         }
       </div>
@@ -2586,7 +2585,7 @@ function VenueSelect({ value, onChange, type = 1 }) {
         }}>
           {loading && (
             <div style={{ padding: '10px 12px', fontSize: 12, color: 'var(--muted)' }}>
-              <i className="ti ti-reload" style={{ marginRight: 6 }} />Loading venues…
+              <Icon className="ti ti-reload" style={{ marginRight: 6 }} />Loading venues…
             </div>
           )}
           {!loading && filtered.length === 0 && (
@@ -2604,7 +2603,7 @@ function VenueSelect({ value, onChange, type = 1 }) {
               <div style={{ fontWeight: 600, color: 'var(--ink)', fontSize: 13 }}>{item.name}</div>
               {item.capacity != null && (
                 <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <i className="ti ti-user" />{item.capacity} capacity
+                  <Icon className="ti ti-user" />{item.capacity} capacity
                 </div>
               )}
             </button>
@@ -2711,10 +2710,10 @@ function InstructorPicker({ value, onChange, placeholder = 'Search instructor…
               type="button" onClick={clear} tabIndex={-1}
               title="Clear"
               style={{ position: 'absolute', right: 6, top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--muted)', padding: 4 }}
-            ><i className="ti ti-close" /></button>
+            ><Icon className="ti ti-close" /></button>
           )
           : (
-            <i className="ti ti-search" style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', fontSize: 12 }} />
+            <Icon className="ti ti-search" style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', fontSize: 12 }} />
           )
         }
       </div>
@@ -2731,7 +2730,7 @@ function InstructorPicker({ value, onChange, placeholder = 'Search instructor…
         }}>
           {loading && (
             <div style={{ padding: '10px 12px', fontSize: 12, color: 'var(--muted)' }}>
-              <i className="ti ti-reload" style={{ marginRight: 6 }} />Searching…
+              <Icon className="ti ti-reload" style={{ marginRight: 6 }} />Searching…
             </div>
           )}
           {!loading && results.length === 0 && (
@@ -2751,7 +2750,7 @@ function InstructorPicker({ value, onChange, placeholder = 'Search instructor…
                 <div style={{ fontWeight: 600, color: 'var(--ink)', fontSize: 13 }}>{item.name}</div>
                 {mobile && (
                   <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
-                    <i className="ti ti-mobile" />{mobile}
+                    <Icon className="ti ti-mobile" />{mobile}
                   </div>
                 )}
               </button>
@@ -2904,7 +2903,7 @@ function EventModal({ state, scheduleDate, onClose, onSave, onDelete }) {
     return (
       <Modal onClose={() => setPendingRecur(null)} title="Repeat shared content?" maxWidth={500}>
         <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 10, padding: 14, marginBottom: 14, display: 'flex', gap: 12 }}>
-          <i className="ti ti-alert" style={{ color: '#c2410c', fontSize: 22, lineHeight: 1, marginTop: 2 }} />
+          <Icon className="ti ti-alert" style={{ color: '#c2410c', fontSize: 22, lineHeight: 1, marginTop: 2 }} />
           <div style={{ color: '#7c2d12', fontSize: 13, lineHeight: 1.5 }}>
             You're about to repeat a <strong>{meta.label}</strong> across multiple days. The same content reference will be linked on every occurrence — students would see <strong>identical material</strong> on each day.
           </div>
@@ -2919,7 +2918,7 @@ function EventModal({ state, scheduleDate, onClose, onSave, onDelete }) {
         </p>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
           <button type="button" onClick={() => setPendingRecur(null)} style={btnGhost}>Back to event</button>
-          <button type="button" onClick={() => onSave(pendingRecur)} style={btnPrimary}><i className="ti ti-repeat" /> Yes, repeat anyway</button>
+          <button type="button" onClick={() => onSave(pendingRecur)} style={btnPrimary}><Icon className="ti ti-repeat" /> Yes, repeat anyway</button>
         </div>
       </Modal>
     );
@@ -2948,7 +2947,7 @@ function EventModal({ state, scheduleDate, onClose, onSave, onDelete }) {
               return (
                 <button key={t.id} type="button" onClick={() => setType(t.id)}
                   style={{ border: `1px solid ${sel ? t.color : 'var(--line)'}`, background: sel ? t.soft : '#fff', color: sel ? t.color : 'var(--ink)', borderRadius: 8, padding: '8px 10px', cursor: 'pointer', fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <i className={`ti ${t.icon}`} />{t.label}
+                  <Icon className={`ti ${t.icon}`} />{t.label}
                 </button>
               );
             })}
@@ -2974,7 +2973,7 @@ function EventModal({ state, scheduleDate, onClose, onSave, onDelete }) {
             </label>
             {recurEnabled && CONTENT_BOUND_TYPES.has(type) && (
               <div style={{ marginTop: 8, padding: '8px 10px', background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 8, color: '#7c2d12', fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
-                <i className="ti ti-alert" /> Repeating a {EVENT_TYPES[type].label} reuses the same content on each day — you'll be asked to confirm.
+                <Icon className="ti ti-alert" /> Repeating a {EVENT_TYPES[type].label} reuses the same content on each day — you'll be asked to confirm.
               </div>
             )}
             {recurEnabled && (
@@ -2998,12 +2997,12 @@ function EventModal({ state, scheduleDate, onClose, onSave, onDelete }) {
 
         {formError && (
           <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b', padding: '8px 12px', borderRadius: 8, fontSize: 13 }}>
-            <i className="ti ti-alert" style={{ marginRight: 6 }} />{formError}
+            <Icon className="ti ti-alert" style={{ marginRight: 6 }} />{formError}
           </div>
         )}
 
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginTop: 4 }}>
-          <div>{editing && <button type="button" onClick={() => onDelete(ev.id)} style={btnDanger}><i className="ti ti-trash" /> Delete</button>}</div>
+          <div>{editing && <button type="button" onClick={() => onDelete(ev.id)} style={btnDanger}><Icon className="ti ti-trash" /> Delete</button>}</div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button type="button" onClick={onClose} style={btnGhost}>Cancel</button>
             <button type="submit" style={btnPrimary}>{editing ? 'Save changes' : 'Create event'}</button>
@@ -3151,7 +3150,7 @@ function PublishModal({ schedule, existingSchedules, onClose, onConfirm }) {
       />
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
         <button type="button" onClick={onClose} style={btnGhost}>Cancel</button>
-        <button type="button" onClick={() => onConfirm(extraIds)} style={btnPrimary}><i className="ti ti-check" /> Publish schedule</button>
+        <button type="button" onClick={() => onConfirm(extraIds)} style={btnPrimary}><Icon className="ti ti-check" /> Publish schedule</button>
       </div>
     </Modal>
   );
@@ -3177,7 +3176,7 @@ function DuplicateModal({ state, allSchedules, onClose, onConfirm }) {
     <>
       <button type="button" className="legacy-btn legacy-btn-default" onClick={onClose}>Cancel</button>
       <button type="submit" form="duplicate-schedule-form" className="legacy-btn legacy-btn-success">
-        <i className="ti ti-files" /> Duplicate
+        <Icon className="ti ti-files" /> Duplicate
       </button>
     </>
   );
@@ -3196,7 +3195,7 @@ function DuplicateModal({ state, allSchedules, onClose, onConfirm }) {
       </p>
       <form id="duplicate-schedule-form" className="form-modal" onSubmit={(e) => { e.preventDefault(); onConfirm({ toDate, name, batchIds }); }}>
         <div className="asset-form-section">
-          <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Basic Details</div>
+          <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Basic Details</div>
           <div className="asset-form-grid basic-grid">
             <label className="field-cell">
               <div className="float-field">
@@ -3224,7 +3223,7 @@ function DuplicateModal({ state, allSchedules, onClose, onConfirm }) {
         </div>
 
         <div className="asset-form-section">
-          <div className="asset-form-section-title"><i className="ti ti-users" /> Linked Batches</div>
+          <div className="asset-form-section-title"><Icon className="ti ti-users" /> Linked Batches</div>
           <BatchPicker
             batchIds={batchIds} onToggle={toggle}
             label={null}
@@ -3248,9 +3247,9 @@ function Modal({ children, onClose, title, maxWidth = 520, icon = 'ti-calendar',
       onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="crispr-modal-dialog" style={{ maxWidth }} role="dialog" aria-modal="true">
         <div className={`crispr-modal-header${headerClassName ? ` ${headerClassName}` : ''}`}>
-          <h3>{icon && <i className={`ti ${icon}`} />} {title}</h3>
+          <h3>{icon && <Icon className={`ti ${icon}`} />} {title}</h3>
           <button type="button" className="crispr-modal-close" onClick={onClose}>
-            <i className="ti ti-close" />
+            <Icon className="ti ti-close" />
           </button>
         </div>
         <div className="crispr-modal-body">{children}</div>

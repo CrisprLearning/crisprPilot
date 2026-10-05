@@ -2,6 +2,7 @@ import React from 'react';
 import {
   methodIcon, methodLabel, orderStateMeta, paymentLabel, statusMeta, summarizeOrder,
 } from '../lib/paymentsModel';
+import Icon from './Icon';
 
 const INR = (n) => `₹${Number(n || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const fmtDate = (ts) => (ts ? new Date(ts * 1000).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) : '—');
@@ -30,7 +31,7 @@ export default function OrderPaymentsCard({ order, payments, compact = false, on
           <div className="opc-order">
             <span className="opc-order-no">{order.orderNumber}</span>
             <span className={`opc-mode is-${order.paymentMode.toLowerCase()}`}>
-              <i className={`ti ${order.paymentMode === 'INSTALLMENTS' ? 'ti-layout-list-thumb' : 'ti-check-box'}`} />
+              <Icon className={`ti ${order.paymentMode === 'INSTALLMENTS' ? 'ti-layout-list-thumb' : 'ti-check-box'}`} />
               {order.paymentMode === 'INSTALLMENTS' ? 'Installments' : 'Full payment'}
             </span>
             <span className={`opc-state is-${state.tone}`}><span className="opc-state-dot" />{state.label}</span>
@@ -51,16 +52,16 @@ export default function OrderPaymentsCard({ order, payments, compact = false, on
         <span>{s.paidPct}% of order settled</span>
         {s.nextDue ? (
           <span className={`opc-next is-${statusMeta(s.nextDue.status).tone}`}>
-            <i className="ti ti-alarm-clock" />
+            <Icon className="ti ti-alarm-clock" />
             {s.nextDue.status === 'overdue' ? 'Overdue since' : 'Next due'} {fmtDate(s.nextDue.dueDate)} · {INR(s.nextDue.amount)}
           </span>
-        ) : <span className="opc-next is-good"><i className="ti ti-check" /> Nothing pending</span>}
+        ) : <span className="opc-next is-good"><Icon className="ti ti-check" /> Nothing pending</span>}
       </div>
 
       <div className={`opc-body ${compact ? 'is-compact' : ''}`}>
         {!compact && (
           <div className="opc-fees">
-            <div className="opc-section-title"><i className="ti ti-receipt" /> Fee breakdown</div>
+            <div className="opc-section-title"><Icon className="ti ti-receipt" /> Fee breakdown</div>
             <dl className="opc-rows">
               {order.feeLines.map((l) => (
                 <div key={l.key}>
@@ -87,7 +88,7 @@ export default function OrderPaymentsCard({ order, payments, compact = false, on
 
         <div className="opc-timeline">
           <div className="opc-section-title">
-            <i className="ti ti-time" /> Payments
+            <Icon className="ti ti-time" /> Payments
             <span className="opc-count">{s.rows.filter((p) => p.status === 'paid').length} of {s.rows.length} settled</span>
           </div>
           <ol className="opc-steps">
@@ -95,7 +96,7 @@ export default function OrderPaymentsCard({ order, payments, compact = false, on
               const m = statusMeta(p.status);
               return (
                 <li key={p.id} className={`opc-step is-${m.tone} ${highlightPaymentId === p.id ? 'is-highlight' : ''}`}>
-                  <span className="opc-step-dot"><i className={`ti ${p.status === 'paid' ? 'ti-check' : p.status === 'overdue' || p.status === 'failed' ? 'ti-alert' : 'ti-time'}`} /></span>
+                  <span className="opc-step-dot"><Icon className={`ti ${p.status === 'paid' ? 'ti-check' : p.status === 'overdue' || p.status === 'failed' ? 'ti-alert' : 'ti-time'}`} /></span>
                   <div className="opc-step-body">
                     <div className="opc-step-top">
                       <span className="opc-step-label">{paymentLabel(p)}</span>
@@ -105,18 +106,18 @@ export default function OrderPaymentsCard({ order, payments, compact = false, on
                       <span className={`opc-pill is-${m.tone}`}>{m.label}</span>
                       {p.status === 'paid' ? (
                         <>
-                          <span><i className="ti ti-calendar" /> {fmtDate(p.paidAt)}</span>
+                          <span><Icon className="ti ti-calendar" /> {fmtDate(p.paidAt)}</span>
                           <span className={`opc-chan is-${p.channel.toLowerCase()}`}>{p.channel}</span>
-                          <span><i className={`ti ${methodIcon(p.method)}`} /> {methodLabel(p.method)}</span>
+                          <span><Icon className={`ti ${methodIcon(p.method)}`} /> {methodLabel(p.method)}</span>
                           {p.reference ? <span className="is-mono">{p.reference}</span> : null}
                         </>
                       ) : (
                         <>
-                          {p.dueDate ? <span><i className="ti ti-calendar" /> Due {fmtDate(p.dueDate)}</span> : null}
-                          {p.method ? <span><i className={`ti ${methodIcon(p.method)}`} /> {methodLabel(p.method)}</span> : null}
+                          {p.dueDate ? <span><Icon className="ti ti-calendar" /> Due {fmtDate(p.dueDate)}</span> : null}
+                          {p.method ? <span><Icon className={`ti ${methodIcon(p.method)}`} /> {methodLabel(p.method)}</span> : null}
                         </>
                       )}
-                      {p.note ? <span className="opc-note"><i className="ti ti-comment-alt" /> {p.note}</span> : null}
+                      {p.note ? <span className="opc-note"><Icon className="ti ti-comment-alt" /> {p.note}</span> : null}
                       {p.originalBaseAmount != null && p.originalBaseAmount !== p.baseAmount ? (
                         <span className="opc-adjusted" title={`Adjusted from ${INR(p.originalBaseAmount)} + GST`}>adjusted from <s>{INR(p.originalBaseAmount)}</s></span>
                       ) : null}
@@ -139,7 +140,7 @@ export default function OrderPaymentsCard({ order, payments, compact = false, on
       {onViewPayments ? (
         <div className="opc-foot">
           <button type="button" className="opc-link" onClick={() => onViewPayments(order)}>
-            <i className="ti ti-list" /> View in Payments
+            <Icon className="ti ti-list" /> View in Payments
           </button>
         </div>
       ) : null}

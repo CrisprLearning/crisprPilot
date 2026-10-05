@@ -6,6 +6,7 @@ import { availableMentors, candidateDetailFallback } from '../data/candidateDeta
 import OrderPaymentsCard from '../components/OrderPaymentsCard';
 import { getAllOrders, useManualOrders, usePayments } from '../lib/paymentsStore';
 import { orderStateMeta, statusMeta, summarizeOrder } from '../lib/paymentsModel';
+import Icon from '../components/Icon';
 
 /* ── Helpers ── */
 function fmtDate(ts) {
@@ -66,20 +67,20 @@ function EnrolledCourseCard({ en, order, payments, onViewPayments }) {
   return (
     <div className={`cd-course is-${v.tone}`}>
       <div className="cd-course-head">
-        <div className="cd-course-badge"><i className={`ti ${courseTypeIcon(en.courseType)}`} /></div>
+        <div className="cd-course-badge"><Icon className={`ti ${courseTypeIcon(en.courseType)}`} /></div>
         <div className="cd-course-title">
           <h3>{en.courseName}</h3>
           <div className="cd-course-chips">
-            <span className="cd-chip"><i className="ti ti-bookmark" /> {en.courseCode}</span>
-            <span className="cd-chip"><i className="ti ti-tag" /> {en.courseType}</span>
+            <span className="cd-chip"><Icon className="ti ti-bookmark" /> {en.courseCode}</span>
+            <span className="cd-chip"><Icon className="ti ti-tag" /> {en.courseType}</span>
             <span className={`cd-status is-${v.tone}`}>
               <span className="cd-status-dot" /> {v.status}
             </span>
           </div>
         </div>
         <div className="cd-course-actions">
-          <button type="button" className="cd-btn cd-btn-primary"><i className="ti ti-eye" /> View Course</button>
-          <button type="button" className="cd-btn cd-btn-ghost"><i className="ti ti-receipt" /> View Invoice</button>
+          <button type="button" className="cd-btn cd-btn-primary"><Icon className="ti ti-eye" /> View Course</button>
+          <button type="button" className="cd-btn cd-btn-ghost"><Icon className="ti ti-receipt" /> View Invoice</button>
         </div>
       </div>
 
@@ -88,7 +89,7 @@ function EnrolledCourseCard({ en, order, payments, onViewPayments }) {
           {/* Progress */}
           <div className="cd-block">
             <div className="cd-block-head">
-              <span className="cd-block-title"><i className="ti ti-bar-chart" /> Learning progress</span>
+              <span className="cd-block-title"><Icon className="ti ti-bar-chart" /> Learning progress</span>
               <span className="cd-progress-pct">{progress}<small>%</small></span>
             </div>
             <div className="cd-progress-track" role="progressbar" aria-valuenow={progress} aria-valuemin="0" aria-valuemax="100">
@@ -96,21 +97,21 @@ function EnrolledCourseCard({ en, order, payments, onViewPayments }) {
             </div>
             <div className="cd-stats">
               <div className="cd-stat">
-                <i className="ti ti-layers" />
+                <Icon className="ti ti-layers" />
                 <div>
                   <div className="cd-stat-value">{en.completedModules} <span>/ {en.totalModules}</span></div>
                   <div className="cd-stat-label">Modules completed</div>
                 </div>
               </div>
               <div className="cd-stat">
-                <i className="ti ti-time" />
+                <Icon className="ti ti-time" />
                 <div>
                   <div className="cd-stat-value">{en.hoursSpent} <span>hrs</span></div>
                   <div className="cd-stat-label">Time spent</div>
                 </div>
               </div>
               <div className="cd-stat">
-                <i className="ti ti-reload" />
+                <Icon className="ti ti-reload" />
                 <div>
                   <div className="cd-stat-value">{en.lastAccessed ? fmtDate(en.lastAccessed) : '—'}</div>
                   <div className="cd-stat-label">Last accessed</div>
@@ -122,7 +123,7 @@ function EnrolledCourseCard({ en, order, payments, onViewPayments }) {
           {/* Validity */}
           <div className="cd-block">
             <div className="cd-block-head">
-              <span className="cd-block-title"><i className="ti ti-calendar" /> Validity period</span>
+              <span className="cd-block-title"><Icon className="ti ti-calendar" /> Validity period</span>
               <span className={`cd-validity-left is-${v.tone}`}>{v.label}</span>
             </div>
             <div className="cd-validity-track">
@@ -139,7 +140,7 @@ function EnrolledCourseCard({ en, order, payments, onViewPayments }) {
         {(pay || os) && (
           <aside className="cd-course-aside">
             <div className="cd-pay-head">
-              <span className="cd-block-title"><i className="ti ti-credit-card" /> Payment</span>
+              <span className="cd-block-title"><Icon className="ti ti-credit-card" /> Payment</span>
               {order ? (
                 <span className={`cd-pay-method is-${order.paymentMode.toLowerCase()}`}>{order.paymentMode === 'INSTALLMENTS' ? 'Installments' : 'Full'}</span>
               ) : <span className="cd-pay-method">{pay.method || '—'}</span>}
@@ -170,7 +171,7 @@ function EnrolledCourseCard({ en, order, payments, onViewPayments }) {
                   {os.overdue.length > 1 ? <div><dt>Overdue items</dt><dd className="is-bad">{os.overdue.length}</dd></div> : null}
                 </dl>
                 <button type="button" className="cd-btn cd-btn-ghost cd-pay-link" onClick={() => onViewPayments?.(order)}>
-                  <i className="ti ti-list" /> Track all payments
+                  <Icon className="ti ti-list" /> Track all payments
                 </button>
               </>
             ) : (
@@ -315,9 +316,9 @@ export default function CandidateDetailPage() {
           <div style={{ flex: 1 }}>
             <h2 style={{ margin: '0 0 8px 0', fontSize: '28px', color: 'white' }}>{candidate.name}</h2>
             <div style={{ display: 'flex', gap: '20px', marginTop: '10px', fontSize: '14px' }}>
-              <span><i className="ti ti-id-badge"></i> {candidate.id}</span>
-              <span><i className="ti ti-email"></i> {candidate.email}</span>
-              <span><i className="ti ti-mobile"></i> {candidate.phone}</span>
+              <span><Icon className="ti ti-id-badge" /> {candidate.id}</span>
+              <span><Icon className="ti ti-email" /> {candidate.email}</span>
+              <span><Icon className="ti ti-mobile" /> {candidate.phone}</span>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginTop: '20px' }}>
               {[
@@ -335,7 +336,7 @@ export default function CandidateDetailPage() {
           </div>
           <div>
             <button onClick={() => navigate('/candidate-profile')} style={{ background: 'white', color: '#006073', border: 'none', padding: '10px 18px', borderRadius: '6px', fontWeight: 600, cursor: 'pointer', fontSize: '14px' }}>
-              <i className="ti ti-arrow-left"></i> Back
+              <Icon className="ti ti-arrow-left" /> Back
             </button>
           </div>
         </div>
@@ -345,7 +346,7 @@ export default function CandidateDetailPage() {
       <div style={{ display: 'flex', gap: 0, marginBottom: '25px', borderBottom: '2px solid #e9ecef' }}>
         {tabs.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)} style={{ padding: '15px 30px', background: 'transparent', border: 'none', borderBottom: `3px solid ${activeTab === t.key ? '#006073' : 'transparent'}`, cursor: 'pointer', fontSize: '15px', fontWeight: 600, color: activeTab === t.key ? '#006073' : '#6c757d', transition: 'all 0.2s' }}>
-            <i className={`ti ${t.icon}`} style={{ marginRight: '6px' }}></i>{t.label}
+            <Icon className={`ti ${t.icon}`} style={{ marginRight: '6px' }} />{t.label}
           </button>
         ))}
       </div>
@@ -379,7 +380,7 @@ export default function CandidateDetailPage() {
           ].map(card => (
             <div key={card.title} style={{ background: 'white', border: '1px solid #e9ecef', borderRadius: '8px', padding: '20px' }}>
               <h5 style={{ color: '#006073', margin: '0 0 15px 0', fontSize: '16px', fontWeight: 600, borderBottom: '2px solid #e9ecef', paddingBottom: '10px' }}>
-                <i className={`ti ${card.icon}`} style={{ marginRight: '8px' }}></i>{card.title}
+                <Icon className={`ti ${card.icon}`} style={{ marginRight: '8px' }} />{card.title}
               </h5>
               {card.fields.map(f => (
                 <div key={f.label} style={{ marginBottom: '15px' }}>
@@ -399,11 +400,11 @@ export default function CandidateDetailPage() {
             <section className="cd-orders">
               <div className="cd-orders-head">
                 <div>
-                  <h4><i className="ti ti-receipt" /> Orders &amp; payments</h4>
+                  <h4><Icon className="ti ti-receipt" /> Orders &amp; payments</h4>
                   <p>Order-wise record of what has been paid and what is still due. Enrollments are granted against these orders.</p>
                 </div>
                 <button type="button" className="cd-btn cd-btn-ghost" onClick={() => navigate(`/payments?student=${encodeURIComponent(candidate.id)}`)}>
-                  <i className="ti ti-list" /> All payments by {candidate.name.split(' ')[0]}
+                  <Icon className="ti ti-list" /> All payments by {candidate.name.split(' ')[0]}
                 </button>
               </div>
               <div className="cd-orders-strip">
@@ -427,7 +428,7 @@ export default function CandidateDetailPage() {
           )}
 
           <div className="cd-courses-head">
-            <h4><i className="ti ti-book" /> Enrolled courses</h4>
+            <h4><Icon className="ti ti-book" /> Enrolled courses</h4>
             <span>{candidate.enrolledCourses.length} course{candidate.enrolledCourses.length === 1 ? '' : 's'}</span>
           </div>
           {candidate.enrolledCourses.map((en, idx) => (
@@ -447,7 +448,7 @@ export default function CandidateDetailPage() {
         <div style={{ display: 'flex', gap: '20px' }}>
           {/* Course Progress */}
           <div style={{ flex: 1, background: 'white', border: '1px solid #e9ecef', borderRadius: '8px', padding: '20px', marginBottom: '20px' }}>
-            <h4 style={{ margin: '0 0 20px 0', color: '#333' }}><i className="ti ti-bar-chart"></i> Course Progress</h4>
+            <h4 style={{ margin: '0 0 20px 0', color: '#333' }}><Icon className="ti ti-bar-chart" /> Course Progress</h4>
             {candidate.enrolledCourses.map(en => (
               <div key={en.courseCode} style={{ marginBottom: '20px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '8px' }}>
@@ -463,7 +464,7 @@ export default function CandidateDetailPage() {
 
           {/* Exam Results */}
           <div style={{ flex: 1, background: 'white', border: '1px solid #e9ecef', borderRadius: '8px', padding: '20px' }}>
-            <h4 style={{ margin: '0 0 20px 0', color: '#333' }}><i className="ti ti-clipboard"></i> Recent Exam Results</h4>
+            <h4 style={{ margin: '0 0 20px 0', color: '#333' }}><Icon className="ti ti-clipboard" /> Recent Exam Results</h4>
             {candidate.examResults.slice(0, 5).map(r => (
               <div key={r.examCode} style={{ background: '#f8f9fa', borderRadius: '6px', padding: '15px', marginBottom: '12px', borderLeft: '4px solid #006073' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
@@ -485,7 +486,7 @@ export default function CandidateDetailPage() {
       {/* ═══ Feedbacks Tab ═══ */}
       {activeTab === 'feedbacks' && (
         <div style={{ background: 'white', border: '1px solid #e9ecef', borderRadius: '8px', padding: '20px' }}>
-          <h4 style={{ margin: '0 0 20px 0', color: '#333' }}><i className="ti ti-comments"></i> Student Feedback History</h4>
+          <h4 style={{ margin: '0 0 20px 0', color: '#333' }}><Icon className="ti ti-comments" /> Student Feedback History</h4>
           {sortedFeedbacks.length > 0 ? (
             <div style={{ position: 'relative', paddingLeft: '30px' }}>
               {/* Timeline line */}
@@ -499,18 +500,18 @@ export default function CandidateDetailPage() {
                       <div>
                         <div style={{ fontWeight: 600, marginBottom: '4px', color: '#333' }}>Feedback on {fb.linkedItemType}: {fb.linkedItemName}</div>
                         <div style={{ fontSize: '11px', color: '#6c757d', marginBottom: '8px' }}>
-                          <i className="ti ti-calendar"></i> {fmtDate(fb.submittedDate)}
+                          <Icon className="ti ti-calendar" /> {fmtDate(fb.submittedDate)}
                           {fb.rating != null && (
                             <span style={{ marginLeft: '15px', display: 'inline-block' }}>
                               {[1, 2, 3, 4, 5].map(s => (
-                                <i key={s} className={getStarClass(fb.rating, s - 1)} style={{ color: '#ffb706', fontSize: '13px', marginRight: '2px' }}></i>
+                                <Icon key={s} className={getStarClass(fb.rating, s - 1)} style={{ color: '#ffb706', fontSize: '13px', marginRight: '2px' }} />
                               ))}
                             </span>
                           )}
                         </div>
                       </div>
                       <button onClick={() => setQuickViewItem(fb)} style={{ fontSize: '11px', padding: '4px 12px', background: '#e9ecef', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                        <i className="ti ti-eye"></i> Quick View
+                        <Icon className="ti ti-eye" /> Quick View
                       </button>
                     </div>
                     <div style={{ background: '#f8f9fa', padding: '10px', borderRadius: '4px', borderLeft: '3px solid #006073' }}>
@@ -526,7 +527,7 @@ export default function CandidateDetailPage() {
             </div>
           ) : (
             <div style={{ textAlign: 'center', padding: '40px', color: '#6c757d' }}>
-              <i className="ti ti-comments" style={{ fontSize: '48px', opacity: 0.3 }}></i>
+              <Icon className="ti ti-comments" style={{ fontSize: '48px', opacity: 0.3 }} />
               <p style={{ marginTop: '15px' }}>No feedback submitted yet</p>
             </div>
           )}
@@ -536,7 +537,7 @@ export default function CandidateDetailPage() {
       {/* ═══ Activity Tab ═══ */}
       {activeTab === 'activity' && (
         <div style={{ background: 'white', border: '1px solid #e9ecef', borderRadius: '8px', padding: '20px' }}>
-          <h4 style={{ margin: '0 0 20px 0', color: '#333' }}><i className="ti ti-time"></i> Recent Activity</h4>
+          <h4 style={{ margin: '0 0 20px 0', color: '#333' }}><Icon className="ti ti-time" /> Recent Activity</h4>
           <div style={{ position: 'relative', paddingLeft: '30px' }}>
             <div style={{ position: 'absolute', left: '5px', top: '5px', bottom: '5px', width: '2px', background: '#e9ecef' }}></div>
             {(candidate.recentActivity || []).slice(0, 20).map((act, idx) => (
@@ -556,9 +557,9 @@ export default function CandidateDetailPage() {
       {activeTab === 'mentor' && (
         <div style={{ background: 'white', border: '1px solid #e9ecef', borderRadius: '8px', padding: '25px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
-            <h4 style={{ margin: 0, color: '#333' }}><i className="ti ti-user"></i> Assigned Mentor</h4>
+            <h4 style={{ margin: 0, color: '#333' }}><Icon className="ti ti-user" /> Assigned Mentor</h4>
             <button onClick={() => { setSelectedNewMentor(null); setMentorSearch(''); setMentorModalOpen(true); }} style={{ background: '#006073', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}>
-              <i className="ti ti-pencil"></i> Change Mentor
+              <Icon className="ti ti-pencil" /> Change Mentor
             </button>
           </div>
 
@@ -589,7 +590,7 @@ export default function CandidateDetailPage() {
                       {lbl === 'Rating' ? (
                         <div style={{ fontSize: '14px', color: '#333', marginTop: '4px' }}>
                           <span style={{ color: '#ffc107' }}>
-                            {[0, 1, 2, 3, 4].map(i => <i key={i} className={getStarClass(candidate.mentor.rating, i)} style={{ marginRight: '2px' }}></i>)}
+                            {[0, 1, 2, 3, 4].map(i => <Icon key={i} className={getStarClass(candidate.mentor.rating, i)} style={{ marginRight: '2px' }} />)}
                           </span>
                           <span style={{ marginLeft: '5px', color: '#6c757d' }}>{candidate.mentor.rating}</span>
                         </div>
@@ -601,17 +602,17 @@ export default function CandidateDetailPage() {
                 </div>
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <button style={{ background: '#006073', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', fontSize: '13px', cursor: 'pointer' }}>
-                    <i className="ti ti-email"></i> {candidate.mentor.email}
+                    <Icon className="ti ti-email" /> {candidate.mentor.email}
                   </button>
                   <button style={{ background: '#f8f9fa', color: '#333', border: '1px solid #e9ecef', padding: '8px 16px', borderRadius: '4px', fontSize: '13px', cursor: 'pointer' }}>
-                    <i className="ti ti-mobile"></i> {candidate.mentor.phone}
+                    <Icon className="ti ti-mobile" /> {candidate.mentor.phone}
                   </button>
                 </div>
               </div>
             </div>
           ) : (
             <div style={{ textAlign: 'center', padding: '40px', color: '#6c757d' }}>
-              <i className="ti ti-user" style={{ fontSize: '48px', opacity: 0.3 }}></i>
+              <Icon className="ti ti-user" style={{ fontSize: '48px', opacity: 0.3 }} />
               <p style={{ marginTop: '15px' }}>No mentor assigned yet</p>
               <button onClick={() => { setSelectedNewMentor(null); setMentorSearch(''); setMentorModalOpen(true); }} style={{ background: '#006073', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer', fontWeight: 600, marginTop: '10px' }}>Assign a Mentor</button>
             </div>
@@ -624,7 +625,7 @@ export default function CandidateDetailPage() {
         <div className="crispr-modal-backdrop active" onClick={() => setQuickViewItem(null)}>
           <div className="crispr-modal" style={{ maxWidth: '600px' }} onClick={e => e.stopPropagation()}>
             <div className="crispr-modal-header" style={{ background: 'linear-gradient(135deg, #006073 0%, #004d5c 100%)', color: 'white', borderRadius: '6px 6px 0 0' }}>
-              <h4 style={{ margin: 0, color: 'white' }}><i className="ti ti-eye"></i> Quick View: {quickViewItem.linkedItemType}</h4>
+              <h4 style={{ margin: 0, color: 'white' }}><Icon className="ti ti-eye" /> Quick View: {quickViewItem.linkedItemType}</h4>
               <button onClick={() => setQuickViewItem(null)} style={{ background: 'none', border: 'none', color: 'white', fontSize: '20px', cursor: 'pointer', opacity: 1 }}>×</button>
             </div>
             <div className="crispr-modal-body" style={{ padding: '25px' }}>
@@ -700,8 +701,8 @@ export default function CandidateDetailPage() {
         <div className="crispr-modal-backdrop active" onClick={() => setMentorModalOpen(false)}>
           <div className="crispr-modal-dialog" style={{ maxWidth: '800px' }} role="dialog" aria-modal="true" onClick={e => e.stopPropagation()}>
             <div className="crispr-modal-header">
-              <h3><i className="ti ti-user"></i> Change Mentor</h3>
-              <button type="button" className="crispr-modal-close" onClick={() => setMentorModalOpen(false)}><i className="ti ti-close" /></button>
+              <h3><Icon className="ti ti-user" /> Change Mentor</h3>
+              <button type="button" className="crispr-modal-close" onClick={() => setMentorModalOpen(false)}><Icon className="ti ti-close" /></button>
             </div>
             <div className="crispr-modal-body" style={{ maxHeight: '500px' }}>
               <div style={{ marginBottom: '20px' }}>
@@ -728,26 +729,26 @@ export default function CandidateDetailPage() {
                             <h5 style={{ margin: 0, color: '#006073' }}>{m.name}</h5>
                             <div style={{ textAlign: 'right' }}>
                               <span style={{ color: '#ffc107', fontSize: '12px' }}>
-                                {[0, 1, 2, 3, 4].map(i => <i key={i} className={getStarClass(m.rating, i)}></i>)}
+                                {[0, 1, 2, 3, 4].map(i => <Icon key={i} className={getStarClass(m.rating, i)} />)}
                               </span>
                               <span style={{ marginLeft: '3px', color: '#6c757d', fontSize: '12px' }}>{m.rating}</span>
                             </div>
                           </div>
                           <p style={{ margin: '0 0 8px 0', color: '#6c757d', fontSize: '13px' }}>{m.brief}</p>
                           <div style={{ display: 'flex', gap: '15px', fontSize: '12px', color: '#6c757d' }}>
-                            <span><i className="ti ti-home"></i> {m.institution}</span>
-                            <span><i className="ti ti-bookmark"></i> {m.specialization}</span>
-                            <span><i className="ti ti-user"></i> Mentoring {m.mentoringStudents?.length || 0} students</span>
+                            <span><Icon className="ti ti-home" /> {m.institution}</span>
+                            <span><Icon className="ti ti-bookmark" /> {m.specialization}</span>
+                            <span><Icon className="ti ti-user" /> Mentoring {m.mentoringStudents?.length || 0} students</span>
                           </div>
                         </div>
-                        {isSel && <div style={{ flexShrink: 0 }}><i className="ti ti-check" style={{ fontSize: '24px', color: '#006073' }}></i></div>}
+                        {isSel && <div style={{ flexShrink: 0 }}><Icon className="ti ti-check" style={{ fontSize: '24px', color: '#006073' }} /></div>}
                       </div>
                     </div>
                   );
                 })}
                 {filteredMentors.length === 0 && (
                   <div style={{ textAlign: 'center', padding: '40px', color: '#6c757d' }}>
-                    <i className="ti ti-search" style={{ fontSize: '48px', opacity: 0.3 }}></i>
+                    <Icon className="ti ti-search" style={{ fontSize: '48px', opacity: 0.3 }} />
                     <p style={{ marginTop: '15px' }}>No mentors found matching your search</p>
                   </div>
                 )}
@@ -756,7 +757,7 @@ export default function CandidateDetailPage() {
             <div className="legacy-modal-footer">
               <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setMentorModalOpen(false)}>Cancel</button>
               <button type="button" className="legacy-btn legacy-btn-success" onClick={assignMentor} disabled={!selectedNewMentor} style={{ cursor: selectedNewMentor ? 'pointer' : 'not-allowed', opacity: selectedNewMentor ? 1 : 0.5 }}>
-                <i className="ti ti-check"></i> Assign Mentor
+                <Icon className="ti ti-check" /> Assign Mentor
               </button>
             </div>
           </div>

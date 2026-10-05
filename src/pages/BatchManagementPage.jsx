@@ -7,6 +7,7 @@ import { PERMS } from '../lib/permissions';
 import { batchesDemo } from '../data/adminRemainingDemo';
 import { listLocations } from '../lib/locationsApi';
 import useDebouncedValue from '../hooks/useDebouncedValue';
+import Icon from '../components/Icon';
 
 
 function titleToSlug(title) {
@@ -1064,7 +1065,7 @@ export default function BatchManagementPage() {
 
       <div className="page-header-section">
         <div className="page-header-title-group">
-          <span className="page-header-icon-box"><i className="ti ti-layout-grid2" /></span>
+          <span className="page-header-icon-box"><Icon className="ti ti-layout-grid2" /></span>
           <div>
             <h2>Batch Management</h2>
             <p>Organize students into batches, manage courses, and control access without changing the existing workflow.</p>
@@ -1072,14 +1073,14 @@ export default function BatchManagementPage() {
         </div>
         <Can permission={PERMS.BATCHES_EDIT}>
           <button type="button" className="create-batch-button" onClick={openCreateBatchModal}>
-            <i className="ti ti-plus" /> Create New Batch
+            <Icon className="ti ti-plus" /> Create New Batch
           </button>
         </Can>
       </div>
 
       <div className="filter-bar">
         <div className="search-wrapper">
-          <i className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} aria-hidden="true" />
+          <Icon className={`ti ${searchQuery ? 'ti-close' : 'ti-search'}`} onClick={() => setSearchQuery('')} aria-hidden="true" />
           <input
             type="text"
             className="search-input"
@@ -1095,7 +1096,7 @@ export default function BatchManagementPage() {
 
       {(hasLoaded && !isLoading && totalBatches === 0) ? (
         <div className="empty-state">
-          <i className="ti ti-layout-grid2" />
+          <Icon className="ti ti-layout-grid2" />
           <h3>No Batches Found</h3>
           {searchQuery.trim() ? (
             <p>No batches match your search</p>
@@ -1112,24 +1113,24 @@ export default function BatchManagementPage() {
               <tr>
                 <th className={`sortable ${sortColumn === 'batchName' ? 'active' : ''}`} style={{ width: '32%', minWidth: '320px' }} onClick={() => handleSort('batchName')}>
                   Batch Name
-                  <i className={`sort-icon ti ${sortIcon('batchName')}`} />
+                  <Icon className={`sort-icon ti ${sortIcon('batchName')}`} />
                 </th>
                 <th className={`sortable center-align ${sortColumn === 'studentCount' ? 'active' : ''}`} onClick={() => handleSort('studentCount')}>
                   Students
-                  <i className={`sort-icon ti ${sortIcon('studentCount')}`} />
+                  <Icon className={`sort-icon ti ${sortIcon('studentCount')}`} />
                 </th>
                 <th>Course</th>
                 <th className={`sortable ${sortColumn === 'startDate' ? 'active' : ''}`} onClick={() => handleSort('startDate')}>
                   Commence
-                  <i className={`sort-icon ti ${sortIcon('startDate')}`} />
+                  <Icon className={`sort-icon ti ${sortIcon('startDate')}`} />
                 </th>
                 <th className={`sortable ${sortColumn === 'endDate' ? 'active' : ''}`} onClick={() => handleSort('endDate')}>
                   Conclude
-                  <i className={`sort-icon ti ${sortIcon('endDate')}`} />
+                  <Icon className={`sort-icon ti ${sortIcon('endDate')}`} />
                 </th>
                 <th className={`sortable center-align ${sortColumn === 'status' ? 'active' : ''}`} onClick={() => handleSort('status')}>
                   Status
-                  <i className={`sort-icon ti ${sortIcon('status')}`} />
+                  <Icon className={`sort-icon ti ${sortIcon('status')}`} />
                 </th>
                 <th className="center-align actions-column">Actions</th>
               </tr>
@@ -1167,7 +1168,7 @@ export default function BatchManagementPage() {
                           {batch.type === 'OFFLINE' ? (
                             (batch.locationName || (typeof batch.location === 'object' && batch.location?.name)) && (
                               <span className="batch-location-tag">
-                                <i className="ti ti-location-pin" /> {batch.locationName || batch.location?.name}
+                                <Icon className="ti ti-location-pin" /> {batch.locationName || batch.location?.name}
                               </span>
                             )
                           ) : (
@@ -1186,7 +1187,7 @@ export default function BatchManagementPage() {
                       {getUnenrolledStudentsInBatch(batch) > 0 ? (
                         <div className="course-info">
                           <span className="badge badge-warning">
-                            <i className="ti ti-alert" /> {getUnenrolledStudentsInBatch(batch)} not enrolled
+                            <Icon className="ti ti-alert" /> {getUnenrolledStudentsInBatch(batch)} not enrolled
                           </span>
                         </div>
                       ) : null}
@@ -1199,7 +1200,7 @@ export default function BatchManagementPage() {
                             const courseKey = typeof course === 'object' ? (course.id || idx) : course;
                             return (
                               <span key={`${batch.id}-${courseKey}-${idx}`} className="batch-course-badge">
-                                <i className="ti ti-book" /> {courseTitle}
+                                <Icon className="ti ti-book" /> {courseTitle}
                               </span>
                             );
                           })}
@@ -1225,7 +1226,7 @@ export default function BatchManagementPage() {
                                     const courseKey = typeof course === 'object' ? (course.id || idx) : course;
                                     return (
                                       <div key={`more-${batch.id}-${courseKey}-${idx}`} className="batch-course-popover-item">
-                                        <i className="ti ti-book" /> {courseTitle}
+                                        <Icon className="ti ti-book" /> {courseTitle}
                                       </div>
                                     );
                                   })}
@@ -1236,7 +1237,7 @@ export default function BatchManagementPage() {
                         </div>
                       ) : (
                         <div className="course-info muted">
-                          <i className="ti ti-info-alt" /> Not enrolled to any course
+                          <Icon className="ti ti-info-alt" /> Not enrolled to any course
                         </div>
                       )}
                     </td>
@@ -1264,28 +1265,28 @@ export default function BatchManagementPage() {
                     <td className={`center-align ${activeKebabId === batch.id ? 'cell-active-menu' : ''}`}>
                       <div className="kebab-menu-container">
                         <button type="button" className="kebab-button" onClick={(event) => toggleKebab(batch.id, event)}>
-                          <i className="ti ti-more-alt" />
+                          <Icon className="ti ti-more-alt" />
                         </button>
                         <div className={`kebab-dropdown ${activeKebabId === batch.id ? 'active' : ''}`}>
                           <button type="button" className="kebab-dropdown-item view-profile" onClick={() => openViewAttendance(batch)}>
-                            <i className="fa fa-check-square-o sb-icon" />
+                            <Icon className="fa fa-check-square-o sb-icon" />
                             <span className="item-label">View Attendance</span>
                           </button>
                           {can(PERMS.BATCHES_COURSES_EDIT) && (
                             <button type="button" className="kebab-dropdown-item view-profile" onClick={() => openManageCourses(batch)} disabled={batch.isFrozen} title={batch.isFrozen ? FROZEN_REASON : undefined}>
-                              <i className="ti ti-book" />
+                              <Icon className="ti ti-book" />
                               <span className="item-label">Manage Courses</span>
                             </button>
                           )}
                           {can(PERMS.BATCHES_STUDENTS_EDIT) && (
                             <button type="button" className="kebab-dropdown-item manage-students" onClick={() => openAddStudentsModal(batch)} disabled={batch.isFrozen} title={batch.isFrozen ? FROZEN_REASON : undefined}>
-                              <i className="ti ti-user" />
+                              <Icon className="ti ti-user" />
                               <span className="item-label">Manage Students</span>
                             </button>
                           )}
                           {can(PERMS.BATCHES_EDIT) && (
                             <button type="button" className="kebab-dropdown-item edit-action" onClick={() => openEditBatchModal(batch)} disabled={batch.isFrozen} title={batch.isFrozen ? FROZEN_REASON : undefined}>
-                              <i className="ti ti-pencil" />
+                              <Icon className="ti ti-pencil" />
                               <span className="item-label">Modify Batch Details</span>
                             </button>
                           )}
@@ -1295,7 +1296,7 @@ export default function BatchManagementPage() {
                               className={`kebab-dropdown-item ${batch.isFrozen ? 'enable-action' : 'draft-action'}`}
                               onClick={() => openFreezeModal(batch)}
                             >
-                              <i className={`ti ${batch.isFrozen ? 'ti-unlock' : 'ti-lock'}`} />
+                              <Icon className={`ti ${batch.isFrozen ? 'ti-unlock' : 'ti-lock'}`} />
                               <span className="item-label">{batch.isFrozen ? 'Unfreeze' : 'Freeze'} Batch</span>
                             </button>
                           )}
@@ -1329,7 +1330,7 @@ export default function BatchManagementPage() {
             </div>
             <div className="pagination-controls">
               <button type="button" className="pagination-btn" disabled={safeCurrentPage === 1} onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}>
-                <i className="ti ti-angle-left" /> Previous
+                <Icon className="ti ti-angle-left" /> Previous
               </button>
               {paginationPages.map((page) => (
                 <button
@@ -1347,7 +1348,7 @@ export default function BatchManagementPage() {
                 disabled={safeCurrentPage === totalPages}
                 onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
               >
-                Next <i className="ti ti-angle-right" />
+                Next <Icon className="ti ti-angle-right" />
               </button>
             </div>
           </div>
@@ -1359,13 +1360,13 @@ export default function BatchManagementPage() {
           <div className="legacy-modal-header">
             <h3>{editingBatch ? 'Modify Batch Details' : 'Create New Batch'}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setBatchModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <form className="batch-modal-form form-modal" onSubmit={(event) => { event.preventDefault(); saveBatch(); }}>
           <div className="legacy-modal-body">
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-info-circle" /> Basic Details</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-info-circle" /> Basic Details</div>
               <div className="asset-form-grid basic-grid">
                 <label className="field-cell">
                   <div className={`float-field ${batchErrors.batchName ? 'has-error' : ''}`}>
@@ -1411,7 +1412,7 @@ export default function BatchManagementPage() {
             </div>
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-calendar" /> Schedule</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-calendar" /> Schedule</div>
               <div className="asset-form-grid">
                 <label className="field-cell">
                   <div className="float-field float-always date-custom">
@@ -1451,7 +1452,7 @@ export default function BatchManagementPage() {
             </div>
 
             <div className="asset-form-section">
-              <div className="asset-form-section-title"><i className="ti ti-settings" /> Configuration</div>
+              <div className="asset-form-section-title"><Icon className="ti ti-settings" /> Configuration</div>
               <div className="asset-form-grid config-grid">
                 <label className="field-cell">
                   <div className={`float-field float-always ${batchErrors.prepJourneyType ? 'has-error' : ''}`}>
@@ -1548,7 +1549,7 @@ export default function BatchManagementPage() {
           <div className="legacy-modal-header">
             <h3>Manage Courses</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setEnrollCourseModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body form-modal">
@@ -1560,7 +1561,7 @@ export default function BatchManagementPage() {
                 </div>
 
                 <div className="asset-form-section">
-                  <div className="asset-form-section-title"><i className="ti ti-plus" /> Add a Course</div>
+                  <div className="asset-form-section-title"><Icon className="ti ti-plus" /> Add a Course</div>
                   <div className="batch-course-toolbar">
                     <div className="float-field float-always">
                       <select className="float-control" value={selectedCourse} onChange={(event) => setSelectedCourse(event.target.value)}>
@@ -1578,7 +1579,7 @@ export default function BatchManagementPage() {
                 </div>
 
                 <div className="asset-form-section">
-                  <div className="asset-form-section-title"><i className="ti ti-book" /> Enrolled Courses</div>
+                  <div className="asset-form-section-title"><Icon className="ti ti-book" /> Enrolled Courses</div>
                   {selectedBatch.enrolledCourses.length > 0 ? (
                     <div className="batch-course-cards">
                       {selectedBatch.enrolledCourses.map((course, idx) => {
@@ -1587,7 +1588,7 @@ export default function BatchManagementPage() {
                         return (
                           <div key={`${courseId}-${idx}`} className="batch-course-card">
                             <div className="batch-course-card-info">
-                              <span className="batch-course-card-icon"><i className="ti ti-book" /></span>
+                              <span className="batch-course-card-icon"><Icon className="ti ti-book" /></span>
                               <div>
                                 <div className="batch-course-card-title">{courseTitle}</div>
                                 <div className="batch-course-card-meta">Assigned to this batch</div>
@@ -1621,7 +1622,7 @@ export default function BatchManagementPage() {
           <div className="legacy-modal-header">
             <h3>Batch Students</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setStudentsModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
@@ -1633,7 +1634,7 @@ export default function BatchManagementPage() {
                 </div>
                 <div className="batch-students-toolbar">
                   <div className="search-wrapper">
-                    <i className="ti ti-search" />
+                    <Icon className="ti ti-search" />
                     <input
                       type="text"
                       className="search-input"
@@ -1644,7 +1645,7 @@ export default function BatchManagementPage() {
                   </div>
                   
                   <div className="search-wrapper" style={{ width: 'auto', minWidth: '220px' }}>
-                    <i className="ti ti-book" />
+                    <Icon className="ti ti-book" />
                     <select 
                       className="search-input" 
                       value={selectedCourseIdForFilter}
@@ -1663,7 +1664,7 @@ export default function BatchManagementPage() {
                   </div>
 
                   <div className="search-wrapper" style={{ width: 'auto', minWidth: '160px' }}>
-                    <i className="ti ti-filter" />
+                    <Icon className="ti ti-filter" />
                     <select 
                       className="search-input" 
                       value={studentFilter}
@@ -1696,7 +1697,7 @@ export default function BatchManagementPage() {
                     {isBatchStudentsLoading ? (
                        <tr>
                          <td colSpan="5" className="center-align" style={{ padding: '40px' }}>
-                           <i className="ti ti-reload rotate" style={{ marginRight: '8px' }} />
+                           <Icon className="ti ti-reload rotate" style={{ marginRight: '8px' }} />
                            Loading course-wise enrollment data...
                          </td>
                        </tr>
@@ -1734,7 +1735,7 @@ export default function BatchManagementPage() {
                              <span className="status-text-default">{student.enrolledToCourse ? 'Enrolled' : 'Not Enrolled'}</span>
                              {selectedCourseIdForFilter && (
                                <span className="status-text-hover">
-                                 <i className={`ti ${student.enrolledToCourse ? 'ti-minus' : 'ti-plus'}`} /> 
+                                 <Icon className={`ti ${student.enrolledToCourse ? 'ti-minus' : 'ti-plus'}`} /> 
                                  {student.enrolledToCourse ? 'Unenroll' : 'Enroll Now'}
                                </span>
                              )}
@@ -1761,7 +1762,7 @@ export default function BatchManagementPage() {
               disabled={Boolean(selectedBatch?.isFrozen)}
               title={selectedBatch?.isFrozen ? FROZEN_REASON : undefined}
             >
-              <i className="ti ti-user" /> Add Students
+              <Icon className="ti ti-user" /> Add Students
             </button>
             <button 
               type="button" 
@@ -1770,7 +1771,7 @@ export default function BatchManagementPage() {
               disabled={Object.keys(selectedBatchStudents).length === 0 || Boolean(selectedBatch?.isFrozen)}
               title={selectedBatch?.isFrozen ? FROZEN_REASON : undefined}
             >
-              <i className="ti ti-trash" /> Remove Selected
+              <Icon className="ti ti-trash" /> Remove Selected
             </button>
           </div>
         </div>
@@ -1781,7 +1782,7 @@ export default function BatchManagementPage() {
           <div className="legacy-modal-header">
             <h3>Manage Students</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setAddStudentsModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
@@ -1793,9 +1794,9 @@ export default function BatchManagementPage() {
                 </div>
 
                 <div className="asset-form-section">
-                  <div className="asset-form-section-title"><i className="ti ti-users" /> Available Students</div>
+                  <div className="asset-form-section-title"><Icon className="ti ti-users" /> Available Students</div>
                   <div className="search-wrapper batch-modal-search">
-                    <i className="ti ti-search" />
+                    <Icon className="ti ti-search" />
                     <input
                       type="text"
                       className="search-input"
@@ -1880,7 +1881,7 @@ export default function BatchManagementPage() {
                       </div>
                       <div className="pagination-controls">
                         <button type="button" className="pagination-btn" disabled={safeAddStudentsPage === 1} onClick={() => setAddStudentsPage((page) => Math.max(1, page - 1))}>
-                          <i className="ti ti-angle-left" /> Previous
+                          <Icon className="ti ti-angle-left" /> Previous
                         </button>
                         {addStudentsPageNumbers.map((page) => (
                           <button
@@ -1898,7 +1899,7 @@ export default function BatchManagementPage() {
                           disabled={safeAddStudentsPage === addStudentsTotalPages}
                           onClick={() => setAddStudentsPage((page) => Math.min(addStudentsTotalPages, page + 1))}
                         >
-                          Next <i className="ti ti-angle-right" />
+                          Next <Icon className="ti ti-angle-right" />
                         </button>
                       </div>
                     </div>
@@ -1922,7 +1923,7 @@ export default function BatchManagementPage() {
           <div className={`legacy-modal-header ${batchToFreeze && !batchToFreeze.isFrozen ? 'legacy-danger-header' : ''}`}>
             <h3>{batchToFreeze?.isFrozen ? 'Unfreeze Batch' : 'Freeze Batch'}</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setFreezeModalOpen(false)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
@@ -1937,7 +1938,7 @@ export default function BatchManagementPage() {
           <div className="legacy-modal-footer">
             <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setFreezeModalOpen(false)}>Cancel</button>
             <button type="button" className={`legacy-btn ${batchToFreeze?.isFrozen ? 'legacy-btn-success' : 'legacy-btn-danger'}`} onClick={confirmFreeze}>
-              <i className={`ti ${batchToFreeze?.isFrozen ? 'ti-unlock' : 'ti-lock'}`} />
+              <Icon className={`ti ${batchToFreeze?.isFrozen ? 'ti-unlock' : 'ti-lock'}`} />
               {batchToFreeze?.isFrozen ? 'Unfreeze Batch' : 'Freeze Batch'}
             </button>
           </div>
@@ -1949,7 +1950,7 @@ export default function BatchManagementPage() {
           <div className="legacy-modal-header">
             <h3>View Attendance</h3>
             <button type="button" className="legacy-modal-close" onClick={() => setAttendanceBatch(null)}>
-              <i className="ti ti-close" />
+              <Icon className="ti ti-close" />
             </button>
           </div>
           <div className="legacy-modal-body">
@@ -1961,7 +1962,7 @@ export default function BatchManagementPage() {
                 </div>
 
                 <div className="asset-form-section">
-                  <div className="asset-form-section-title"><i className="ti ti-calendar" /> Attendance Date</div>
+                  <div className="asset-form-section-title"><Icon className="ti ti-calendar" /> Attendance Date</div>
                   <div className="asset-form-grid">
                     <label className="field-cell">
                       <div className="float-field float-always date-custom">
