@@ -170,7 +170,7 @@ export default function InstructorPortfolioPage() {
     const isLocalWebPreview = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
     try {
-      const response = await api.get('/restricted/people/instructor/list', {
+      const response = await api.get('/admin/people/instructor/list', {
         params: {
           page: currentPage,
           size: pageSize,
@@ -246,7 +246,7 @@ export default function InstructorPortfolioPage() {
 
     setIsInstructorProfileLoading(true);
     try {
-      const response = await api.get(`/restricted/people/instructor/profile?id=${selectedInstructor.id}`);
+      const response = await api.get(`/admin/people/instructor/profile?id=${selectedInstructor.id}`);
       if (response.data?.status === 'success' && !isCancelled.current) {
         const detailed = normalizeInstructor(response.data.data, 0);
         setSelectedInstructor(detailed);
@@ -355,8 +355,8 @@ export default function InstructorPortfolioPage() {
         if (currentInstructor.mobile || currentInstructor.phone) formData.append('mobile', currentInstructor.mobile || currentInstructor.phone);
 
         const url = editMode && currentInstructor.id 
-          ? `/restricted/people/instructor/update?id=${currentInstructor.id}`
-          : '/restricted/people/instructor/add';
+          ? `/admin/people/instructor/update?id=${currentInstructor.id}`
+          : '/admin/people/instructor/add';
 
         const response = await api.post(url, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }

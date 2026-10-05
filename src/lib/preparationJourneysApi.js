@@ -2,7 +2,7 @@
 // Reuses the project-wide axios instance (X-Access-Token + 401 handling),
 // unwraps the `{ data }` / `{ data, pagination }` envelope, and normalises
 // errors so callers can switch on `err.code` (e.g. 'validation_error',
-// 'PREPARATION_JOURNEY_NOT_FOUND').
+// 'preparation_journey_not_found').
 //
 // Object shape (see API contract):
 //   {
@@ -14,67 +14,41 @@
 // `datesUnsure` is presentation-only (UI shows month+year instead of a full date).
 //
 // Routes (mounted under the axios baseURL's `/api`):
-//   GET    /restricted/preparation-journey/list?status&page&size   (preparationJourney.view)
-//   POST   /restricted/preparation-journey/add                     (preparationJourney.edit)
-//   PUT    /restricted/preparation-journey/{id}                    (preparationJourney.edit)
-//   DELETE /restricted/preparation-journey/{id}                    (preparationJourney.edit)
+//   GET    /admin/preparation-journey/list?status&page&size   (preparationJourney.view)
+//   POST   /admin/preparation-journey/add                     (preparationJourney.edit)
+//   PUT    /admin/preparation-journey/{id}                    (preparationJourney.edit)
+//   DELETE /admin/preparation-journey/{id}                    (preparationJourney.edit)
 
-import { api } from './api';
+import { api, apiError } from './api';
 
-const BASE = '/restricted/preparation-journey';
+const BASE = '/admin/preparation-journey';
 
 // ── Error normalisation ──────────────────────────────────────────────
 class PreparationJourneyError extends Error {
   constructor(code, message, fields, status) {
     super(message || code);
-    this.code = code || 'SERVER_ERROR';
+    this.code = code || 'server_error';
     this.fields = fields || null;
     this.status = status || 0;
   }
 }
 
-function statusToCode(status) {
-  if (status === 404) return 'PREPARATION_JOURNEY_NOT_FOUND';
-  if (status === 401) return 'UNAUTHENTICATED';
-  if (status === 403) return 'FORBIDDEN';
-  if (status === 422) return 'validation_error';
-  return 'SERVER_ERROR';
-}
-
+// Failures arrive as axios rejections: HTTP 4xx/5xx with
+// { success: false, error: { code, message, fields? } } (codes are lowercase,
+// fields map to lists of messages).
 function normaliseError(err) {
   if (err instanceof PreparationJourneyError) return err;
-  const status = err?.response?.status || 0;
-  const env = err?.response?.data?.error || {};
-  return new PreparationJourneyError(
-    env.code || statusToCode(status),
-    env.message || err?.message || 'Request failed',
-    env.fields || null,
-    status,
-  );
-}
-
-// Guard against 2xx responses that still carry `{ success: false }`.
-function ensureOk(res) {
-  const body = res?.data;
-  if (body && body.success === false) {
-    const env = body.error || {};
-    throw new PreparationJourneyError(
-      env.code || statusToCode(res?.status || 0),
-      env.message || 'Request failed',
-      env.fields || null,
-      res?.status || 0,
-    );
-  }
-  return body;
+  const { status, code, message, fields } = apiError(err, 'Request failed');
+  return new PreparationJourneyError(code, message, fields, status);
 }
 
 function unwrap(res) {
-  const body = ensureOk(res);
+  const body = res?.data;
   return body?.data ?? body;
 }
 
 function unwrapList(res) {
-  const body = ensureOk(res) || {};
+  const body = res?.data || {};
   return {
     data: body.data ?? (Array.isArray(body) ? body : []),
     pagination: body.pagination ?? null,

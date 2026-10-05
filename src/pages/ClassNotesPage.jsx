@@ -5,6 +5,7 @@ import MultiSelectDropdown from '../components/MultiSelectDropdown';
 import useDebouncedValue from '../hooks/useDebouncedValue';
 import { Can, usePermission } from '../lib/userStore';
 import { PERMS } from '../lib/permissions';
+import { apiError, apiErrorMessage } from '../lib/api';
 import {
   IDEAL_SIZE_TIERS,
   MAX_PDF_BYTES,
@@ -412,11 +413,11 @@ export default function ClassNotesPage() {
       setPage(1);
       loadNotes();
     } catch (err) {
-      const env = err?.response?.data?.error;
-      if (err?.response?.status === 409 || env?.code === 'DUPLICATE_FILE') {
-        showToast('error', 'Duplicate PDF', env?.message || 'This exact file has already been uploaded.');
+      const e = apiError(err, 'Could not upload the class note.');
+      if (e.status === 409 || e.code === 'duplicate_file') {
+        showToast('error', 'Duplicate PDF', e.message || 'This exact file has already been uploaded.');
       } else {
-        showToast('error', 'Upload failed', env?.message || err?.response?.data?.message || err.message || 'Could not upload the class note.');
+        showToast('error', 'Upload failed', e.message);
       }
     } finally {
       setUploading(false);
@@ -448,8 +449,7 @@ export default function ClassNotesPage() {
       setVisibilityNote(null);
       loadNotes();
     } catch (err) {
-      const env = err?.response?.data?.error;
-      showToast('error', 'Update failed', env?.message || err?.response?.data?.message || err.message || 'Could not update the visibility.');
+      showToast('error', 'Update failed', apiErrorMessage(err, 'Could not update the visibility.'));
     } finally {
       setVisibilitySaving(false);
     }

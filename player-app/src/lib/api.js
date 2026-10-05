@@ -14,7 +14,7 @@ import { API_BASE, USE_MOCK } from '../config.js';
 import { mockFetchScreen, mockHeartbeat, mockPair } from './mockApi.js';
 import * as tokenStore from './tokenStore.js';
 
-const BASE = `${API_BASE}/api/signage/player`;
+const BASE = `${API_BASE}/api/system/signage/player`;
 
 function authHeader(screenCode) {
   const token = tokenStore.read(screenCode);
@@ -43,9 +43,10 @@ function aliasPayload(payload) {
 async function parseError(res) {
   let body = null;
   try { body = await res.json(); } catch { /* ignore */ }
-  const env = body?.error || {};
+  // { success:false, error:{ code, message, fields? } } — codes are lowercase.
+  const env = body?.error && typeof body.error === 'object' ? body.error : {};
   const err = new Error(env.message || `HTTP ${res.status}`);
-  err.code = env.code || (res.status === 404 ? 'NOT_FOUND' : 'HTTP_ERROR');
+  err.code = env.code ? String(env.code).toLowerCase() : (res.status === 404 ? 'not_found' : res.status === 410 ? 'pairing_expired' : 'http_error');
   err.status = res.status;
   return err;
 }

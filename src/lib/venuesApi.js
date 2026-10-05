@@ -2,12 +2,12 @@
 // Schedules calendar event modal (Classroom Lecture / Offline Exam /
 // Discussion event types).
 //
-//   GET /api/restricted/venue/list?locationId=1&type=1
+//   GET /api/admin/venue/list?locationId=1&type=1
 //        &sortBy=capacity&sortOrder=DESC
 
 import { api } from './api';
 
-const BASE = '/restricted/venue/list';
+const BASE = '/admin/venue/list';
 
 export async function listVenues({
   type = 1,

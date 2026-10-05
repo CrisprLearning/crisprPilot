@@ -1,7 +1,7 @@
 // Thin HTTP layer for the Digital Signage admin module.
 // Reuses the project-wide axios instance (X-Access-Token + 401 handling),
 // unwraps the `{ data: ... }` envelope, and normalises errors so callers
-// can switch on `err.code` (e.g. 'SCREEN_CODE_TAKEN', 'MEDIA_IN_USE').
+// can switch on `err.code` (e.g. 'screen_code_taken', 'media_in_use').
 //
 // Backend contract: DIGITAL_SIGNAGE_API_CONTRACT.md (admin §4).
 // Branches are NOT owned by signage — use `listLocations` from
@@ -11,30 +11,33 @@
 // (`player-app/`) with its own Bearer-token auth — it does NOT use this admin
 // client. See `player-app/src/lib/api.js`.
 
-import { api } from './api';
+import { api, apiError } from './api';
 
-const BASE = '/restricted/signage';
+const BASE = '/admin/signage';
 
 // ── Error normalisation ──────────────────────────────────────────────
+// `code` is the API's lower_snake_case code, `details` the extra top-level
+// keys sent next to `error` (e.g. `uses` on media_in_use), `fields` the
+// validation_error field → messages map.
 class SignageError extends Error {
-  constructor(code, message, details, status) {
+  constructor(code, message, details, status, fields) {
     super(message || code);
-    this.code = code || 'SERVER_ERROR';
+    this.code = code || 'server_error';
     this.details = details || null;
     this.status = status || 0;
+    this.fields = fields || null;
   }
 }
 
 function normaliseError(err) {
   if (err instanceof SignageError) return err;
-  const status = err?.response?.status || 0;
-  const body = err?.response?.data || {};
-  const env = body?.error || {};
+  const e = apiError(err, 'Request failed');
   return new SignageError(
-    env.code || (status === 404 ? 'NOT_FOUND' : status === 401 ? 'UNAUTHENTICATED' : status === 403 ? 'FORBIDDEN' : 'SERVER_ERROR'),
-    env.message || err?.message || 'Request failed',
-    env.details || null,
-    status,
+    e.code === 'error' ? 'server_error' : e.code,
+    e.message,
+    e.extra && Object.keys(e.extra).length ? e.extra : null,
+    e.status,
+    e.fields,
   );
 }
 

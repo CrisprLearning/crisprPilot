@@ -557,7 +557,7 @@ export default function ResidenceManagementPage() {
   const loadCandidates = useCallback(async (q) => {
     setCandidatesLoading(true);
     try {
-      const response = await api.get('/restricted/people/candidate/list', {
+      const response = await api.get('/admin/people/candidate/list', {
         params: {
           page: 1,
           size: 30,

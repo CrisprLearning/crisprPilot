@@ -1,6 +1,6 @@
 import { api } from './api';
 
-const BASE = '/restricted/attendance-default-location';
+const BASE = '/admin/attendance-default-location';
 
 function clean(params) {
   const out = {};
@@ -11,7 +11,7 @@ function clean(params) {
   return out;
 }
 
-// GET /restricted/attendance-default-location/list
+// GET /admin/attendance-default-location/list
 // Returns { success, data: [...], pagination: { total, size, currentPage, lastPage } }
 // Each record maps a subject (a student batch, or an individual instructor /
 // mentor / staff user) to one or more default attendance locations. When
@@ -29,7 +29,7 @@ export async function listDefaultLocations({
   return data;
 }
 
-// POST /restricted/attendance-default-location/add
+// POST /admin/attendance-default-location/add
 //  • Students are mapped by batch    → { subjectType:'batch', subjectId: batchId, userType:1 }
 //  • Others are mapped by individual → { subjectType:'user',  subjectId: userId,  userType }
 // `anyLocation: true` means all locations are valid (locationIds ignored).
@@ -54,7 +54,7 @@ export async function createDefaultLocation({
   return data;
 }
 
-// PUT /restricted/attendance-default-location/{id} — update locations / anyLocation.
+// PUT /admin/attendance-default-location/{id} — update locations / anyLocation.
 export async function updateDefaultLocation(id, { locationIds, anyLocation } = {}) {
   const { data } = await api.put(`${BASE}/${id}`, clean({
     locationIds: anyLocation ? undefined : locationIds,
@@ -63,7 +63,7 @@ export async function updateDefaultLocation(id, { locationIds, anyLocation } = {
   return data;
 }
 
-// DELETE /restricted/attendance-default-location/{id}
+// DELETE /admin/attendance-default-location/{id}
 export async function deleteDefaultLocation(id) {
   const { data } = await api.delete(`${BASE}/${id}`);
   return data;

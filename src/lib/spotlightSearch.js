@@ -87,7 +87,7 @@ const PEOPLE_SOURCES = [
     icon: 'fa-graduation-cap',
     fetch: (q, signal) =>
       api
-        .get('/restricted/people/candidate/list', {
+        .get('/admin/people/candidate/list', {
           params: { page: 1, size: SPOTLIGHT_PAGE_SIZE, sortBy: 'name', searchKey: q },
           signal,
         })
@@ -123,7 +123,7 @@ const PEOPLE_SOURCES = [
     icon: 'fa-user-circle-o',
     fetch: (q, signal) =>
       api
-        .get('/restricted/people/mentor/list', {
+        .get('/admin/people/mentor/list', {
           params: { page: 1, size: SPOTLIGHT_PAGE_SIZE, sortBy: 'name', sortOrder: 'ASC', searchKey: q },
           signal,
         })
@@ -143,7 +143,7 @@ const PEOPLE_SOURCES = [
     icon: 'fa-black-tie',
     fetch: (q, signal) =>
       api
-        .get('/restricted/people/instructor/list', {
+        .get('/admin/people/instructor/list', {
           params: { page: 1, size: SPOTLIGHT_PAGE_SIZE, sortBy: 'name', sortOrder: 'ASC', searchKey: q },
           signal,
         })

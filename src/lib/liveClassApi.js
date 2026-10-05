@@ -1,28 +1,31 @@
-import { api } from './api';
+import { api, apiError, apiFieldErrors } from './api';
 
 // Live Class Scheduler API client.
-// Base path resolves to `<origin>/api/restricted/live-classes` (the shared
+// Base path resolves to `<origin>/api/admin/live-classes` (the shared
 // `api` axios instance already prefixes `/api` and injects X-Access-Token).
 // Contract: LIVE_CLASS_SCHEDULER_API_CONTRACT.md / "Live Class Scheduler — FE Integration".
 
-const BASE = '/restricted/live-classes';
+const BASE = '/admin/live-classes';
 
-// Envelopes: single `{ data }`, list `{ data, meta }`, error `{ error }`.
+// Envelopes: single `{ data }`, list `{ data, meta }`, error `{ success:false, error }`.
 // axios rejects on non-2xx, so callers catch and run errors through liveClassError().
+// `code` is the API's lower_snake_case code; `fields` maps each field to its
+// first message (or null when the error is not a validation_error).
 export function liveClassError(err) {
-  const env = err?.response?.data?.error;
+  const e = apiError(err, 'Request failed');
+  const fields = apiFieldErrors(err);
   return {
-    status: err?.response?.status,
-    code: env?.code || 'SERVER_ERROR',
-    message: env?.message || err?.message || 'Request failed',
-    fields: env?.details?.fields || null,
+    status: e.status,
+    code: e.code,
+    message: e.message,
+    fields: Object.keys(fields).length ? fields : null,
   };
 }
 
 // `true` when an error came from the YouTube provisioning/lifecycle layer —
 // the FE should refresh and surface the "Provision stream" affordance.
 export function isYoutubeError(code) {
-  return typeof code === 'string' && code.startsWith('YOUTUBE_');
+  return typeof code === 'string' && code.startsWith('youtube_');
 }
 
 function clean(params) {

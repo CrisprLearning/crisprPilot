@@ -1,6 +1,6 @@
 import { api } from './api';
 
-const BASE = '/restricted/residence';
+const BASE = '/admin/residence';
 
 export async function createResidence(payload) {
   const { data } = await api.post(`${BASE}/add`, payload);

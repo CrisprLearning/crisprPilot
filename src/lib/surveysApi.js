@@ -1,6 +1,6 @@
 import { api } from './api';
 
-const BASE = '/restricted/survey';
+const BASE = '/admin/survey';
 
 // ── Status enum (schema) ─────────────────────────────────────────────────────
 export const SURVEY_STATUS = {
@@ -47,7 +47,8 @@ export const QUESTION_TYPE_FROM_LABEL = {
   'Multi Select': 'MULTI',
 };
 
-// Throw on `{ success:false, error:{...} }` even when HTTP status is 2xx.
+// Defensive only: the API now sends every error with a real 4xx/5xx status
+// (axios rejects), so a 2xx `{ success:false }` body is not expected.
 function ensureOk(body) {
   if (body && body.success === false) {
     const err = body.error || {};

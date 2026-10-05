@@ -281,20 +281,20 @@ export default function SchedulesListPage() {
               const err = asApiError(e);
               const batchName = (id) => batchPool.find((b) => String(b.id) === String(id))?.name || id;
               switch (err.code) {
-                case 'BATCH_DATE_UNIQUE': {
+                case 'batch_date_unique': {
                   const c = err.details?.conflicts?.[0];
                   showToast('error', 'Batch conflict', c
                     ? `${batchName(c.batch_id)} is already in "${c.schedule_name}".`
                     : err.message);
                   break;
                 }
-                case 'CONTENT_DUPLICATION_REQUIRED':
+                case 'content_duplication_required':
                   showToast('error', 'Confirm needed', 'Source has shared-content events. Re-open the modal to confirm.');
                   break;
-                case 'EVENT_OVERLAP':
+                case 'event_overlap':
                   showToast('error', 'Time overlap', err.message);
                   break;
-                case 'PUBLISHED_IMMUTABLE':
+                case 'published_immutable':
                   showToast('error', 'Published', 'This schedule is published — unpublish to edit.');
                   break;
                 default:

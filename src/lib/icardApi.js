@@ -1,6 +1,6 @@
 import { api } from './api';
 
-const BASE = '/restricted/icard';
+const BASE = '/admin/icard';
 
 function clean(params) {
   const out = {};
@@ -28,7 +28,7 @@ export async function recordIcardAudit(entries) {
 }
 
 export async function getCandidateProfile(id) {
-  const { data } = await api.get('/restricted/people/candidate/profile-from-forms', { params: { id } });
+  const { data } = await api.get('/admin/people/candidate/profile-from-forms', { params: { id } });
   return data;
 }
 
@@ -38,14 +38,14 @@ export async function generateIcards({ batchIds, candidateIds }) {
 }
 
 export async function listBatches({ page = 1, size = 200, searchKey } = {}) {
-  const { data } = await api.get('/restricted/enrollment/list-batches', {
+  const { data } = await api.get('/admin/enrollment/list-batches', {
     params: clean({ page, size, sortBy: 'name', sortOrder: 'ASC', searchKey }),
   });
   return data;
 }
 
 export async function listCandidates({ page = 1, size = 50, searchKey } = {}) {
-  const { data } = await api.get('/restricted/people/candidate/list', {
+  const { data } = await api.get('/admin/people/candidate/list', {
     params: clean({ page, size, sortBy: 'name', searchKey }),
   });
   return data;
@@ -60,7 +60,7 @@ export async function listCandidatesInBatches(batchIds, { size = 200 } = {}) {
   let page = 1;
   let meta;
   for (;;) {
-    const { data } = await api.get('/restricted/enrollment/list-candidates-in-batches', {
+    const { data } = await api.get('/admin/enrollment/list-candidates-in-batches', {
       params: { batchIds: ids.join(','), page, size },
     });
     const rows = data?.data || [];

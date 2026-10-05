@@ -277,7 +277,7 @@ function StudentSearch({ onSelect }) {
     setLoading(true);
     setError(false);
     api
-      .get('/restricted/people/candidate/list', { params: { searchKey: q, page: 1, size: 8, sortBy: 'name' } })
+      .get('/admin/people/candidate/list', { params: { searchKey: q, page: 1, size: 8, sortBy: 'name' } })
       .then((res) => {
         if (cancelled) return;
         const list = res?.data?.data || [];
@@ -392,7 +392,7 @@ export default function Student360Page() {
     let cancelled = false;
     setProfileLoading(true);
     api
-      .get('/restricted/people/candidate/profile', { params: { id: selectedId } })
+      .get('/admin/people/candidate/profile', { params: { id: selectedId } })
       .then((res) => {
         if (cancelled) return;
         const d = res?.data?.data || res?.data || {};

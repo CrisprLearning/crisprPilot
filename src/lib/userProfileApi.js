@@ -1,6 +1,6 @@
 import { api } from './api';
 
-const BASE = '/restricted/user-profile';
+const BASE = '/admin/user-profile';
 
 export async function getProfile() {
   const { data } = await api.get(BASE);

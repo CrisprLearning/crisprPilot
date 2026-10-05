@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { clearToken } from '../lib/auth';
 import { changePassword } from '../lib/userProfileApi';
+import { apiErrorMessage, handleUnauthorized } from '../lib/api';
 import { protectedScreens, NAV_GROUPS } from '../lib/legacyScreens';
 import { useUser } from '../lib/userStore';
 import { canAccess, isSuperAdmin } from '../lib/roles';
@@ -283,24 +284,25 @@ export default function Layout({ children, currentScreen }) {
 
     setPwdSaving(true);
     try {
-      const res = await changePassword({
+      await changePassword({
         currentPassword: pwdCurrent,
         newPassword: pwdNew,
       });
-      if (res && res.status === false) {
-        throw new Error(res.message || 'Could not change password.');
-      }
-      setPwdSuccess('Password changed successfully.');
+      // A password change signs every session out, this one included, so
+      // send the user back to sign in with the new password.
+      setPwdSuccess('Password changed. Please sign in again with your new password.');
       setPwdCurrent('');
       setPwdNew('');
       setPwdConfirm('');
       setTimeout(() => {
         setShowPasswordModal(false);
         setPwdSuccess('');
-      }, 1200);
+        handleUnauthorized();
+      }, 1500);
     } catch (err) {
-      const msg = err?.response?.data?.message || err?.message || 'Could not change password. Please try again.';
-      setPwdError(msg);
+      // 422 invalid_credentials (wrong current password), password_unchanged
+      // or validation_error.
+      setPwdError(apiErrorMessage(err, 'Could not change password. Please try again.'));
     } finally {
       setPwdSaving(false);
     }

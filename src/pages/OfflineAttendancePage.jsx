@@ -33,7 +33,7 @@ async function searchPeople(audienceKey, query) {
     return (items || []).map((i) => ({ id: i.id, name: i.name || 'Unknown', detail: i.subject || i.specialization || '' }));
   }
   if (audienceKey === 'MENTORS') {
-    const resp = await api.get('/restricted/people/mentor/list', {
+    const resp = await api.get('/admin/people/mentor/list', {
       params: { page: 1, size: 20, sortBy: 'name', searchKey: q || undefined },
     });
     return (resp.data?.data || []).map((m) => ({ id: m.id, name: m.name || 'Unknown', detail: m.specialization || '' }));
@@ -395,7 +395,7 @@ export default function OfflineAttendancePage() {
     let cancelled = false;
     (async () => {
       try {
-        const resp = await api.get('/restricted/locations');
+        const resp = await api.get('/admin/location/list', { params: { size: 100 } });
         if (!cancelled) {
           const rows = resp.data?.data || resp.data?.locations || resp.data || [];
           setLocations(Array.isArray(rows) ? rows : []);
@@ -1380,7 +1380,7 @@ async function fetchBatchDefaultLocations(batchIds) {
     // location id -> name (for records that only carry locationIds)
     const nameById = {};
     try {
-      const lresp = await api.get('/restricted/locations');
+      const lresp = await api.get('/admin/location/list', { params: { size: 100 } });
       const rows = lresp.data?.data || lresp.data?.locations || lresp.data || [];
       (Array.isArray(rows) ? rows : []).forEach((l) => {
         nameById[String(l.id ?? l.code)] = l.name || l.title || l.code;
@@ -1495,7 +1495,7 @@ function MonthlyReportModal({ onClose, showToast }) {
       const { items } = await searchInstructors({ page: 1, size: 200, searchKey: '' });
       (items || []).forEach((i) => push(i.id, 2, i.name));
     } else if (criteria === 'mentors') {
-      const resp = await api.get('/restricted/people/mentor/list', { params: { page: 1, size: 200, sortBy: 'name' } });
+      const resp = await api.get('/admin/people/mentor/list', { params: { page: 1, size: 200, sortBy: 'name' } });
       (resp.data?.data || []).forEach((m) => push(m.id, 3, m.name));
     } else if (criteria === 'staff') {
       const resp = await listUsers({ page: 1, size: 200 });

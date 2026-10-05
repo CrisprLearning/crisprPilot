@@ -307,7 +307,7 @@ export default function MentorSessionsPage() {
     let cancelled = false;
     (async () => {
       try {
-        const resp = await api.get('/restricted/people/mentor/list', {
+        const resp = await api.get('/admin/people/mentor/list', {
           params: { page: 1, size: 200, sortBy: 'name', sortOrder: 'ASC' },
         });
         const rows = (resp.data?.data || []).map((m) => ({ id: String(m.id), name: m.name || 'Unknown', detail: m.specialization || m.specialisation || '' }));
@@ -323,7 +323,7 @@ export default function MentorSessionsPage() {
         }
       }
       try {
-        const resp = await api.get('/restricted/enrollment/list-batches', {
+        const resp = await api.get('/admin/enrollment/list-batches', {
           params: { page: 1, size: 200, sortBy: 'name', sortOrder: 'ASC' },
         });
         const rows = (resp.data?.data || []).map((b) => ({ id: String(b.id), name: b.name || b.batchName || 'Unnamed batch', detail: b.numberOfStudents ? `${b.numberOfStudents} students` : '' }));

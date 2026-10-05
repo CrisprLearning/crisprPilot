@@ -1,6 +1,6 @@
-import { api } from './api';
+import { api, apiError } from './api';
 
-const BASE = '/restricted/feedback';
+const BASE = '/admin/feedback';
 
 export const FEEDBACK_TYPE = {
   COURSE: 'COURSE',
@@ -9,16 +9,17 @@ export const FEEDBACK_TYPE = {
   CHAPTER: 'CHAPTER',
 };
 
-function ensureOk(body) {
-  if (body && body.success === false) {
-    const err = body.error || {};
-    const e = new Error(err.message || 'Request failed');
-    e.code = err.code;
-    e.fields = err.fields;
-    e.envelope = body;
-    throw e;
-  }
-  return body;
+// Failures arrive as axios rejections (HTTP 4xx/5xx with
+// { success: false, error: { code, message, fields? } }); rethrow them as an
+// Error carrying the API's lowercase code, message and fields.
+function toError(err) {
+  const { status, code, message, fields } = apiError(err, 'Request failed');
+  const e = new Error(message);
+  e.status = status;
+  e.code = code;
+  e.fields = fields;
+  e.envelope = err?.response?.data;
+  return e;
 }
 
 function clean(params) {
@@ -42,15 +43,23 @@ export async function listFeedback({
   moduleId,
   chapterId,
 } = {}) {
-  const { data } = await api.get(`${BASE}/list`, {
-    params: clean({ page, size, sortBy, sortOrder, filterBy, searchKey, type, courseId, moduleId, chapterId }),
-  });
-  return ensureOk(data);
+  try {
+    const { data } = await api.get(`${BASE}/list`, {
+      params: clean({ page, size, sortBy, sortOrder, filterBy, searchKey, type, courseId, moduleId, chapterId }),
+    });
+    return data;
+  } catch (err) {
+    throw toError(err);
+  }
 }
 
 export async function feedbackSummary({ type, sortBy = 'rating', sortOrder = 'DESC', page = 1, limit = 20 } = {}) {
-  const { data } = await api.get(`${BASE}/summary`, {
-    params: clean({ type, sortBy, sortOrder, page, limit }),
-  });
-  return ensureOk(data);
+  try {
+    const { data } = await api.get(`${BASE}/summary`, {
+      params: clean({ type, sortBy, sortOrder, page, limit }),
+    });
+    return data;
+  } catch (err) {
+    throw toError(err);
+  }
 }

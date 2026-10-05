@@ -1,7 +1,7 @@
-import { api } from './api';
+import { api, apiError, apiFieldErrors } from './api';
 
-const LOC_BASE = '/restricted/location';
-const VEN_BASE = '/restricted/venue';
+const LOC_BASE = '/admin/location';
+const VEN_BASE = '/admin/venue';
 
 export const LOCATION_TYPES = [
   { value: 1, label: 'Studio' },
@@ -15,26 +15,29 @@ export const VENUE_TYPES = [
   { value: 4, label: 'Hall' },
 ];
 
+// Defensive only: the API now sends every error with a real 4xx/5xx status
+// (axios rejects), so a 2xx `{ success:false }` body is not expected.
 function ensureOk(body) {
   if (body && body.success === false) {
     const err = body.error || {};
     const e = new Error(err.message || body.message || 'Request failed');
     e.code = err.code;
-    e.fields = err.details?.fields || err.fields;
+    e.fields = err.fields;
     e.envelope = body;
     throw e;
   }
   return body;
 }
 
+// { message, fields, status } for a failed call. `fields` maps each field of a
+// validation_error to its first message (the API sends lists), else null.
 export function extractApiError(err) {
-  const body = err?.response?.data || err?.envelope;
-  if (!body) {
+  if (!err?.response) {
     return { message: err?.message || 'Request failed', fields: null, status: err?.response?.status };
   }
-  const message = body.error?.message || body.message || err.message || 'Request failed';
-  const fields = body.error?.details?.fields || body.error?.fields || null;
-  return { message, fields, status: err?.response?.status };
+  const info = apiError(err, 'Request failed');
+  const fields = apiFieldErrors(err);
+  return { message: info.message, fields: Object.keys(fields).length ? fields : null, status: info.status };
 }
 
 // ── Locations ─────────────────────────────────────────────────────────────

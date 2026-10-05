@@ -283,7 +283,7 @@ export async function ensureLoopDetail(loopId) {
 // and `src/lib/locationsApi.js`. The signage Branches tab has been removed.
 // These stubs exist only so callers in old code paths fail loudly.
 function branchOpRemoved() {
-  throw new SignageError('NOT_IMPLEMENTED', 'Branch CRUD lives in the Locations module — open /locations.');
+  throw new SignageError('not_implemented', 'Branch CRUD lives in the Locations module — open /locations.');
 }
 export const createBranch = branchOpRemoved;
 export const updateBranch = branchOpRemoved;
@@ -391,7 +391,7 @@ export async function reorderTimelineItem(timeline_id, from, to) {
   try {
     await Loops.reorderItems(timeline_id, next.map((x) => x.id));
   } catch (e) {
-    // Roll back on REORDER_SET_MISMATCH or any other failure
+    // Roll back on reorder_set_mismatch or any other failure
     replaceLoopItems(timeline_id, () => cur.items);
     throw e;
   }
@@ -517,7 +517,7 @@ export async function createMedia(input) {
   // Fallback for the existing mock-upload UX — no real binary, so just
   // surface a friendly error. The Media tab upload UI should be wired
   // to <input type="file"> in a follow-up.
-  throw new SignageError('VALIDATION_FAILED', 'Pick a file to upload.');
+  throw new SignageError('validation_error', 'Pick a file to upload.');
 }
 export async function updateMedia(id, body) {
   const { branch_id, ...rest } = body || {};

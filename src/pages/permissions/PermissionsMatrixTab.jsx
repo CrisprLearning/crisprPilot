@@ -231,10 +231,10 @@ export default function PermissionsMatrixTab({ roles, tree, showToast, refetchRo
       const info = extractApiError(err);
       if (info.status === 401) { navigate('/login', { replace: true }); return; }
       let msg = info.message;
-      if (info.code === 'role_is_system' || /system/i.test(info.message)) {
+      // 403 role_is_system; 409 role_in_use carries its own message with the
+      // number of users still holding the role.
+      if (info.code === 'role_is_system') {
         msg = 'System roles cannot be deleted.';
-      } else if (info.code === 'role_in_use' || /in use|in_use/i.test(info.message)) {
-        msg = 'This role is still assigned to one or more users. Reassign them first.';
       }
       showToast('error', 'Could not delete', msg);
       setDeleteTarget(null);

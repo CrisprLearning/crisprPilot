@@ -74,7 +74,7 @@ export function mockPair(screen_code, _pairing_code) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const payload = SEED[screen_code];
-      if (!payload) { reject(Object.assign(new Error('Unknown screen'), { code: 'NOT_FOUND' })); return; }
+      if (!payload) { reject(Object.assign(new Error('Unknown screen'), { code: 'not_found' })); return; }
       resolve({ screen_token: `mock:${screen_code}`, screen: payload.screen });
     }, 200);
   });

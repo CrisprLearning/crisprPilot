@@ -8,13 +8,13 @@
 // of the linked batches.
 //
 // Backend contract: CLASS_NOTES_API_CONTRACT.md. Endpoints live under
-// /restricted/classnotes behind the standard X-Access-Token middleware.
+// /admin/classnotes behind the standard X-Access-Token middleware.
 
 import { api } from './api';
 import { displayNameFromStored } from './bunnyStorageApi';
 import syllabusFixed from '../../SYLLABUS_FIXED.json';
 
-const BASE = '/restricted/classnotes';
+const BASE = '/admin/classnotes';
 
 // Top-level storage-zone folder that owns class notes (sent as `path`).
 export const STORAGE_FOLDER = 'class-notes';
@@ -102,7 +102,7 @@ export function flattenSyllabusChapters(data = syllabusFixed) {
 // ── Batches ──────────────────────────────────────────────────────────
 // Same enrollment endpoint the I-Card generator uses; rows are { id, name }.
 export async function listClassNoteBatches() {
-  const { data } = await api.get('/restricted/enrollment/list-batches', {
+  const { data } = await api.get('/admin/enrollment/list-batches', {
     params: { page: 1, size: 200, sortBy: 'name', sortOrder: 'ASC' },
   });
   return (data?.data || []).map((b) => ({ id: String(b.id), name: b.name || `Batch ${b.id}` }));
@@ -112,7 +112,7 @@ export async function listClassNoteBatches() {
 // Same bundle endpoint the Courses page uses; a note is attached to one
 // chapter but published under one or more course bundles.
 export async function listClassNoteCourses() {
-  const { data } = await api.get('/restricted/course/list-bundles', {
+  const { data } = await api.get('/admin/course/list-bundles', {
     params: { page: 1, size: 200, sortBy: 'name', sortOrder: 'ASC' },
   });
   return (data?.data || []).map((c) => ({

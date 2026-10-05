@@ -2983,7 +2983,7 @@ function ModalFooter({ children, style }) {
 
 // ─── Location typeahead (paginated) ──────────────────────────────────
 // Drives every "branch" picker on this page off the Location API
-// (/restricted/location/list). Pages 20 at a time, debounced search,
+// (/admin/location/list). Pages 20 at a time, debounced search,
 // IntersectionObserver-driven infinite scroll.
 const LOC_PAGE_SIZE = 20;
 

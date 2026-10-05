@@ -161,7 +161,7 @@ export default function AttendanceMappingPage() {
     let cancelled = false;
     (async () => {
       try {
-        const resp = await api.get('/restricted/locations');
+        const resp = await api.get('/admin/location/list', { params: { size: 100 } });
         if (!cancelled) {
           const rows = resp.data?.data || resp.data?.locations || resp.data || [];
           setLocations(Array.isArray(rows) ? rows : []);

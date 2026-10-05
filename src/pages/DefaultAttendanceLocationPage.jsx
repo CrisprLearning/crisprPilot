@@ -71,7 +71,7 @@ async function searchPeople(audienceKey, query) {
     return (items || []).map((i) => ({ id: i.id, name: i.name || 'Unknown', detail: i.subject || i.specialization || '' }));
   }
   if (audienceKey === 'MENTORS') {
-    const resp = await api.get('/restricted/people/mentor/list', {
+    const resp = await api.get('/admin/people/mentor/list', {
       params: { page: 1, size: 20, sortBy: 'name', searchKey: q || undefined },
     });
     return (resp.data?.data || []).map((m) => ({ id: m.id, name: m.name || 'Unknown', detail: m.specialization || '' }));
@@ -137,7 +137,7 @@ export default function DefaultAttendanceLocationPage() {
     let cancelled = false;
     (async () => {
       try {
-        const resp = await api.get('/restricted/locations');
+        const resp = await api.get('/admin/location/list', { params: { size: 100 } });
         if (!cancelled) {
           const rows = resp.data?.data || resp.data?.locations || resp.data || [];
           setLocations(Array.isArray(rows) ? rows : []);

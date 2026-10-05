@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../lib/api';
+import { api, apiError } from '../lib/api';
 import ToastRegion from '../components/ToastRegion';
 import { Can, usePermission } from '../lib/userStore';
 import { PERMS } from '../lib/permissions';
@@ -32,6 +32,8 @@ function createStudent(seed, batchName, enrolledToCourse = true) {
     addedOn: Date.now() - seed * 86400000,
   };
 }
+
+const FROZEN_REASON = 'Batch is frozen. Unfreeze it to make changes.';
 
 function normalizeBatch(batch, index) {
   const batchName = batch.name || batch.batchName || `Batch ${index + 1}`;
@@ -71,7 +73,8 @@ function normalizeBatch(batch, index) {
     endDate,
     enrolledCourses: courses,
     active: batch.active ?? 1,
-    isFrozen: Boolean(batch.isFrozen),
+    // The API reports a frozen batch as status "Inactive" (candidate_batches.status 0).
+    isFrozen: batch.isFrozen != null ? Boolean(batch.isFrozen) : String(batch.status || '').toLowerCase() === 'inactive',
     students: normalizedStudents,
     prepJourneyType: batch.prepJourneyType || '',
     prepJourneyYear: batch.prepJourneyYear || '',
@@ -289,12 +292,25 @@ export default function BatchManagementPage() {
     }, 4500);
   };
 
+  // A frozen batch refuses edits and member/course changes with 409
+  // batch_frozen; refresh the list so the UI picks up the frozen state.
+  const showBatchActionError = (error, fallback) => {
+    const { code, message } = apiError(error, fallback);
+    if (code === 'batch_frozen') {
+      showToast('error', 'Batch Frozen', `${message}. Unfreeze it to make changes.`);
+      setSelectedBatch((current) => (current ? { ...current, isFrozen: true } : current));
+      loadBatches();
+      return;
+    }
+    showToast('error', 'Error', message);
+  };
+
   const loadBatches = useCallback(async (isCancelled = { current: false }) => {
     setIsLoading(true);
     const isLocalWebPreview = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
     try {
-      const response = await api.get('/restricted/enrollment/list-batches', {
+      const response = await api.get('/admin/enrollment/list-batches', {
         params: {
           page: currentPage,
           size: pageSize,
@@ -304,18 +320,15 @@ export default function BatchManagementPage() {
         },
       });
 
-      if (response.data?.status === 'success') {
-        const rows = (response.data.data || []).map((batch, idx) => normalizeBatch(batch, idx));
-        if (!isCancelled.current) {
-          setBatches(rows);
-          setTotalBatches(response.data.meta?.total || 0);
-          setTotalPages(response.data.meta?.totalPages || 1);
-          setCurrentPage(response.data.meta?.page || 1);
-          setIsDemoMode(false);
-        }
-        return;
+      const rows = (response.data.data || []).map((batch, idx) => normalizeBatch(batch, idx));
+      if (!isCancelled.current) {
+        setBatches(rows);
+        setTotalBatches(response.data.meta?.total || 0);
+        setTotalPages(response.data.meta?.totalPages || 1);
+        setCurrentPage(response.data.meta?.page || 1);
+        setIsDemoMode(false);
       }
-      throw new Error(response.data?.message || 'Failed to load batches');
+      return;
     } catch (error) {
       if (isCancelled.current) return;
       
@@ -354,7 +367,7 @@ export default function BatchManagementPage() {
         if (isLocalWebPreview) {
           showToast('info', 'Demo Data', 'Loaded demo batch data because the batch API is unreachable.');
         } else {
-          showToast('error', 'Network Error', error.message || 'Error loading batches.');
+          showToast('error', 'Network Error', apiError(error, 'Error loading batches.').message);
         }
       }
     } finally {
@@ -376,7 +389,7 @@ export default function BatchManagementPage() {
 
   const loadAvailableCourses = useCallback(async () => {
     try {
-      const response = await api.get('/restricted/catalog/list', {
+      const response = await api.get('/admin/catalog/list', {
         params: {
           page: 1,
           size: 100,
@@ -385,9 +398,7 @@ export default function BatchManagementPage() {
           filterValue: 'Course'
         }
       });
-      if (response.data?.status === 'success') {
-        setAvailableCourses(response.data.data || []);
-      }
+      setAvailableCourses(response.data.data || []);
     } catch (error) {
       if (isDemoMode) {
         setAvailableCourses([
@@ -401,7 +412,7 @@ export default function BatchManagementPage() {
   const loadAllCandidates = useCallback(async (query = '') => {
     setIsCandidatesLoading(true);
     try {
-      const response = await api.get('/restricted/people/candidate/list', {
+      const response = await api.get('/admin/people/candidate/list', {
         params: {
           page: 1,
           size: 200,
@@ -409,9 +420,7 @@ export default function BatchManagementPage() {
           searchKey: query || undefined,
         },
       });
-      if (response.data?.status === 'success') {
-        setAllCandidates(response.data.data || []);
-      }
+      setAllCandidates(response.data.data || []);
     } catch (error) {
       if (isDemoMode) {
         setAllCandidates(createAvailableStudents());
@@ -438,7 +447,7 @@ export default function BatchManagementPage() {
 
     setIsBatchStudentsLoading(true);
     try {
-      const response = await api.get('/restricted/enrollment/get-enrolled-candidates-in-course-part-of-batches', {
+      const response = await api.get('/admin/enrollment/get-enrolled-candidates-in-course-part-of-batches', {
         params: {
           page: 1,
           size: 200,
@@ -447,7 +456,7 @@ export default function BatchManagementPage() {
         },
       });
 
-      if (response.data?.status === 'success' && !isCancelled.current) {
+      if (!isCancelled.current) {
         const normalized = (response.data.data || []).map(student => ({
           ...student,
           enrolledToCourse: Number(student.enrollmentStatus) === 1
@@ -670,19 +679,16 @@ export default function BatchManagementPage() {
     if (!isDemoMode) {
       try {
         const url = editingBatch && batchDraft.id 
-          ? `/restricted/enrollment/update-batch?id=${batchDraft.id}` 
-          : '/restricted/enrollment/add-new-batch';
+          ? `/admin/enrollment/update-batch?id=${batchDraft.id}` 
+          : '/admin/enrollment/add-new-batch';
         
-        const response = await api.post(url, payload);
-        if (response.data?.status === 'success') {
-          showToast('success', editingBatch ? 'Batch Updated' : 'Batch Created', `${payload.name} has been ${editingBatch ? 'updated' : 'created'} successfully.`);
-          setBatchModalOpen(false);
-          loadBatches();
-          return;
-        }
-        throw new Error(response.data?.message || 'Operation failed');
+        await api.post(url, payload);
+        showToast('success', editingBatch ? 'Batch Updated' : 'Batch Created', `${payload.name} has been ${editingBatch ? 'updated' : 'created'} successfully.`);
+        setBatchModalOpen(false);
+        loadBatches();
+        return;
       } catch (error) {
-        showToast('error', 'Error', error.message || 'Error saving batch.');
+        showBatchActionError(error, 'Error saving batch.');
         return;
       }
     }
@@ -733,21 +739,18 @@ export default function BatchManagementPage() {
 
     if (!isDemoMode) {
       try {
-        const response = await api.post(`/restricted/enrollment/enroll-course-to-a-batch?batchId=${selectedBatch.id}&courseId=${selectedCourse}`);
-        if (response.data?.status === 'success') {
-          showToast('success', 'Course Enrolled', `${courseTitle} has been enrolled to ${selectedBatch.batchName}.`);
-          setSelectedCourse('');
-          loadBatches();
-          // Update selected batch in modal immediately
-          setSelectedBatch((current) => (current ? { 
-            ...current, 
-            enrolledCourses: [...current.enrolledCourses, courseObj] 
-          } : current));
-          return;
-        }
-        throw new Error(response.data?.message || 'Failed to enroll course');
+        await api.post(`/admin/enrollment/enroll-course-to-a-batch?batchId=${selectedBatch.id}&courseId=${selectedCourse}`);
+        showToast('success', 'Course Enrolled', `${courseTitle} has been enrolled to ${selectedBatch.batchName}.`);
+        setSelectedCourse('');
+        loadBatches();
+        // Update selected batch in modal immediately
+        setSelectedBatch((current) => (current ? { 
+          ...current, 
+          enrolledCourses: [...current.enrolledCourses, courseObj] 
+        } : current));
+        return;
       } catch (error) {
-        showToast('error', 'Error', error.message || 'Error enrolling course.');
+        showBatchActionError(error, 'Error enrolling course.');
         return;
       }
     }
@@ -791,20 +794,17 @@ export default function BatchManagementPage() {
 
     if (!isDemoMode) {
       try {
-        const response = await api.post(`/restricted/enrollment/remove-course-from-a-batch?batchId=${selectedBatch.id}&courseId=${courseId}`);
-        if (response.data?.status === 'success') {
-          showToast('success', 'Course Removed', `${courseTitle} has been removed from ${selectedBatch.batchName}.`);
-          loadBatches();
-          
-          const nextCourses = selectedBatch.enrolledCourses.filter((course) => 
-            (typeof course === 'object' ? course.id !== courseId : course !== courseId)
-          );
-          setSelectedBatch((current) => (current ? { ...current, enrolledCourses: nextCourses } : current));
-          return;
-        }
-        throw new Error(response.data?.message || 'Failed to remove course');
+        await api.post(`/admin/enrollment/remove-course-from-a-batch?batchId=${selectedBatch.id}&courseId=${courseId}`);
+        showToast('success', 'Course Removed', `${courseTitle} has been removed from ${selectedBatch.batchName}.`);
+        loadBatches();
+        
+        const nextCourses = selectedBatch.enrolledCourses.filter((course) => 
+          (typeof course === 'object' ? course.id !== courseId : course !== courseId)
+        );
+        setSelectedBatch((current) => (current ? { ...current, enrolledCourses: nextCourses } : current));
+        return;
       } catch (error) {
-        showToast('error', 'Error', error.message || 'Error removing course.');
+        showBatchActionError(error, 'Error removing course.');
         return;
       }
     }
@@ -829,21 +829,17 @@ export default function BatchManagementPage() {
     if (!selectedCourseIdForFilter || !selectedBatch) return;
 
     try {
-      const response = await api.post('/restricted/enrollment/enroll-candidates-to-course', {
+      await api.post('/admin/enrollment/enroll-candidates-to-course', {
         candidates: [studentId],
         course: selectedCourseIdForFilter,
         prepJourneyType: selectedBatch.prepJourneyType || 'IAT',
         prepJourneyYear: Number(selectedBatch.prepJourneyYear) || 2026,
       });
 
-      if (response.data?.status === 'success') {
-        showToast('success', 'Enrollment Successful', 'Student has been enrolled to the course.');
-        loadBatchEnrolledStudents();
-      } else {
-        throw new Error(response.data?.message || 'Enrollment failed');
-      }
+      showToast('success', 'Enrollment Successful', 'Student has been enrolled to the course.');
+      loadBatchEnrolledStudents();
     } catch (error) {
-      showToast('error', 'Error', error.message || 'Error enrolling student.');
+      showBatchActionError(error, 'Error enrolling student.');
     }
   }
 
@@ -851,21 +847,17 @@ export default function BatchManagementPage() {
     if (!selectedCourseIdForFilter || !selectedBatch) return;
 
     try {
-      const response = await api.post('/restricted/enrollment/unenroll-candidates-from-course', {
+      await api.post('/admin/enrollment/unenroll-candidates-from-course', {
         candidates: [studentId],
         course: selectedCourseIdForFilter,
         prepJourneyType: selectedBatch.prepJourneyType || 'IAT',
         prepJourneyYear: Number(selectedBatch.prepJourneyYear) || 2026,
       });
 
-      if (response.data?.status === 'success') {
-        showToast('success', 'Unenrollment Successful', 'Student has been unenrolled from the course.');
-        loadBatchEnrolledStudents();
-      } else {
-        throw new Error(response.data?.message || 'Unenrollment failed');
-      }
+      showToast('success', 'Unenrollment Successful', 'Student has been unenrolled from the course.');
+      loadBatchEnrolledStudents();
     } catch (error) {
-      showToast('error', 'Error', error.message || 'Error unenrolling student.');
+      showBatchActionError(error, 'Error unenrolling student.');
     }
   }
 
@@ -926,19 +918,16 @@ export default function BatchManagementPage() {
 
     if (!isDemoMode) {
       try {
-        const response = await api.post(`/restricted/enrollment/remove-candidates-from-a-batch?batchId=${selectedBatch.id}`, {
+        await api.post(`/admin/enrollment/remove-candidates-from-a-batch?batchId=${selectedBatch.id}`, {
           candidates: idsToRemove
         });
-        if (response.data?.status === 'success') {
-          showToast('success', 'Students Removed', `${idsToRemove.length} student(s) removed from ${selectedBatch.batchName} successfully.`);
-          setSelectedBatchStudents({});
-          loadBatches();
-          loadBatchEnrolledStudents();
-          return;
-        }
-        throw new Error(response.data?.message || 'Failed to remove students');
+        showToast('success', 'Students Removed', `${idsToRemove.length} student(s) removed from ${selectedBatch.batchName} successfully.`);
+        setSelectedBatchStudents({});
+        loadBatches();
+        loadBatchEnrolledStudents();
+        return;
       } catch (error) {
-        showToast('error', 'Error', error.message || 'Error removing students.');
+        showBatchActionError(error, 'Error removing students.');
         return;
       }
     }
@@ -985,19 +974,16 @@ export default function BatchManagementPage() {
 
     if (!isDemoMode) {
       try {
-        const response = await api.post(`/restricted/enrollment/add-candidates-to-a-batch?batchId=${selectedBatch.id}`, {
+        await api.post(`/admin/enrollment/add-candidates-to-a-batch?batchId=${selectedBatch.id}`, {
           candidates: candidateIds
         });
-        if (response.data?.status === 'success') {
-          showToast('success', 'Students Added', `${studentsToAdd.length} student(s) added to ${selectedBatch.batchName} successfully.`);
-          setAddStudentsModalOpen(false);
-          setSelectedStudentsToAdd({});
-          loadBatches();
-          return;
-        }
-        throw new Error(response.data?.message || 'Failed to add students');
+        showToast('success', 'Students Added', `${studentsToAdd.length} student(s) added to ${selectedBatch.batchName} successfully.`);
+        setAddStudentsModalOpen(false);
+        setSelectedStudentsToAdd({});
+        loadBatches();
+        return;
       } catch (error) {
-        showToast('error', 'Error', error.message || 'Error adding students.');
+        showBatchActionError(error, 'Error adding students.');
         return;
       }
     }
@@ -1041,9 +1027,19 @@ export default function BatchManagementPage() {
     navigate(`/offline-attendance?batch=${encodeURIComponent(attendanceBatch.id)}&date=${dmy}`);
   }
 
-  function confirmFreeze() {
+  async function confirmFreeze() {
     if (!batchToFreeze) return;
     const nextFrozen = !batchToFreeze.isFrozen;
+    if (!isDemoMode) {
+      try {
+        await api.post('/admin/enrollment/freeze-batch', null, {
+          params: { batchId: batchToFreeze.id, freeze: nextFrozen ? 'true' : 'false' },
+        });
+      } catch (error) {
+        showToast('error', 'Error', apiError(error, `Error ${nextFrozen ? 'freezing' : 'unfreezing'} batch.`).message);
+        return;
+      }
+    }
     setBatches((current) =>
       current.map((batch) => (batch.id === batchToFreeze.id ? { ...batch, isFrozen: nextFrozen } : batch))
     );
@@ -1054,6 +1050,7 @@ export default function BatchManagementPage() {
     );
     setFreezeModalOpen(false);
     setBatchToFreeze(null);
+    if (!isDemoMode) loadBatches();
   }
 
   function sortIcon(column) {
@@ -1259,7 +1256,7 @@ export default function BatchManagementPage() {
                         return (
                           <span className={`batch-status-dot ${isActive ? 'is-active' : 'is-inactive'}`}>
                             <span className="batch-status-dot-mark" />
-                            {isActive ? 'Active' : 'Inactive'}
+                            {batch.isFrozen ? 'Frozen' : isActive ? 'Active' : 'Inactive'}
                           </span>
                         );
                       })()}
@@ -1275,19 +1272,19 @@ export default function BatchManagementPage() {
                             <span className="item-label">View Attendance</span>
                           </button>
                           {can(PERMS.BATCHES_COURSES_EDIT) && (
-                            <button type="button" className="kebab-dropdown-item view-profile" onClick={() => openManageCourses(batch)}>
+                            <button type="button" className="kebab-dropdown-item view-profile" onClick={() => openManageCourses(batch)} disabled={batch.isFrozen} title={batch.isFrozen ? FROZEN_REASON : undefined}>
                               <i className="ti ti-book" />
                               <span className="item-label">Manage Courses</span>
                             </button>
                           )}
                           {can(PERMS.BATCHES_STUDENTS_EDIT) && (
-                            <button type="button" className="kebab-dropdown-item manage-students" onClick={() => openAddStudentsModal(batch)}>
+                            <button type="button" className="kebab-dropdown-item manage-students" onClick={() => openAddStudentsModal(batch)} disabled={batch.isFrozen} title={batch.isFrozen ? FROZEN_REASON : undefined}>
                               <i className="ti ti-user" />
                               <span className="item-label">Manage Students</span>
                             </button>
                           )}
                           {can(PERMS.BATCHES_EDIT) && (
-                            <button type="button" className="kebab-dropdown-item edit-action" onClick={() => openEditBatchModal(batch)}>
+                            <button type="button" className="kebab-dropdown-item edit-action" onClick={() => openEditBatchModal(batch)} disabled={batch.isFrozen} title={batch.isFrozen ? FROZEN_REASON : undefined}>
                               <i className="ti ti-pencil" />
                               <span className="item-label">Modify Batch Details</span>
                             </button>
@@ -1574,7 +1571,7 @@ export default function BatchManagementPage() {
                       </select>
                       <span className="float-label">Course</span>
                     </div>
-                    <button type="button" className="legacy-btn legacy-btn-success" onClick={addCourseToBatch}>
+                    <button type="button" className="legacy-btn legacy-btn-success" onClick={addCourseToBatch} disabled={selectedBatch.isFrozen} title={selectedBatch.isFrozen ? FROZEN_REASON : undefined}>
                       Add Course
                     </button>
                   </div>
@@ -1600,6 +1597,8 @@ export default function BatchManagementPage() {
                               type="button"
                               className="legacy-btn legacy-btn-small batch-course-revoke"
                               onClick={() => removeCourseFromBatch(course)}
+                              disabled={selectedBatch.isFrozen}
+                              title={selectedBatch.isFrozen ? FROZEN_REASON : undefined}
                             >
                               Revoke
                             </button>
@@ -1755,14 +1754,21 @@ export default function BatchManagementPage() {
             ) : null}
           </div>
           <div className="legacy-modal-footer">
-            <button type="button" className="legacy-btn legacy-btn-default" onClick={() => openAddStudentsModal(selectedBatch)}>
+            <button
+              type="button"
+              className="legacy-btn legacy-btn-default"
+              onClick={() => openAddStudentsModal(selectedBatch)}
+              disabled={Boolean(selectedBatch?.isFrozen)}
+              title={selectedBatch?.isFrozen ? FROZEN_REASON : undefined}
+            >
               <i className="ti ti-user" /> Add Students
             </button>
             <button 
               type="button" 
               className="legacy-btn legacy-btn-danger" 
               onClick={removeSelectedStudents}
-              disabled={Object.keys(selectedBatchStudents).length === 0}
+              disabled={Object.keys(selectedBatchStudents).length === 0 || Boolean(selectedBatch?.isFrozen)}
+              title={selectedBatch?.isFrozen ? FROZEN_REASON : undefined}
             >
               <i className="ti ti-trash" /> Remove Selected
             </button>
@@ -1904,7 +1910,7 @@ export default function BatchManagementPage() {
           <div className="legacy-modal-footer">
             <div className="batch-selection-count">{Object.keys(selectedStudentsToAdd).length} selected</div>
             <button type="button" className="legacy-btn legacy-btn-default" onClick={() => setAddStudentsModalOpen(false)}>Cancel</button>
-            <button type="button" className="legacy-btn legacy-btn-success" onClick={confirmAddStudents}>
+            <button type="button" className="legacy-btn legacy-btn-success" onClick={confirmAddStudents} disabled={Boolean(selectedBatch?.isFrozen)} title={selectedBatch?.isFrozen ? FROZEN_REASON : undefined}>
               Add Selected Students
             </button>
           </div>
@@ -1923,8 +1929,8 @@ export default function BatchManagementPage() {
             {batchToFreeze ? (
               <p className="batch-freeze-copy">
                 {batchToFreeze.isFrozen
-                  ? `Do you want to unfreeze "${batchToFreeze.batchName}" and restore edit access?`
-                  : `Do you want to freeze "${batchToFreeze.batchName}"? This keeps the batch visible but prevents operational changes until it is unfrozen.`}
+                  ? `Do you want to unfreeze "${batchToFreeze.batchName}"? Its details, students and courses can be changed again.`
+                  : `Do you want to freeze "${batchToFreeze.batchName}"? Its details, students and courses can't be changed until it is unfrozen. Students stay enrolled.`}
               </p>
             ) : null}
           </div>

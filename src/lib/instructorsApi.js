@@ -1,14 +1,14 @@
 // Thin wrapper for the people / instructor search endpoint. Used by the
 // async instructor / host picker on the Schedules calendar event modal.
 //
-//   GET /api/restricted/people/instructor/list?page=1&size=5&sortBy=name
+//   GET /api/admin/people/instructor/list?page=1&size=5&sortBy=name
 //        &filterBy=<subject>&searchKey=<query>
 //
 // The underlying axios instance attaches X-Access-Token automatically.
 
 import { api } from './api';
 
-const BASE = '/restricted/people/instructor/list';
+const BASE = '/admin/people/instructor/list';
 
 export async function searchInstructors({
   page = 1,

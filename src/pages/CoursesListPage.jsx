@@ -189,7 +189,7 @@ export default function CoursesListPage() {
     async function loadCourses() {
       setIsLoading(true);
       try {
-        const response = await api.get('/restricted/course/list-bundles', {
+        const response = await api.get('/admin/course/list-bundles', {
           params: {
             page: currentPage,
             size: itemsPerPage,
@@ -246,7 +246,7 @@ export default function CoursesListPage() {
     async function loadCourseEnrollments() {
       if (!selectedCourseForStudents) return;
       try {
-        const response = await api.get('/restricted/enrollment/get-course-enrollments', {
+        const response = await api.get('/admin/enrollment/get-course-enrollments', {
           params: {
             course: selectedCourseForStudents.code,
             page: studentsCurrentPage,

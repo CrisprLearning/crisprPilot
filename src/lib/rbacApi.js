@@ -1,6 +1,6 @@
-import { api } from './api';
+import { api, apiError, apiFieldErrors } from './api';
 
-const BASE = '/restricted/rbac';
+const BASE = '/admin/rbac';
 
 function ensureOk(body) {
   if (body && body.success === false) {
@@ -15,7 +15,7 @@ function ensureOk(body) {
 }
 
 export async function fetchMe() {
-  const { data } = await api.get('/restricted/admin-auth/me');
+  const { data } = await api.get('/admin/auth/me');
   return ensureOk(data);
 }
 
@@ -136,10 +136,10 @@ export function groupPermissions(permissionNames) {
   return sorted;
 }
 
+// { message, code, status, fields } for a failed call. `code` is the API's
+// lower_snake_case error code; `fields` maps each invalid field to its first
+// message (the API sends a list per field).
 export function extractApiError(err) {
-  const body = err?.response?.data || err?.envelope;
-  if (!body) return { message: err?.message || 'Request failed', fields: null, status: err?.response?.status };
-  const message = body.error?.message || body.message || err.message || 'Request failed';
-  const fields = body.error?.fields || null;
-  return { message, fields, status: err?.response?.status };
+  const { message, code, status, fields } = apiError(err, 'Request failed');
+  return { message, code, status, fields: fields ? apiFieldErrors(err) : null };
 }

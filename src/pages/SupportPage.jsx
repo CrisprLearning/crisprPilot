@@ -453,8 +453,8 @@ export default function SupportPage() {
     } catch (err) {
       setLocalMessages(prev => prev.filter(m => m.id !== tempId));
       const code = getApiErrorCode(err);
-      if (code === 'NO_ACTIVE_TICKET') setSendError('Cannot send as resolution — no active ticket on this thread.');
-      else if (code === 'ALREADY_RESOLVED') setSendError('The active ticket is already resolved.');
+      if (code === 'no_active_ticket') setSendError('Cannot send as resolution — no active ticket on this thread.');
+      else if (code === 'already_resolved') setSendError('The active ticket is already resolved.');
       else setSendError(extractApiError(err, 'Failed to send message.'));
     } finally {
       setSending(false);
@@ -514,7 +514,7 @@ export default function SupportPage() {
       bumpThreadsRefresh();
     } catch (err) {
       const code = getApiErrorCode(err);
-      if (code === 'TICKET_ALREADY_OPEN') setTicketFormError('A ticket is already open on this thread.');
+      if (code === 'ticket_already_open') setTicketFormError('A ticket is already open on this thread.');
       else setTicketFormError(extractApiError(err, 'Failed to create ticket.'));
     } finally {
       setCreatingTicket(false);
@@ -546,7 +546,7 @@ export default function SupportPage() {
       setActiveTicket(prevTicket);
       setThreads(prev => prev.map(c => c.id === selectedThread.id ? { ...c, activeTicket: prevTicket } : c));
       const code = getApiErrorCode(err);
-      if (code === 'INVALID_TRANSITION') setTicketUpdateError('That status change is not allowed.');
+      if (code === 'invalid_transition') setTicketUpdateError('That status change is not allowed.');
       else setTicketUpdateError(extractApiError(err, 'Failed to update ticket.'));
     }
   };
@@ -621,7 +621,7 @@ export default function SupportPage() {
       setNoteDraft('');
     } catch (err) {
       const code = getApiErrorCode(err);
-      if (code === 'TICKET_RESOLVED') {
+      if (code === 'ticket_resolved') {
         setNoteError('This ticket was resolved. Re-open to add notes.');
         // Refresh activeTicket so the UI reflects the server's current state.
         try {

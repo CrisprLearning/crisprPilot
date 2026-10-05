@@ -9,11 +9,11 @@
 // `BUNNY_FOLDERS`). The proxy enforces a folder allowlist server-side.
 //
 // Backend proxy contract (under the standard X-Access-Token auth):
-//   GET    /restricted/signage/bunny/list?path=digital-signage
+//   GET    /admin/signage/bunny/list?path=digital-signage
 //            → { data: BunnyObject[] }   (Bunny's native list shape passed through)
-//   POST   /restricted/signage/bunny/upload   (multipart: file, path, fileName)
+//   POST   /admin/signage/bunny/upload   (multipart: file, path, fileName)
 //            → { data: BunnyObject }   (201)
-//   DELETE /restricted/signage/bunny/file?path=digital-signage/<fileName>
+//   DELETE /admin/signage/bunny/file?path=digital-signage/<fileName>
 //            → { data: { ok: true } }
 //
 // A BunnyObject is Bunny's storage listing row: { Guid, ObjectName, Length,
@@ -23,9 +23,9 @@
 //
 // See SIGNAGE_MEDIA_BUNNY_PROXY.md for the full backend specification.
 
-import { api } from './api';
+import { api, apiError } from './api';
 
-export const STORAGE_BASE = '/restricted/signage/bunny';
+export const STORAGE_BASE = '/admin/signage/bunny';
 
 // Top-level storage-zone folders, one per use case. Keep this list in sync
 // with the backend proxy's allowlist (see the contract doc).
@@ -148,23 +148,23 @@ function unwrapList(res) {
 }
 
 // ── Error surfacing ──────────────────────────────────────────────────
-// The signage Bunny proxy returns the project-standard envelope
-//   { error: { code, message } }
-// (see contract §4). Map the documented codes to friendly copy, falling back to
-// the server message then a generic line.
+// The signage Bunny proxy returns the project-standard error body
+//   HTTP <status> { success: false, error: { code, message, fields? } }
+// (see crispr-api docs/API_ERRORS.md). Map the documented codes to friendly
+// copy, falling back to the server message then a generic line.
 const STORAGE_ERROR_COPY = {
-  VALIDATION_FAILED: 'Invalid request. Check the file and try again.',
-  UNSUPPORTED_TYPE:  'Unsupported file type. Use image, video, audio, or Lottie JSON.',
-  TOO_LARGE:         'File is too large. Maximum size is 200 MB.',
-  NOT_FOUND:         'The file was not found.',
-  STORAGE_ERROR:     'Storage is unavailable right now. Please try again.',
-  FORBIDDEN:         'You do not have permission to manage signage media.',
+  validation_error: 'Invalid request. Check the file and try again.',
+  unsupported_type: 'Unsupported file type. Use image, video, audio, or Lottie JSON.',
+  too_large:        'File is too large. Maximum size is 200 MB.',
+  not_found:        'The file was not found.',
+  storage_error:    'Storage is unavailable right now. Please try again.',
+  forbidden:        'You do not have permission to manage signage media.',
 };
 
 export function bunnyErrorMessage(error, fallback = 'Storage request failed.') {
-  const env = error?.response?.data?.error;
-  if (env?.code && STORAGE_ERROR_COPY[env.code]) return STORAGE_ERROR_COPY[env.code];
-  return env?.message || error?.message || fallback;
+  if (error && !error.isAxiosError && !error.response) return error.message || fallback;
+  const { code, message } = apiError(error, fallback);
+  return STORAGE_ERROR_COPY[code] || message;
 }
 
 // ── API ──────────────────────────────────────────────────────────────

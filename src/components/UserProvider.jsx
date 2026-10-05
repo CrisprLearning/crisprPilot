@@ -19,7 +19,7 @@ export default function UserProvider({ children }) {
     const token = getToken();
     if (!token) return;
 
-    api.get('/restricted/user-profile')
+    api.get('/admin/user-profile')
       .then((res) => {
         if (res.data?.status && res.data?.response) {
           const raw = res.data.response;
@@ -49,7 +49,7 @@ export default function UserProvider({ children }) {
     // Also fetch RBAC identity so `roles` / `permissions` are available for guards.
     // A 401 here (like any other API call) logs the user out via the global
     // interceptor in lib/api.js.
-    api.get('/restricted/admin-auth/me')
+    api.get('/admin/auth/me')
       .then((res) => {
         const me = res.data?.user;
         if (!me) return;

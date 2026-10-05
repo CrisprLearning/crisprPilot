@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { api } from '../lib/api';
+import { api, apiErrorMessage } from '../lib/api';
 import useDebouncedValue from '../hooks/useDebouncedValue';
 import { availableCourses, demoCandidates } from '../data/candidateProfileDemo';
 import ToastRegion from '../components/ToastRegion';
@@ -208,7 +208,7 @@ export default function StudentManagementPage() {
       const isLocalWebPreview = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
       try {
-        const response = await api.get('/restricted/people/candidate/list', {
+        const response = await api.get('/admin/people/candidate/list', {
           params: {
             page: currentPage,
             size: itemsPerPage,
@@ -218,19 +218,15 @@ export default function StudentManagementPage() {
           },
         });
 
-        if (response.data?.status === 'success') {
-          const rows = (response.data.data || []).map(normalizeCandidate);
-          if (!isCancelled) {
-            setStudents(rows);
-            setTotalStudents(response.data.meta?.total || 0);
-            setTotalPages(response.data.meta?.totalPages || 1);
-            setCurrentPage(response.data.meta?.page || 1);
-            setIsDemoMode(false);
-          }
-          return;
+        const rows = (response.data.data || []).map(normalizeCandidate);
+        if (!isCancelled) {
+          setStudents(rows);
+          setTotalStudents(response.data.meta?.total || 0);
+          setTotalPages(response.data.meta?.totalPages || 1);
+          setCurrentPage(response.data.meta?.page || 1);
+          setIsDemoMode(false);
         }
-
-        throw new Error(response.data?.message || response.data?.error || 'Failed to load students');
+        return;
       } catch (error) {
         const demo = getDemoResponse({
           searchQuery: debouncedSearchQuery,
@@ -250,7 +246,7 @@ export default function StudentManagementPage() {
           if (isLocalWebPreview) {
             showToast('info', 'Demo Data', 'Loaded demo candidate data because the candidate API is not reachable.');
           } else {
-            showToast('error', 'Network Error', error.message || 'Error loading students.');
+            showToast('error', 'Network Error', apiErrorMessage(error, 'Error loading students.'));
           }
         }
       } finally {

@@ -1,6 +1,6 @@
-import { api } from './api';
+import { api, apiError, apiErrorMessage } from './api';
 
-const BASE = '/restricted/support';
+const BASE = '/admin/support';
 
 function clean(params) {
   const out = {};
@@ -113,12 +113,10 @@ export async function sendMessage(threadId, { text, kind = 'reply', asResolution
 }
 
 export function extractApiError(error, fallback = 'Request failed.') {
-  const env = error?.response?.data;
-  if (env?.error?.message) return env.error.message;
-  if (env?.message) return env.message;
-  return error?.message || fallback;
+  return apiErrorMessage(error, fallback);
 }
 
+// The API's lower_snake_case error code (e.g. 'ticket_already_open'), or null.
 export function getApiErrorCode(error) {
-  return error?.response?.data?.error?.code || null;
+  return error?.response?.data?.error?.code ? apiError(error).code : null;
 }

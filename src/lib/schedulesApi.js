@@ -4,9 +4,9 @@
 // and handles 401 redirects, so these wrappers just unwrap the envelope
 // and re-throw a normalized error on non-2xx.
 
-import { api } from './api';
+import { api, apiError } from './api';
 
-const BASE = '/restricted/schedules';
+const BASE = '/admin/schedules';
 
 function unwrap(res) {
   return res?.data?.data;
@@ -105,15 +105,21 @@ export async function recurringEvent(scheduleId, { event, recurrence, confirm_co
 }
 
 // ─── Error normalizer ──────────────────────────────────────────────────
-// Normalize an axios failure (or anything thrown) into the API's
-// { code, message, details, status } shape. Falls back to UNKNOWN for
-// non-API errors so callers can always `switch (err.code)`.
+// Normalize an axios failure (or anything thrown) into
+// { code, message, details, fields, status }. `code` is the API's
+// lower_snake_case code (or 'unknown' for non-API errors) so callers can
+// always `switch (err.code)`. `details` holds the extra top-level keys the
+// API sends next to `error` (conflicts, hits, events, copying, …).
 export function asApiError(e) {
-  const r = e?.response;
+  if (!e?.response) {
+    return { status: 0, code: 'unknown', message: e?.message || 'Unexpected error', details: {}, fields: null };
+  }
+  const err = apiError(e, 'Unexpected error');
   return {
-    status:  r?.status ?? 0,
-    code:    r?.data?.error?.code    ?? (e?.code || 'UNKNOWN'),
-    message: r?.data?.error?.message ?? (e?.message || 'Unexpected error'),
-    details: r?.data?.error?.details,
+    status:  err.status,
+    code:    err.code,
+    message: err.message,
+    details: err.extra || {},
+    fields:  err.fields,
   };
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { api } from '../lib/api';
+import { api, apiErrorMessage } from '../lib/api';
 import { setToken } from '../lib/auth';
 import { defaultProtectedRoute } from '../lib/legacyScreens';
 
@@ -50,7 +50,7 @@ export default function LoginPage() {
 
     try {
       const response = await api.post(
-        '/restricted/admin-auth/authenticate',
+        '/admin/auth/authenticate',
         { username, password },
         { headers: { 'Content-Type': 'application/json' } }
       );
@@ -71,9 +71,11 @@ export default function LoginPage() {
         window.location.assign(resolveNextPath());
         return;
       }
-      setState({ loading: false, error: response.data?.error || 'Authentication failed.', success: '' });
+      setState({ loading: false, error: 'Authentication failed.', success: '' });
     } catch (error) {
-      setState({ loading: false, error: error.message || 'Authentication failed.', success: '' });
+      // Refusals arrive as HTTP errors: 422 validation_error (missing field),
+      // 401 invalid_credentials, 403 account_disabled, 429 rate_limited.
+      setState({ loading: false, error: apiErrorMessage(error, 'Authentication failed.'), success: '' });
     }
   }
 

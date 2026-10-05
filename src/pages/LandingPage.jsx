@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ToastRegion from '../components/ToastRegion';
-import { api } from '../lib/api';
+import { apiErrorMessage, handleUnauthorized } from '../lib/api';
+import { changePassword } from '../lib/userProfileApi';
 import { allScreens } from '../lib/legacyScreens';
 import { canAccess } from '../lib/roles';
 import { useUser } from '../lib/userStore';
@@ -148,7 +149,7 @@ export default function LandingPage() {
       showToast('success', 'Profile Updated', 'Your details have been saved.');
       setEditOpen(false);
     } catch (error) {
-      showToast('error', 'Save failed', error?.response?.data?.error?.message || error?.response?.data?.message || error.message || 'Could not save profile.');
+      showToast('error', 'Save failed', apiErrorMessage(error, 'Could not save profile.'));
     } finally {
       setEditSaving(false);
     }
@@ -171,8 +172,8 @@ export default function LandingPage() {
       showToast('error', 'Validation', 'All password fields are required.');
       return;
     }
-    if (pwNew.length < 6) {
-      showToast('error', 'Validation', 'New password must be at least 6 characters.');
+    if (pwNew.length < 8) {
+      showToast('error', 'Validation', 'New password must be at least 8 characters.');
       return;
     }
     if (pwNew !== pwConfirm) {
@@ -181,14 +182,16 @@ export default function LandingPage() {
     }
     setPwSaving(true);
     try {
-      await api.post('/user-profile/change-password', {
+      await changePassword({
         currentPassword: pwCurrent,
         newPassword: pwNew,
       });
-      showToast('success', 'Password Changed', 'Your password has been updated.');
+      // A password change signs every session out, this one included.
+      showToast('success', 'Password Changed', 'Please sign in again with your new password.');
       setPwOpen(false);
+      setTimeout(handleUnauthorized, 1500);
     } catch (error) {
-      showToast('error', 'Change failed', error?.response?.data?.error?.message || error?.response?.data?.message || error.message || 'Could not change password.');
+      showToast('error', 'Change failed', apiErrorMessage(error, 'Could not change password.'));
     } finally {
       setPwSaving(false);
     }

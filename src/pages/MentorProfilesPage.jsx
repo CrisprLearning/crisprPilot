@@ -176,7 +176,7 @@ export default function MentorProfilesPage() {
     const isLocalWebPreview = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
     try {
-      const response = await api.get('/restricted/people/mentor/list', {
+      const response = await api.get('/admin/people/mentor/list', {
         params: {
           page: currentPage,
           size: pageSize,
@@ -257,7 +257,7 @@ export default function MentorProfilesPage() {
 
     setIsMappedStudentsLoading(true);
     try {
-      const response = await api.get('/restricted/people/mentor/get-mapped-candidates', {
+      const response = await api.get('/admin/people/mentor/get-mapped-candidates', {
         params: {
           id: selectedMentorForStudents.id,
           page: studentsCurrentPage,
@@ -348,7 +348,7 @@ export default function MentorProfilesPage() {
     async function fetchMentorProfile() {
       setIsMentorProfileLoading(true);
       try {
-        const response = await api.get(`/restricted/people/mentor/profile?id=${selectedMentor.id}`);
+        const response = await api.get(`/admin/people/mentor/profile?id=${selectedMentor.id}`);
         if (isCancelled) return;
         if (response.data?.status === 'success' && response.data?.data) {
           setSelectedMentor(normalizeMentor(response.data.data, 0));
@@ -473,7 +473,7 @@ export default function MentorProfilesPage() {
         if (currentMentor.email) formData.append('email', currentMentor.email);
         if (currentMentor.mobile) formData.append('mobile', currentMentor.mobile);
 
-        const response = await api.post(`/restricted/people/mentor/update?id=${currentMentor.id}`, formData, {
+        const response = await api.post(`/admin/people/mentor/update?id=${currentMentor.id}`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
 

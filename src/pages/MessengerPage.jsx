@@ -478,7 +478,7 @@ export default function MessengerPage() {
     if (fieldsLoadedRef.current) return;
     setLoadingFields(true);
     try {
-      const { data } = await api.get('/restricted/people/candidate/profile', { params: { id: 1 } });
+      const { data } = await api.get('/admin/people/candidate/profile', { params: { id: 1 } });
       const payload = data?.data || data || {};
       setCandidateFields(deriveCandidateFields(payload));
       fieldsLoadedRef.current = true;

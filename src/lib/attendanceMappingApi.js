@@ -1,6 +1,6 @@
 import { api } from './api';
 
-const BASE = '/restricted/attendance-mapping';
+const BASE = '/admin/attendance-mapping';
 
 function clean(params) {
   const out = {};
@@ -11,7 +11,7 @@ function clean(params) {
   return out;
 }
 
-// GET /restricted/attendance-mapping/list
+// GET /admin/attendance-mapping/list
 // Returns { success, data: [...], pagination: { total, size, currentPage, lastPage } }
 export async function listMappings({
   id,
@@ -30,7 +30,7 @@ export async function listMappings({
   return data;
 }
 
-// POST /restricted/attendance-mapping/add
+// POST /admin/attendance-mapping/add
 // accessProvidedAt is optional (server defaults to now); status defaults to 1=ACTIVE.
 export async function createMapping({
   key,
@@ -46,7 +46,7 @@ export async function createMapping({
   return data;
 }
 
-// PUT /restricted/attendance-mapping/{id} — at least one of accessExpiryAt / status.
+// PUT /admin/attendance-mapping/{id} — at least one of accessExpiryAt / status.
 export async function updateMapping(id, { accessExpiryAt, status } = {}) {
   const { data } = await api.put(`${BASE}/${id}`, clean({ accessExpiryAt, status }));
   return data;

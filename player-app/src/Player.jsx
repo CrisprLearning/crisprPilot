@@ -39,7 +39,7 @@ export default function Player({ screenCode }) {
         log('loaded', screenCode, '→', payload.loop?.items?.length, 'items');
       } catch (e) {
         warn('fetch failed', e?.message, e?.code);
-        if (e?.status === 401 || e?.status === 403 || e?.code === 'PAIRING_EXPIRED') {
+        if (e?.status === 401 || e?.status === 403 || e?.code === 'pairing_expired') {
           // Bearer dead or screen rotated — back to pairing UI
           setNeedPair(true);
           return;
@@ -173,9 +173,9 @@ function PairingScreen({ screenCode, onPaired }) {
       await pair(screenCode, code.trim());
       onPaired();
     } catch (e) {
-      const msg = e.code === 'PAIRING_EXPIRED' ? 'This pairing code has expired. Ask admin to regenerate it.'
-              :  e.code === 'NOT_FOUND'       ? 'No such screen, or it is already paired.'
-              :  e.code === 'UNAUTHENTICATED' ? 'Wrong pairing code.'
+      const msg = e.code === 'pairing_expired' ? 'This pairing code has expired. Ask admin to regenerate it.'
+              :  e.code === 'not_found'       ? 'No such screen, or it is already paired.'
+              :  e.code === 'unauthenticated' ? 'Wrong pairing code.'
               :  e.message || 'Pairing failed.';
       setErr(msg);
     } finally { setSubmitting(false); }

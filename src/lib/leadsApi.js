@@ -1,7 +1,7 @@
 import { api } from './api';
 
-const BASE = '/restricted/leads';
-const ASSOCIATES_BASE = '/restricted/associates';
+const BASE = '/admin/leads';
+const ASSOCIATES_BASE = '/admin/associates';
 
 function clean(params) {
   const out = {};

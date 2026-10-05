@@ -1,6 +1,6 @@
-import { api } from './api';
+import { api, apiErrorMessage, apiFieldErrors } from './api';
 
-const ADMIN_BASE = '/restricted/messenger/campaigns';
+const ADMIN_BASE = '/admin/messenger/campaigns';
 const USER_BASE = '/messenger/in-app';
 
 // ── Enums (per spec) ─────────────────────────────────────────────────────────
@@ -136,15 +136,11 @@ export function buildAudienceFilter(audience, { selectedCourses = [], selectedBa
   }
 }
 
-// Map a Laravel validation error envelope to a flat error message string.
+// Map an API error to a flat message string: the first field message of a
+// validation_error, otherwise the error message.
 export function extractApiError(err, fallback = 'Request failed') {
-  const resp = err?.response?.data;
-  if (!resp) return err?.message || fallback;
-  if (resp.errors && typeof resp.errors === 'object') {
-    const first = Object.values(resp.errors)[0];
-    if (Array.isArray(first) && first[0]) return first[0];
-  }
-  return resp.message || fallback;
+  const first = Object.values(apiFieldErrors(err))[0];
+  return first || apiErrorMessage(err, fallback);
 }
 
 // Normalize an API campaign resource into the message-list shape MessengerPage uses.

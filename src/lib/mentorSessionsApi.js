@@ -1,4 +1,4 @@
-import { api } from './api';
+import { api, apiError, apiFieldErrors } from './api';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Mentor Sessions (Audio Rooms) API client.
@@ -8,32 +8,35 @@ import { api } from './api';
 // provisioned on getstream.io as `audio_room` calls (host + co-hosts speak,
 // listeners may "request to join" the stage when the host enables it).
 //
-// Base path resolves to `<origin>/api/restricted/audio-streams` — the shared
+// Base path resolves to `<origin>/api/admin/audio-streams` — the shared
 // `api` axios instance already prefixes `/api` and injects X-Access-Token.
 //
 // Envelopes follow the house contract: single `{ data }`, list `{ data, meta }`,
-// error `{ error: { code, message, details } }`. axios rejects on non-2xx, so
+// error `{ success: false, error: { code, message, fields? } }`. axios rejects on non-2xx, so
 // callers run the error through `mentorSessionError()`.
 //
 // Full backend contract: docs/audio-streams-contract.md
 // ─────────────────────────────────────────────────────────────────────────────
 
-const BASE = '/restricted/audio-streams';
+const BASE = '/admin/audio-streams';
 
+// `code` is the API's lower_snake_case code; `fields` maps each invalid field
+// to its first message (the API sends a list per field).
 export function mentorSessionError(err) {
-  const env = err?.response?.data?.error;
+  const { status, code, message, fields } = apiError(err, 'Request failed');
   return {
-    status: err?.response?.status,
-    code: env?.code || 'SERVER_ERROR',
-    message: env?.message || err?.message || 'Request failed',
-    fields: env?.details?.fields || null,
+    status,
+    code,
+    message,
+    fields: fields ? apiFieldErrors(err) : null,
   };
 }
 
-// `true` when the error came from the getstream provisioning layer — the FE
-// should surface a retry affordance rather than a generic failure.
+// `true` when the error came from the getstream provisioning layer
+// (stream_provision_failed, stream_golive_failed, stream_token_failed) — the
+// FE should surface a retry affordance rather than a generic failure.
 export function isStreamError(code) {
-  return typeof code === 'string' && code.startsWith('STREAM_');
+  return typeof code === 'string' && code.startsWith('stream_');
 }
 
 function clean(params) {

@@ -126,33 +126,33 @@ export default function SchedulesPage() {
     const e = asApiError(err);
     const batchName = (id) => batchPool.find((b) => String(b.id) === String(id))?.name || id;
     switch (e.code) {
-      case 'BATCH_DATE_UNIQUE': {
+      case 'batch_date_unique': {
         const c = e.details?.conflicts?.[0];
         return showToast('error', 'Batch conflict', c
           ? `${batchName(c.batch_id)} is already in "${c.schedule_name}".`
           : e.message);
       }
-      case 'EVENT_OVERLAP': {
+      case 'event_overlap': {
         const c = e.details?.conflicts?.[0] || e.details?.copying;
         return showToast('error', 'Time overlap', c?.title ? `Clashes with "${c.title}".` : e.message);
       }
-      case 'RECURRENCE_PUBLISHED_BLOCK': {
+      case 'recurrence_published_block': {
         const h = e.details?.hits?.[0];
         return showToast('error', 'Repeat blocked', h
           ? `"${h.schedule_name}" on ${h.date} is published.`
           : e.message);
       }
-      case 'CONTENT_DUPLICATION_REQUIRED':
+      case 'content_duplication_required':
         return showToast('error', 'Confirm needed', 'Shared-content events — confirm and retry.');
-      case 'PUBLISHED_IMMUTABLE':
+      case 'published_immutable':
         return showToast('error', 'Published', 'This schedule is published — unpublish to edit.');
-      case 'NO_EVENTS':
+      case 'no_events':
         return showToast('error', 'No events', 'Add at least one event before publishing.');
-      case 'NO_BATCHES':
+      case 'no_batches':
         return showToast('error', 'No batches', 'Link at least one batch before publishing.');
-      case 'NOT_FOUND':
+      case 'not_found':
         return showToast('error', 'Not found', e.message);
-      case 'VALIDATION':
+      case 'validation_error':
         return showToast('error', 'Validation', e.message);
       default:
         return showToast('error', fallbackTitle, e.message);
@@ -2480,7 +2480,7 @@ function NewScheduleCircle({ onClick }) {
 }
 
 // Venue picker — typeahead-style. Loads the venue list once from
-// /restricted/venue/list (no search param on that endpoint) and filters
+// /admin/venue/list (no search param on that endpoint) and filters
 // client-side as the user types. Stores the venue *name* on the event.
 function VenueSelect({ value, onChange, type = 1 }) {
   const [query, setQuery] = useState(value || '');

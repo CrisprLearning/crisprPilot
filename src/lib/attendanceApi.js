@@ -1,6 +1,6 @@
 import { api } from './api';
 
-const RECORDS_BASE = '/restricted/attendance-record';
+const RECORDS_BASE = '/admin/attendance-record';
 
 function clean(params) {
   const out = {};
@@ -11,7 +11,7 @@ function clean(params) {
   return out;
 }
 
-// GET /restricted/attendance-record/list
+// GET /admin/attendance-record/list
 // Returns { success, data: [...], pagination: { total, size, currentPage, lastPage } }
 export async function listAttendanceRecords({
   id,
@@ -35,7 +35,7 @@ export async function listAttendanceRecords({
   return data;
 }
 
-// POST /restricted/attendance-record/send-parent-notification
+// POST /admin/attendance-record/send-parent-notification
 // Wrapper endpoint for notifying parents of absentees. It logs to
 // attendance_notification_log (preventing duplicate notifications for the same
 // student/date) before internally invoking the campaign API.

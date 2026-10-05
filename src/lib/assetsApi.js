@@ -1,7 +1,7 @@
 import { api } from './api';
 import { ACCEPT, BUNNY_FOLDERS, DEFAULT_MAX_UPLOAD_BYTES, validateUpload as validateStorageUpload } from './bunnyStorageApi';
 
-const BASE = '/restricted/asset';
+const BASE = '/admin/asset';
 
 // Asset invoices live in the shared Bunny storage zone. The frontend posts
 // the raw file to the asset endpoint below; the backend forwards it to this
