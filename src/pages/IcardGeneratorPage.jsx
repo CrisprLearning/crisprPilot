@@ -4,13 +4,14 @@ import { Can, usePermission } from '../lib/userStore';
 import { PERMS } from '../lib/permissions';
 import useDebouncedValue from '../hooks/useDebouncedValue';
 import {
+  generateIcards,
   getCandidateProfile,
   listBatches,
   listCandidates,
-  listCandidatesInBatches,
   listIcardAudit,
   recordIcardAudit,
 } from '../lib/icardApi';
+import { apiErrorMessage } from '../lib/api';
 import {
   absolutifyAssets,
   buildPrintDocument,
@@ -430,17 +431,15 @@ export default function IcardGeneratorPage() {
     }
     setGenerating(true);
     try {
-      // Keep the picked-row + fetched profile + original id paired together so
-      // the audit never loses the candidateId even if profile fields differ.
-      const pairs = await Promise.all(
-        ids.map(async (id) => {
-          const profile = await getCandidateProfile(id)
-            .then((resp) => resp?.data || resp || null)
-            .catch(() => null);
-          return { id, cand: selectedCandidates[id], profile };
-        })
-      );
-      const valid = pairs.filter((p) => p.profile);
+      // One call returns every picked student's card profile. Keep the
+      // picked row + profile + id together so the audit never loses the
+      // candidateId even if profile fields differ.
+      const result = await generateIcards({ candidateIds: ids.map(Number).filter(Boolean) });
+      const valid = (result?.data || []).map((card) => ({
+        id: String(card.candidateId),
+        cand: selectedCandidates[card.candidateId] || selectedCandidates[String(card.candidateId)],
+        profile: card.profile,
+      }));
       const students = valid.map((p) => p.profile);
       if (students.length === 0) {
         showToast('error', 'No profiles', 'Could not load profile data for the selected students.');
@@ -491,7 +490,7 @@ export default function IcardGeneratorPage() {
           .finally(loadAudit);
       }
     } catch (err) {
-      showToast('error', 'Generation failed', err?.response?.data?.message || err.message || 'Could not generate cards.');
+      showToast('error', 'Generation failed', apiErrorMessage(err, 'Could not generate cards.'));
     } finally {
       setGenerating(false);
     }
@@ -622,37 +621,23 @@ export default function IcardGeneratorPage() {
     }
     setGenerating(true);
     try {
-      const data = await listCandidatesInBatches(selectedBatchIds);
-      const list = data?.data || [];
-      if (list.length === 0) {
+      // One call returns the card profile of every student in the batches,
+      // with the batch each card is printed under.
+      const result = await generateIcards({ batchIds: selectedBatchIds.map(Number).filter(Boolean) });
+      const cards = result?.data || [];
+      if (cards.length === 0) {
         showToast('error', 'No students', 'No students were found in the selected batches.');
         return;
       }
-      // Build a lookup from candidate id → batch name (from the roster row).
-      const batchById = Object.fromEntries(batches.map((b) => [b.id, b]));
+      if (result?.truncated) {
+        showToast('error', 'Too many students', `Only the first ${cards.length} cards were generated. Select fewer batches to print the rest.`);
+      }
       const batchNameByCandidate = {};
-      list.forEach((c) => {
-        const id = c.id || c.candidateId || c.candidateKey;
-        if (!id) return;
-        batchNameByCandidate[id] =
-          c.batchName || c.batch?.name ||
-          (c.batchId && batchById[c.batchId]?.name) ||
-          (c.batch?.id && batchById[c.batch.id]?.name) ||
-          '';
+      const valid = cards.map((card) => {
+        const id = String(card.candidateId);
+        batchNameByCandidate[id] = card.batchName || '';
+        return { id, profile: card.profile };
       });
-
-      // Fetch each candidate's full profile, keeping the original ID we
-      // queried with — so we never lose track of `candidateId` for the audit.
-      const ids = Object.keys(batchNameByCandidate);
-      const pairs = await Promise.all(
-        ids.map(async (id) => {
-          const profile = await getCandidateProfile(id)
-            .then((resp) => resp?.data || resp || null)
-            .catch(() => null);
-          return { id, profile };
-        })
-      );
-      const valid = pairs.filter((p) => p.profile);
       const students = valid.map((p) => p.profile);
       if (students.length === 0) {
         showToast('error', 'No profiles', 'Could not load profile data for the selected students.');
@@ -683,11 +668,11 @@ export default function IcardGeneratorPage() {
           .finally(loadAudit);
       }
     } catch (err) {
-      showToast('error', 'Generation failed', err?.response?.data?.message || err.message || 'Could not generate cards.');
+      showToast('error', 'Generation failed', apiErrorMessage(err, 'Could not generate cards.'));
     } finally {
       setGenerating(false);
     }
-  }, [template, selectedBatchIds, batches, mapping, showToast, loadAudit, selectedTemplatePath]);
+  }, [template, selectedBatchIds, mapping, showToast, loadAudit, selectedTemplatePath]);
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 

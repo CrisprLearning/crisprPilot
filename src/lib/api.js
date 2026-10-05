@@ -105,7 +105,7 @@ api.interceptors.response.use(
     }
     const status = error?.response?.status;
     const url = error?.config?.url || '';
-    const isAuthCall = url.includes('/admin/auth/authenticate');
+    const isAuthCall = url.includes('/admin/auth/authenticate') || url.includes('/admin/auth/otp/');
     if (status === 401 && !isAuthCall) {
       handleUnauthorized();
     }

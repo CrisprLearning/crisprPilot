@@ -7,8 +7,10 @@
 // "Resources" section of the chapter they're watching, if they belong to one
 // of the linked batches.
 //
-// Backend contract: CLASS_NOTES_API_CONTRACT.md. Endpoints live under
-// /admin/classnotes behind the standard X-Access-Token middleware.
+// Backend: crispr-api docs/CLASS_NOTES_API.md (adapted from
+// CLASS_NOTES_API_CONTRACT.md). Endpoints live under /admin/classnotes behind
+// the standard X-Access-Token middleware; success bodies are
+// { success: true, data, … }, errors the standard { error: { code, message } }.
 
 import { api } from './api';
 import { displayNameFromStored } from './bunnyStorageApi';
@@ -177,22 +179,23 @@ export async function uploadClassNotePdf(file, { checksumSha256, onProgress } = 
   fd.append('path', STORAGE_FOLDER);
   fd.append('fileName', fileName);
   fd.append('checksumSha256', checksumSha256);
-  const res = await api.post(`${BASE}/upload-classnote.php`, fd, {
+  const res = await api.post(`${BASE}/upload`, fd, {
     onUploadProgress: (e) => {
       if (onProgress && e.total) onProgress(Math.round((e.loaded / e.total) * 100));
     },
   });
-  const data = res?.data?.data ?? res?.data ?? {};
+  const data = res?.data?.data ?? {};
   return {
-    fileUrl: data.fileUrl ?? data.url ?? '',
-    fileName: data.fileName ?? data.ObjectName ?? fileName,
+    fileUrl: data.fileUrl ?? '',
+    fileName: data.fileName ?? fileName,
     fileSize: Number(data.fileSize ?? file.size) || file.size,
   };
 }
 
 // Step 2 of 2 — persist the metadata row linking file → chapter → courses → batches.
+// Returns the saved row (normalized).
 export async function saveClassNoteMetadata({ chapterId, courseIds, fileUrl, fileName, displayName, fileSize, checksumSha256, batchIds }) {
-  const { data } = await api.post(`${BASE}/update-classnotes-metadata.php`, {
+  const { data } = await api.post(`${BASE}/save`, {
     chapterId,
     courseIds,
     fileUrl,
@@ -202,20 +205,33 @@ export async function saveClassNoteMetadata({ chapterId, courseIds, fileUrl, fil
     checksumSha256,
     batchIds,
   });
-  return data;
+  return normalizeClassNote(data?.data);
 }
 
 // Update an existing note's visibility links — chapter, courses, batches.
 // Same endpoint as the create call; the presence of `id` makes it an update
 // (file fields are immutable — re-upload to change the PDF itself).
 export async function updateClassNoteVisibility({ id, chapterId, courseIds, batchIds }) {
-  const { data } = await api.post(`${BASE}/update-classnotes-metadata.php`, {
+  const { data } = await api.post(`${BASE}/save`, {
     id,
     chapterId,
     courseIds,
     batchIds,
   });
-  return data;
+  return normalizeClassNote(data?.data);
+}
+
+// Hide a note from students (it stays in the admin list under "Include
+// hidden"), or show it again.
+export async function setClassNoteHidden(id, hidden) {
+  const { data } = await api.patch(`${BASE}/${id}/visibility`, { hidden: !!hidden });
+  return normalizeClassNote(data?.data);
+}
+
+// Soft delete: the row disappears everywhere and its checksum is free again.
+// The Bunny object is kept server-side.
+export async function deleteClassNote(id) {
+  await api.delete(`${BASE}/${id}`);
 }
 
 // Server-side duplicate probe by checksum. Returns the normalized existing
@@ -223,7 +239,7 @@ export async function updateClassNoteVisibility({ id, chapterId, courseIds, batc
 // treat a failed probe as "unknown" and rely on the 409 at save time.
 export async function findClassNoteByChecksum(checksumSha256) {
   try {
-    const { data } = await api.get(`${BASE}/check-classnote-checksum.php`, {
+    const { data } = await api.get(`${BASE}/check-checksum`, {
       params: { checksum: checksumSha256 },
     });
     const row = data?.data;
@@ -235,14 +251,15 @@ export async function findClassNoteByChecksum(checksumSha256) {
 }
 
 // Server-side list with paging + filters. Returns { rows, total, totalPages }.
-export async function listClassNotes({ page = 1, size = 20, chapterId, courseId, batchId, searchKey } = {}) {
+export async function listClassNotes({ page = 1, size = 20, chapterId, courseId, batchId, searchKey, includeHidden } = {}) {
   const params = { page, size };
+  if (includeHidden) params.includeHidden = true;
   if (chapterId) params.chapterId = chapterId;
   if (courseId) params.courseId = courseId;
   if (batchId) params.batchId = batchId;
   if (searchKey) params.searchKey = searchKey;
-  const { data } = await api.get(`${BASE}/list-classnotes-metadata.php`, { params });
-  const rows = (data?.data ?? data?.notes ?? []).map(normalizeClassNote).filter(Boolean);
+  const { data } = await api.get(`${BASE}/list`, { params });
+  const rows = (data?.data ?? []).map(normalizeClassNote).filter(Boolean);
   const total = Number(data?.total ?? rows.length) || rows.length;
   return {
     rows,

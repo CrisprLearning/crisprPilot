@@ -10,6 +10,7 @@ import {
   IDEAL_SIZE_TIERS,
   MAX_PDF_BYTES,
   defaultTitleFromFileName,
+  deleteClassNote,
   findClassNoteByChecksum,
   flattenSyllabusChapters,
   formatBytes,
@@ -18,6 +19,7 @@ import {
   listClassNotes,
   sanitizeTitle,
   saveClassNoteMetadata,
+  setClassNoteHidden,
   sha256Hex,
   updateClassNoteVisibility,
   uploadClassNotePdf,
@@ -41,6 +43,17 @@ function getPageNumbers(currentPage, totalPages) {
   pages.push(totalPages);
   return pages;
 }
+
+// Demo mode is only for an unreachable backend (no HTTP response at all);
+// a real API error is shown as an error, not papered over with demo rows.
+function isNetworkError(err) {
+  return apiError(err).code === 'network_error';
+}
+
+const HIDDEN_FILTER_OPTIONS = [
+  { value: '', label: 'Visible notes' },
+  { value: 'all', label: 'Include hidden' },
+];
 
 function fmtDate(epochSeconds) {
   if (!epochSeconds) return '—';
@@ -195,13 +208,15 @@ export default function ClassNotesPage() {
       try {
         const rows = await listClassNoteBatches();
         if (!cancelled) setBatches(rows);
-      } catch {
-        // Enrollment module unreachable → demo batches so the form stays usable.
-        if (!cancelled) setBatches(CLASS_NOTES_DEMO_BATCHES);
+      } catch (err) {
+        if (cancelled) return;
+        // Backend unreachable → demo batches so the form stays usable.
+        if (isNetworkError(err)) setBatches(CLASS_NOTES_DEMO_BATCHES);
+        else showToast('error', 'Could not load batches', apiErrorMessage(err, 'Could not load the batches.'));
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [showToast]);
   const batchById = useMemo(() => {
     const m = new Map();
     batches.forEach((b) => m.set(String(b.id), b));
@@ -216,13 +231,15 @@ export default function ClassNotesPage() {
       try {
         const rows = await listClassNoteCourses();
         if (!cancelled) setCourses(rows);
-      } catch {
-        // Course module unreachable → demo courses so the form stays usable.
-        if (!cancelled) setCourses(CLASS_NOTES_DEMO_COURSES);
+      } catch (err) {
+        if (cancelled) return;
+        // Backend unreachable → demo courses so the form stays usable.
+        if (isNetworkError(err)) setCourses(CLASS_NOTES_DEMO_COURSES);
+        else showToast('error', 'Could not load courses', apiErrorMessage(err, 'Could not load the courses.'));
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [showToast]);
   const courseById = useMemo(() => {
     const m = new Map();
     courses.forEach((c) => m.set(String(c.id), c));
@@ -258,6 +275,7 @@ export default function ClassNotesPage() {
   const [filterChapter, setFilterChapter] = useState('');
   const [filterCourse, setFilterCourse] = useState('');
   const [filterBatch, setFilterBatch] = useState('');
+  const [filterHidden, setFilterHidden] = useState('');
 
   // Row kebab menu + visibility modal
   const [openKebabId, setOpenKebabId] = useState(null);
@@ -279,18 +297,29 @@ export default function ClassNotesPage() {
         courseId: filterCourse || undefined,
         batchId: filterBatch || undefined,
         searchKey: debouncedSearch.trim() || undefined,
+        includeHidden: filterHidden === 'all',
       });
       setNotes(res.rows);
       setTotal(res.total);
       setTotalPages(res.totalPages);
       setIsDemo(false);
-    } catch {
-      // Backend module unreachable → demo rows, filtered + paged locally.
+    } catch (err) {
+      if (!isNetworkError(err)) {
+        // A real API error (403, 422, 5xx…) — say so instead of faking rows.
+        setNotes([]);
+        setTotal(0);
+        setTotalPages(1);
+        setIsDemo(false);
+        showToast('error', 'Could not load class notes', apiErrorMessage(err, 'Could not load the class notes.'));
+        return;
+      }
+      // Backend unreachable → demo rows, filtered + paged locally.
       const q = debouncedSearch.trim().toLowerCase();
       let rows = demoRowsRef.current;
+      if (filterHidden !== 'all') rows = rows.filter((n) => !n.hidden);
       if (filterChapter) rows = rows.filter((n) => String(n.chapterId) === String(filterChapter));
       if (filterCourse) rows = rows.filter((n) => (n.courses || []).some((c) => String(c.id) === String(filterCourse)));
-      if (filterBatch) rows = rows.filter((n) => n.batches.some((b) => String(b.id) === String(filterBatch)));
+      if (filterBatch) rows = rows.filter((n) => n.batches.length === 0 || n.batches.some((b) => String(b.id) === String(filterBatch)));
       if (q) {
         rows = rows.filter((n) =>
           [n.displayName, n.fileName, n.chapterTitle, n.subject, ...(n.courses || []).map((c) => c.title)]
@@ -304,10 +333,10 @@ export default function ClassNotesPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [page, pageSize, filterChapter, filterCourse, filterBatch, debouncedSearch]);
+  }, [page, pageSize, filterChapter, filterCourse, filterBatch, filterHidden, debouncedSearch, showToast]);
 
   useEffect(() => { loadNotes(); }, [loadNotes]);
-  useEffect(() => { setPage(1); }, [debouncedSearch, filterChapter, filterCourse, filterBatch]);
+  useEffect(() => { setPage(1); }, [debouncedSearch, filterChapter, filterCourse, filterBatch, filterHidden]);
 
   // ── File selection + checksum + duplicate probe ─────────────────────
   const acceptFile = useCallback(async (picked) => {
@@ -455,6 +484,39 @@ export default function ClassNotesPage() {
     }
   }, [visibilityNote, isDemo, chapterById, courseById, batchById, loadNotes, showToast]);
 
+  const handleToggleHidden = useCallback(async (note) => {
+    setOpenKebabId(null);
+    const hidden = !note.hidden;
+    try {
+      if (isDemo) {
+        demoRowsRef.current = demoRowsRef.current.map((n) => (n.id === note.id ? { ...n, hidden } : n));
+      } else {
+        await setClassNoteHidden(note.id, hidden);
+      }
+      showToast('success', hidden ? 'Note hidden' : 'Note visible',
+        hidden ? `“${note.displayName}” is hidden from students.` : `“${note.displayName}” is visible to students again.`);
+      loadNotes();
+    } catch (err) {
+      showToast('error', 'Update failed', apiErrorMessage(err, 'Could not change the note.'));
+    }
+  }, [isDemo, loadNotes, showToast]);
+
+  const handleDelete = useCallback(async (note) => {
+    setOpenKebabId(null);
+    if (!window.confirm(`Delete “${note.displayName}”? Students will no longer see it.`)) return;
+    try {
+      if (isDemo) {
+        demoRowsRef.current = demoRowsRef.current.filter((n) => n.id !== note.id);
+      } else {
+        await deleteClassNote(note.id);
+      }
+      showToast('success', 'Note deleted', `“${note.displayName}” was deleted.`);
+      loadNotes();
+    } catch (err) {
+      showToast('error', 'Delete failed', apiErrorMessage(err, 'Could not delete the note.'));
+    }
+  }, [isDemo, loadNotes, showToast]);
+
   const copyLink = useCallback((note) => {
     if (!note.fileUrl || note.fileUrl === '#') return;
     navigator.clipboard?.writeText(note.fileUrl)
@@ -489,12 +551,13 @@ export default function ClassNotesPage() {
     [batches]
   );
 
-  const hasFilters = Boolean(searchQuery || filterChapter || filterCourse || filterBatch);
+  const hasFilters = Boolean(searchQuery || filterChapter || filterCourse || filterBatch || filterHidden);
   const clearAllFilters = useCallback(() => {
     setSearchQuery('');
     setFilterChapter('');
     setFilterCourse('');
     setFilterBatch('');
+    setFilterHidden('');
     setPage(1);
   }, []);
 
@@ -676,6 +739,7 @@ export default function ClassNotesPage() {
         <FilterDropdown label="All Chapters" value={filterChapter} options={chapterFilterOptions} maxHeight="300px" onChange={setFilterChapter} />
         <FilterDropdown label="All Courses" value={filterCourse} options={courseFilterOptions} maxHeight="280px" onChange={setFilterCourse} />
         <FilterDropdown label="All Batches" value={filterBatch} options={batchFilterOptions} maxHeight="280px" onChange={setFilterBatch} />
+        <FilterDropdown label="Visible notes" value={filterHidden} options={HIDDEN_FILTER_OPTIONS} onChange={setFilterHidden} />
         {hasFilters ? (
           <button type="button" className="payments-clear-btn" onClick={clearAllFilters}><i className="ti ti-close" /> Clear</button>
         ) : null}
@@ -724,6 +788,7 @@ export default function ClassNotesPage() {
                           <i className="fa fa-file-pdf-o" />
                           <div>
                             <span className="cn-cell-file-name" title={n.fileName}>{n.displayName}</span>
+                            {n.hidden ? <div className="profile-subtext"><i className="ti ti-eye" /> Hidden from students</div> : null}
                           </div>
                         </div>
                       </td>
@@ -794,6 +859,12 @@ export default function ClassNotesPage() {
                                   onClick={() => { setVisibilityNote(n); setOpenKebabId(null); }}
                                 >
                                   <i className="ti ti-eye" /> Visibility
+                                </button>
+                                <button type="button" className="kebab-dropdown-item" onClick={() => handleToggleHidden(n)}>
+                                  <i className={`ti ${n.hidden ? 'ti-eye' : 'ti-na'}`} /> {n.hidden ? 'Show to students' : 'Hide from students'}
+                                </button>
+                                <button type="button" className="kebab-dropdown-item" onClick={() => handleDelete(n)}>
+                                  <i className="ti ti-trash" /> Delete
                                 </button>
                               </div>
                             </div>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { api, apiErrorMessage } from '../lib/api';
+import { api, apiError, apiErrorMessage } from '../lib/api';
 import { setToken } from '../lib/auth';
+import { fetchResetIdentity, requestAdminOtp, resetAdminPassword, verifyAdminOtp } from '../lib/adminAuthApi';
 import { defaultProtectedRoute } from '../lib/legacyScreens';
 
 export default function LoginPage() {
@@ -19,18 +20,26 @@ export default function LoginPage() {
     return defaultProtectedRoute;
   }
   
-  // View states: 'password', 'otp', 'forgot'
+  // View states: 'password', 'otp', 'forgot', 'reset' (set a new password)
   const [view, setView] = useState('password');
-  
+
   // Form fields
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
-  
-  // OTP logic
+
+  // OTP logic: `otpKey` is the request key the API wants back with the code.
   const [otpSent, setOtpSent] = useState(false);
   const [otpTimer, setOtpTimer] = useState(0);
-  
+  const [otpKey, setOtpKey] = useState('');
+
+  // Forgot password: the short-lived reset token lives only in this state —
+  // never in storage — and is dropped once the password is set.
+  const [resetToken, setResetToken] = useState('');
+  const [resetUser, setResetUser] = useState(null);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
   const [state, setState] = useState({ loading: false, error: '', success: '' });
 
   // Handle countdown for OTP
@@ -44,6 +53,38 @@ export default function LoginPage() {
 
   const resetState = () => setState({ loading: false, error: '', success: '' });
 
+  // Leave the current flow: forget any code, key and reset token.
+  function switchView(next, nextState = { loading: false, error: '', success: '' }) {
+    setView(next);
+    setOtp('');
+    setOtpSent(false);
+    setOtpTimer(0);
+    setOtpKey('');
+    setResetToken('');
+    setResetUser(null);
+    setNewPassword('');
+    setConfirmPassword('');
+    setState(nextState);
+  }
+
+  // Store a session token and enter the console — the same for password and
+  // OTP sign-in.
+  function completeSignIn(token) {
+    // Wipe any cached identity from a previous session so the new user's
+    // details don't flash before /me resolves.
+    try {
+      window.localStorage.removeItem('vp_user');
+      window.localStorage.removeItem('vp_prefs');
+      window.localStorage.removeItem('sb_collapsed');
+    } catch {
+      // ignore storage errors
+    }
+    setToken(token);
+    // Hard navigation forces UserProvider to remount and refetch identity
+    // from scratch — avoids stale React state carrying over across users.
+    window.location.assign(resolveNextPath());
+  }
+
   async function handlePasswordLogin(e) {
     if (e) e.preventDefault();
     setState({ loading: true, error: '', success: '' });
@@ -56,19 +97,7 @@ export default function LoginPage() {
       );
 
       if (response.data?.status && response.data?.response) {
-        // Wipe any cached identity from a previous session so the new user's
-        // details don't flash before /me resolves.
-        try {
-          window.localStorage.removeItem('vp_user');
-          window.localStorage.removeItem('vp_prefs');
-          window.localStorage.removeItem('sb_collapsed');
-        } catch {
-          // ignore storage errors
-        }
-        setToken(response.data.response);
-        // Hard navigation forces UserProvider to remount and refetch identity
-        // from scratch — avoids stale React state carrying over across users.
-        window.location.assign(resolveNextPath());
+        completeSignIn(response.data.response);
         return;
       }
       setState({ loading: false, error: 'Authentication failed.', success: '' });
@@ -79,38 +108,142 @@ export default function LoginPage() {
     }
   }
 
+  // Ask for a code ('login' or 'reset'). The API answers the same way whether
+  // or not the username is an admin's, so the message stays neutral.
+  async function sendCode(purpose) {
+    if (!username.trim()) {
+      setState({ loading: false, error: 'Please enter your mobile number or email.', success: '' });
+      return;
+    }
+    setState({ loading: true, error: '', success: '' });
+    try {
+      const sent = await requestAdminOtp(username.trim(), purpose);
+      setOtpKey(sent?.key || '');
+      setOtp('');
+      setOtpSent(true);
+      setOtpTimer(Number(sent?.resendAfter) || 0);
+      const minutes = Math.max(1, Math.round((Number(sent?.expiresIn) || 300) / 60));
+      setState({
+        loading: false,
+        error: '',
+        success: `If ${sent?.sentTo || 'this account'} belongs to an admin, a 6-digit code has been sent to its registered email. It is valid for ${minutes} min.`,
+      });
+    } catch (error) {
+      // 429 rate_limited carries retryAfterSeconds; 503 when the mail failed.
+      const parsed = apiError(error, 'Could not send the code.');
+      const retry = Number(parsed.extra?.retryAfterSeconds);
+      if (parsed.code === 'rate_limited' && retry > 0 && otpSent) setOtpTimer(retry);
+      setState({ loading: false, error: parsed.message, success: '' });
+    }
+  }
+
+  // The text for a refused code: invalid_otp says how many guesses are left.
+  function otpErrorMessage(error) {
+    const parsed = apiError(error, 'Could not verify the code.');
+    const left = parsed.extra?.remainingAttempts;
+    if (parsed.code === 'invalid_otp' && typeof left === 'number') {
+      return left > 0
+        ? `${parsed.message} ${left} attempt${left === 1 ? '' : 's'} left.`
+        : `${parsed.message} No attempts left — request a new code.`;
+    }
+    return parsed.message;
+  }
+
+  function codeIsComplete() {
+    if (/^\d{6}$/.test(otp)) return true;
+    setState({ loading: false, error: 'Enter the 6-digit code.', success: '' });
+    return false;
+  }
+
   async function handleSendOtp(e) {
     if (e) e.preventDefault();
-    if (!username) return setState({ loading: false, error: 'Please enter your username/email.', success: '' });
-    
-    setState({ loading: true, error: '', success: '' });
-    // Mocking API delay for OTP
-    setTimeout(() => {
-      setOtpSent(true);
-      setOtpTimer(120); // 2 mins
-      setState({ loading: false, error: '', success: 'OTP sent to your registered email/phone.' });
-    }, 1000);
+    await sendCode('login');
   }
 
   async function handleOtpLogin(e) {
     if (e) e.preventDefault();
+    if (!codeIsComplete()) return;
     setState({ loading: true, error: '', success: '' });
-    // Mock OTP logic, then fallback to standard login
-    setTimeout(() => {
-      // In a real app this would verify OTP. For now, pretend standard login works
-      setState({ loading: false, error: 'Invalid OTP entered. Mock mode prevents real login.', success: '' });
-    }, 1000);
+    try {
+      const data = await verifyAdminOtp({ username: username.trim(), key: otpKey, otp, purpose: 'login' });
+      if (data?.status && data?.response) {
+        completeSignIn(data.response);
+        return;
+      }
+      setState({ loading: false, error: 'Authentication failed.', success: '' });
+    } catch (error) {
+      // 401 invalid_otp / otp_expired / invalid_credentials, 403 account_disabled, 429 rate_limited.
+      setState({ loading: false, error: otpErrorMessage(error), success: '' });
+    }
   }
 
   async function handleForgotPassword(e) {
     if (e) e.preventDefault();
-    if (!username) return setState({ loading: false, error: 'Please enter your registered email.', success: '' });
-    
+    await sendCode('reset');
+  }
+
+  async function handleVerifyResetCode(e) {
+    if (e) e.preventDefault();
+    if (!codeIsComplete()) return;
     setState({ loading: true, error: '', success: '' });
-    // Mocking API delay
-    setTimeout(() => {
-      setState({ loading: false, error: '', success: 'Temporary password sent to your email.' });
-    }, 1500);
+    try {
+      const data = await verifyAdminOtp({ username: username.trim(), key: otpKey, otp, purpose: 'reset' });
+      if (!data?.response || !data?.temporary) {
+        setState({ loading: false, error: 'Could not start the password reset.', success: '' });
+        return;
+      }
+      const token = data.response;
+      let user = data.user ?? null;
+      try {
+        user = (await fetchResetIdentity(token)) ?? user;
+      } catch {
+        // The name is only for display; the reset still works without it.
+      }
+      setOtp('');
+      setOtpSent(false);
+      setOtpTimer(0);
+      setOtpKey('');
+      setResetToken(token);
+      setResetUser(user);
+      setNewPassword('');
+      setConfirmPassword('');
+      setView('reset');
+      resetState();
+    } catch (error) {
+      setState({ loading: false, error: otpErrorMessage(error), success: '' });
+    }
+  }
+
+  async function handleSetNewPassword(e) {
+    if (e) e.preventDefault();
+    if (newPassword.length < 8) {
+      setState({ loading: false, error: 'The new password must be at least 8 characters.', success: '' });
+      return;
+    }
+    if (newPassword.length > 72) {
+      setState({ loading: false, error: 'The new password must be at most 72 characters.', success: '' });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setState({ loading: false, error: 'The passwords do not match.', success: '' });
+      return;
+    }
+    setState({ loading: true, error: '', success: '' });
+    try {
+      await resetAdminPassword(resetToken, newPassword);
+      // The reset token is dead now (every session ends); drop it and go back
+      // to the password form.
+      setPassword('');
+      switchView('password', { loading: false, error: '', success: 'Password updated. Sign in with your new password.' });
+    } catch (error) {
+      const parsed = apiError(error, 'Could not set the new password.');
+      if (parsed.status === 401) {
+        switchView('forgot', { loading: false, error: 'Your reset session has expired. Request a new code.', success: '' });
+        return;
+      }
+      const fieldMessage = parsed.fields?.newPassword?.[0];
+      setState({ loading: false, error: fieldMessage || parsed.message, success: '' });
+    }
   }
 
   const [showPassword, setShowPassword] = useState(false);
@@ -163,6 +296,35 @@ export default function LoginPage() {
         </div>
       )}
     </>
+  );
+
+  const renderCodeInput = () => (
+    <label className="login-field">
+      <span className="login-label">6-digit code</span>
+      <input
+        className="login-input login-otp-input"
+        placeholder="000000"
+        inputMode="numeric"
+        autoComplete="one-time-code"
+        value={otp}
+        onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+        maxLength={6}
+        autoFocus
+      />
+    </label>
+  );
+
+  // Resend countdown (from the API's resendAfter / retryAfterSeconds), then a
+  // resend link; plus a way to change the username.
+  const renderResendRow = (purpose) => (
+    <div className="login-options">
+      {otpTimer > 0 ? (
+        <span className="timer-text">Resend in {Math.floor(otpTimer / 60)}:{(otpTimer % 60).toString().padStart(2, '0')}</span>
+      ) : (
+        <button type="button" className="text-btn" onClick={() => sendCode(purpose)} disabled={state.loading}>Resend code</button>
+      )}
+      <button type="button" className="text-btn" onClick={() => switchView(view)}>Change username</button>
+    </div>
   );
 
   return (
@@ -231,8 +393,8 @@ export default function LoginPage() {
                 </button>
 
                 <div className="login-options">
-                  <button type="button" className="text-btn" onClick={() => { setView('otp'); resetState(); }}>Login with OTP</button>
-                  <button type="button" className="text-btn" onClick={() => { setView('forgot'); resetState(); }}>Forgot password?</button>
+                  <button type="button" className="text-btn" onClick={() => switchView('otp')}>Login with OTP</button>
+                  <button type="button" className="text-btn" onClick={() => switchView('forgot')}>Forgot password?</button>
                 </div>
               </form>
             </div>
@@ -243,12 +405,12 @@ export default function LoginPage() {
               <div className="login-header">
                 <span className="login-eyebrow">One-time password</span>
                 <h3>Login with OTP</h3>
-                <p>{otpSent ? `We sent a 4-digit code for ${username}` : 'We will send a one-time code to your registered email or phone.'}</p>
+                <p>{otpSent ? 'Enter the 6-digit code from your email.' : 'We will send a one-time code to your registered email.'}</p>
               </div>
 
               <form onSubmit={otpSent ? handleOtpLogin : handleSendOtp}>
                 <label className="login-field">
-                  <span className="login-label">Username or email</span>
+                  <span className="login-label">Mobile number or email</span>
                   <div className="login-input-wrap">
                     <svg className="login-input-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z" /></svg>
                     <input
@@ -262,31 +424,8 @@ export default function LoginPage() {
                   </div>
                 </label>
 
-                {otpSent && (
-                  <label className="login-field">
-                    <span className="login-label">4-digit OTP</span>
-                    <input
-                      className="login-input login-otp-input"
-                      placeholder="0000"
-                      inputMode="numeric"
-                      autoComplete="one-time-code"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      maxLength={4}
-                      autoFocus
-                    />
-                  </label>
-                )}
-
-                {otpSent && (
-                  <div className="login-options">
-                    {otpTimer > 0 ? (
-                      <span className="timer-text">Resend in {Math.floor(otpTimer/60)}:{(otpTimer%60).toString().padStart(2, '0')}</span>
-                    ) : (
-                      <button type="button" className="text-btn" onClick={handleSendOtp}>Resend OTP</button>
-                    )}
-                  </div>
-                )}
+                {otpSent && renderCodeInput()}
+                {otpSent && renderResendRow('login')}
 
                 {renderAlerts()}
 
@@ -296,7 +435,7 @@ export default function LoginPage() {
               </form>
 
               <div className="login-secondary-actions">
-                <button type="button" className="text-btn with-arrow" onClick={() => { setView('password'); resetState(); }}>
+                <button type="button" className="text-btn with-arrow" onClick={() => switchView('password')}>
                   <span aria-hidden="true">←</span> Login with password
                 </button>
               </div>
@@ -308,20 +447,82 @@ export default function LoginPage() {
               <div className="login-header">
                 <span className="login-eyebrow">Account recovery</span>
                 <h3>Recover password</h3>
-                <p>Enter your registered email and we will send a temporary password.</p>
+                <p>{otpSent ? 'Enter the 6-digit code from your email to set a new password.' : 'Enter your registered mobile number or email and we will send a one-time code.'}</p>
               </div>
 
-              <form onSubmit={handleForgotPassword}>
+              <form onSubmit={otpSent ? handleVerifyResetCode : handleForgotPassword}>
                 <label className="login-field">
-                  <span className="login-label">Email address</span>
+                  <span className="login-label">Mobile number or email</span>
                   <div className="login-input-wrap">
                     <svg className="login-input-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M3 4h14a1 1 0 011 1v.4l-8 4.6-8-4.6V5a1 1 0 011-1zm-1 3.7V15a1 1 0 001 1h14a1 1 0 001-1V7.7l-8 4.6-8-4.6z" /></svg>
                     <input
                       className="login-input"
                       placeholder="you@institute.com"
-                      autoComplete="email"
+                      autoComplete="username"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
+                      disabled={otpSent}
+                    />
+                  </div>
+                </label>
+
+                {otpSent && renderCodeInput()}
+                {otpSent && renderResendRow('reset')}
+
+                {renderAlerts()}
+
+                <button type="submit" className="login-btn primary" disabled={state.loading}>
+                  {state.loading ? <><span className="login-spinner" />Processing…</> : (otpSent ? 'Verify code' : 'Send code')}
+                </button>
+              </form>
+
+              <div className="login-secondary-actions">
+                <button type="button" className="text-btn with-arrow" onClick={() => switchView('password')}>
+                  <span aria-hidden="true">←</span> Back to login
+                </button>
+              </div>
+            </div>
+          )}
+
+          {view === 'reset' && (
+            <div className="login-form-inner fade-in" key="reset">
+              <div className="login-header">
+                <span className="login-eyebrow">Account recovery</span>
+                <h3>Set a new password</h3>
+                <p>
+                  {resetUser?.name ? `For ${resetUser.name}${resetUser.email ? ` (${resetUser.email})` : ''}. ` : ''}
+                  Every signed-in session will be signed out.
+                </p>
+              </div>
+
+              <form onSubmit={handleSetNewPassword}>
+                <label className="login-field">
+                  <span className="login-label">New password</span>
+                  <div className="login-input-wrap">
+                    <svg className="login-input-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" /></svg>
+                    <input
+                      className="login-input"
+                      type="password"
+                      placeholder="At least 8 characters"
+                      autoComplete="new-password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      autoFocus
+                    />
+                  </div>
+                </label>
+
+                <label className="login-field">
+                  <span className="login-label">Confirm new password</span>
+                  <div className="login-input-wrap">
+                    <svg className="login-input-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" /></svg>
+                    <input
+                      className="login-input"
+                      type="password"
+                      placeholder="Repeat the new password"
+                      autoComplete="new-password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                   </div>
                 </label>
@@ -329,12 +530,12 @@ export default function LoginPage() {
                 {renderAlerts()}
 
                 <button type="submit" className="login-btn primary" disabled={state.loading}>
-                  {state.loading ? <><span className="login-spinner" />Sending…</> : 'Send temporary password'}
+                  {state.loading ? <><span className="login-spinner" />Saving…</> : 'Set new password'}
                 </button>
               </form>
 
               <div className="login-secondary-actions">
-                <button type="button" className="text-btn with-arrow" onClick={() => { setView('password'); resetState(); }}>
+                <button type="button" className="text-btn with-arrow" onClick={() => switchView('password')}>
                   <span aria-hidden="true">←</span> Back to login
                 </button>
               </div>
